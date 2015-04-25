@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>Learning & Thoughts - mysql</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content">
+
+
+
+   <div class="row">
+
+
+        <div class="eleven columns">
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">MySQL docker image 的简单用法</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-04-25T00:00:00+08:00"> 2015-04-25 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>自从有了Docker compose，各种开发、测试等环境的搭建就变成了一件很简单的事情。因此，趁着周末有时间，准备使用docker compose搭建一个Pyramid的开发环境。
+整个搭建过程都很简单，不过在使用MySQL的官方image时，也遇到了几个小问题，简单做个记录。</p>
+<h3>1. 使用最新的image</h3>
+<p>因原来使用的MySQL是一个确定的版本，因此在使用image时，也指定了数据库的版本作为tag，结果说明里面的几个属性一直在出各种各样的问题，换成last的image，一切正常。</p>
+<h3>2. 注意数据目录</h3>
+<p>因为将数据目录映射到了host上，因此instance关掉，删除之后，数据文件还是保留在硬盘上的，如果之前的配置中出现过错误，就会影响后面的instance。在搭建过程中，就有一次发现mysql目录变成了root权限，结果在启动过程中一直报错误：mysql_1 | ERROR: 1005  Can't create table 'db' (errno: 13)</p>
+<h3>3. 新建数据库、用户</h3>
+<p>该image只有在没有发现"$DATADIR/mysql"这个目录下，才会去初始化数据库、设置root密码 ...</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/docker.html">docker</a>
+                                            <a class="danger label" href="/tag/compose.html">compose</a>
+                                            <a class="danger label" href="/tag/mysql.html">mysql</a>
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+<!--
+<h4>Pages</h4>
+
+ <ul>
+      <li><a href="/archives.html">Archives</a></li>
+      <li><a href="/about.html">About</a></li>
+  </ul>
+//-->
+<h4>Categories</h4>
+<ul>
+		<li><a href="/ops/index.html">ops</a></li>
+</ul>
+
+
+<h4>Tags</h4>
+	<ul>
+	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-4"><a href="/tag/compose.html">compose</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul>
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+<nav class="widget">
+  <h4>Links</h4>
+  <ul>
+    <li><a href="http://python.org/">Python.org</a></li>
+    <li><a href="https://github.com/docker-library">Docker library</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+<p class="paginator">
+    Page 1 / 1
+</p>
+</section><!-- /#content -->
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>
