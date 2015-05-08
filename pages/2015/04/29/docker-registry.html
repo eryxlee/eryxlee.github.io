@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>CentOS 7 搭建Docker registry</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2015/04/29/docker-registry.html" rel="bookmark"
+                   title="Permalink to CentOS 7 搭建Docker registry">CentOS 7 搭建Docker registry</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-04-29T00:00:00+08:00">
+                2015-04-29
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>本文主要内容源自docker registry里的README，不过后面有几个原文有误的地方做了点小修改。</p>
+<h3>1. 安装Docker</h3>
+<div class="highlight"><pre><span class="n">yum</span> <span class="n">update</span>
+
+<span class="n">wget</span> <span class="o">-</span><span class="n">qO</span><span class="o">-</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">get</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span><span class="o">/</span> <span class="o">|</span> <span class="n">sh</span>
+<span class="n">systemctl</span> <span class="n">restart</span>  <span class="n">docker</span><span class="p">.</span><span class="n">service</span>
+<span class="n">systemctl</span> <span class="n">enable</span> <span class="n">docker</span><span class="p">.</span><span class="n">service</span>
+</pre></div>
+
+
+<h3>2. 安装Docker Compose</h3>
+<div class="highlight"><pre><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">pypa</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">get</span><span class="o">-</span><span class="n">pip</span><span class="p">.</span><span class="n">py</span>
+<span class="n">python</span> <span class="n">get</span><span class="o">-</span><span class="n">pip</span><span class="p">.</span><span class="n">py</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span>
+</pre></div>
+
+
+<h3>3. 下载Docker registry</h3>
+<div class="highlight"><pre><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">docker</span><span class="o">/</span><span class="n">distribution</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="n">v2</span><span class="p">.</span>0<span class="p">.</span>0<span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">v2</span><span class="p">.</span>0<span class="p">.</span>0<span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+</pre></div>
+
+
+<h3>4. 生成Nginx密钥，启用SSL</h3>
+<div class="highlight"><pre><span class="n">cd</span> <span class="n">distribution</span><span class="o">-</span>2<span class="p">.</span>0<span class="p">.</span>0<span class="o">/</span><span class="n">contrib</span><span class="o">/</span><span class="n">compose</span><span class="o">/</span><span class="n">nginx</span>
+<span class="n">openssl</span> <span class="n">req</span> <span class="o">\</span>
+         <span class="o">-</span><span class="n">newkey</span> <span class="n">rsa</span><span class="p">:</span>2048 <span class="o">-</span><span class="n">nodes</span> <span class="o">-</span><span class="n">keyout</span> <span class="n">mydomain</span><span class="p">.</span><span class="n">key</span> <span class="o">\</span>
+         <span class="o">-</span><span class="n">x509</span> <span class="o">-</span><span class="n">days</span> 365 <span class="o">-</span><span class="n">out</span> <span class="n">mydomain</span><span class="p">.</span><span class="n">crt</span>
+</pre></div>
+
+
+<p>Dockerfile中加入</p>
+<div class="highlight"><pre><span class="n">COPY</span> <span class="n">mydomain</span><span class="p">.</span><span class="n">crt</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">mydomain</span><span class="p">.</span><span class="n">crt</span>
+<span class="n">COPY</span> <span class="n">mydomain</span><span class="p">.</span><span class="n">key</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">mydomain</span><span class="p">.</span><span class="n">key</span>
+</pre></div>
+
+
+<p>registry.conf中加入</p>
+<div class="highlight"><pre><span class="n">ssl</span> <span class="n">on</span><span class="p">;</span>
+<span class="n">ssl_certificate</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">mydomain</span><span class="p">.</span><span class="n">crt</span><span class="p">;</span>
+<span class="n">ssl_certificate_key</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">mydomain</span><span class="p">.</span><span class="n">key</span><span class="p">;</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="nb">cat</span> <span class="n">nginx</span><span class="o">/</span><span class="n">mydomain</span><span class="p">.</span><span class="n">crt</span>  <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">pki</span><span class="o">/</span><span class="n">tls</span><span class="o">/</span><span class="n">certs</span><span class="o">/</span><span class="n">ca</span><span class="o">-</span><span class="n">bundle</span><span class="p">.</span><span class="n">crt</span>
+</pre></div>
+
+
+<h3>5. 启动Docker registry</h3>
+<div class="highlight"><pre><span class="n">cd</span> <span class="n">distribution</span><span class="o">/</span><span class="n">contrib</span><span class="o">/</span><span class="n">compose</span>
+<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">build</span>
+<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span>
+</pre></div>
+
+
+<p>registry镜像中启动后镜像默认位置是/tmp/registry，因此直接映射这个位置即可，比如到本机的/opt/data/registry目录下。
+docker run -d -e SETTINGS_FLAVOR=dev -e STORAGE_PATH=/tmp/registry -v /opt/data/registry:/tmp/registry  -p 5000:5000 registry</p>
+<p>此时主机的5000端口应该通过防火墙禁止访问（或者在docker run端口映射时只监听回环接口的IP -p 127.0.0.1:5000:5000）。</p>
+<h3>6. 本地测试</h3>
+<div class="highlight"><pre><span class="n">curl</span> <span class="o">-</span><span class="n">v</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span>5000 <span class="o">--</span><span class="n">insecure</span>
+</pre></div>
+
+
+<p>标记 v1 registry 镜像。</p>
+<div class="highlight"><pre><span class="n">docker</span> <span class="n">tag</span> <span class="n">registry</span><span class="p">:</span><span class="n">latest</span> <span class="n">localhost</span><span class="p">:</span>5000<span class="o">/</span><span class="n">registry_one</span><span class="p">:</span><span class="n">latest</span>
+</pre></div>
+
+
+<p>将其推送到 localhost。</p>
+<div class="highlight"><pre><span class="n">docker</span> <span class="n">push</span> <span class="n">localhost</span><span class="p">:</span>5000<span class="o">/</span><span class="n">registry_one</span><span class="p">:</span><span class="n">latest</span>
+</pre></div>
+
+
+<p>使用 curl 来列出 Registry 中的镜像。</p>
+<div class="highlight"><pre><span class="n">curl</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">X</span> <span class="n">GET</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span>5000<span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">repositories</span><span class="o">/</span><span class="n">registry_one</span><span class="o">/</span><span class="n">tags</span><span class="o">/</span><span class="n">latest</span> <span class="o">--</span><span class="n">insecure</span>
+<span class="n">curl</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">X</span> <span class="n">GET</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span>5000<span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">repositories</span><span class="o">/</span><span class="n">registry_one</span><span class="o">/</span><span class="n">json</span> <span class="o">--</span><span class="n">insecure</span>
+</pre></div>
+
+
+<h3>7. 其他机器测试</h3>
+<p>另外找一台机器，安装docker
+将registry的公钥传到这里
+/etc/docker/certs.d/117.121.25.170:5000/ca.crt</p>
+<div class="highlight"><pre><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">systemctl</span> <span class="n">restart</span>  <span class="n">docker</span><span class="p">.</span><span class="n">service</span>
+
+<span class="n">curl</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">X</span> <span class="n">GET</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span>117<span class="p">.</span>121<span class="p">.</span>25<span class="p">.</span>170<span class="p">:</span>5000<span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">repositories</span><span class="o">/</span><span class="n">registry_one</span><span class="o">/</span><span class="n">json</span> <span class="o">--</span><span class="n">insecure</span>
+</pre></div>
+
+
+<p>在docker启动参数中加入</p>
+<p>/etc/default# vi docker</p>
+<div class="highlight"><pre><span class="o">--</span><span class="n">insecure</span><span class="o">-</span><span class="n">registry</span> 117<span class="p">.</span>121<span class="p">.</span>25<span class="p">.</span>170<span class="p">:</span>5000
+</pre></div>
+
+
+<div class="highlight"><pre><span class="n">docker</span> <span class="n">tag</span> <span class="n">dquiz_app</span><span class="p">:</span><span class="n">latest</span> 117<span class="p">.</span>121<span class="p">.</span>25<span class="p">.</span>170<span class="p">:</span>5000<span class="o">/</span><span class="n">dquiz_app</span><span class="p">:</span><span class="n">latest</span>
+
+<span class="n">docker</span> <span class="n">push</span> 117<span class="p">.</span>121<span class="p">.</span>25<span class="p">.</span>170<span class="p">:</span>5000<span class="o">/</span><span class="n">dquiz_app</span><span class="p">:</span><span class="n">latest</span>
+
+<span class="n">docker</span> <span class="n">pull</span> <span class="o">-</span><span class="n">v</span> 117<span class="p">.</span>121<span class="p">.</span>25<span class="p">.</span>170<span class="p">:</span>5000<span class="o">/</span><span class="n">dquiz_app</span><span class="p">:</span><span class="n">latest</span>
+</pre></div>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2015/04/29/docker-registry.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+<!--
+<h4>Pages</h4>
+
+ <ul>
+      <li><a href="/archives.html">Archives</a></li>
+      <li><a href="/about.html">About</a></li>
+  </ul>
+//-->
+<h4>Categories</h4>
+<ul>
+		<li><a href="/ops/index.html">ops</a></li>
+		<li><a href="/uncategorized/index.html">uncategorized</a></li>
+</ul>
+
+
+<h4>Tags</h4>
+	<ul>
+	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="/tag/docker-compose.html">docker-compose</a></li>
+	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-4"><a href="/tag/docker-registry.html">docker-registry</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul>
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+<nav class="widget">
+  <h4>Links</h4>
+  <ul>
+    <li><a href="http://python.org/">Python.org</a></li>
+    <li><a href="https://github.com/docker-library">Docker library</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>

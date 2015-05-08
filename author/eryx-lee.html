@@ -63,6 +63,47 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">CentOS 7 搭建Docker registry</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-04-29T00:00:00+08:00"> 2015-04-29 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>本文主要内容源自docker registry里的README，不过后面有几个原文有误的地方做了点小修改。</p>
+<h3>1. 安装Docker</h3>
+<div class="highlight"><pre><span class="n">yum</span> <span class="n">update</span>
+
+<span class="n">wget</span> <span class="o">-</span><span class="n">qO</span><span class="o">-</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">get</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span><span class="o">/</span> <span class="o">|</span> <span class="n">sh</span>
+<span class="n">systemctl</span> <span class="n">restart</span>  <span class="n">docker</span><span class="p">.</span><span class="n">service</span>
+<span class="n">systemctl</span> <span class="n">enable</span> <span class="n">docker</span><span class="p">.</span><span class="n">service</span>
+</pre></div>
+
+
+<h3>2. 安装Docker Compose</h3>
+<div class="highlight"><pre><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">pypa</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">get</span><span class="o">-</span><span class="n">pip</span><span class="p">.</span><span class="n">py</span>
+<span class="n">python</span> <span class="n">get</span><span class="o">-</span><span class="n">pip</span><span class="p">.</span><span class="n">py</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span>
+</pre></div>
+
+
+<h3>3. 下载Docker registry</h3>
+<div class="highlight"><pre><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">docker</span><span class="o">/</span><span class="n">distribution ...</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/docker.html">docker</a>
+                                            <a class="danger label" href="/tag/docker-registry.html">docker-registry</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">MySQL docker image 的简单用法</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-04-25T00:00:00+08:00"> 2015-04-25 </abbr>
@@ -86,8 +127,28 @@
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
                                             <a class="danger label" href="/tag/docker.html">docker</a>
-                                            <a class="danger label" href="/tag/compose.html">compose</a>
+                                            <a class="danger label" href="/tag/docker-compose.html">docker-compose</a>
                                             <a class="danger label" href="/tag/mysql.html">mysql</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/04/23/old_post.html" rel="bookmark" title="Permalink to Old Posts">Old Posts</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-04-23T00:00:00+08:00"> 2015-04-23 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Old posts refer to http://blog.sina.com.cn/eryxlee</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/04/23/old_post.html" rel="bookmark" title="Permalink to Old Posts">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
                                 </div>
 
 
@@ -109,14 +170,16 @@
 <h4>Categories</h4>
 <ul>
 		<li><a href="/ops/index.html">ops</a></li>
+		<li><a href="/uncategorized/index.html">uncategorized</a></li>
 </ul>
 
 
 <h4>Tags</h4>
 	<ul>
 	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-4"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/compose.html">compose</a></li>
+	    <li class="tag-4"><a href="/tag/docker-compose.html">docker-compose</a></li>
+	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-4"><a href="/tag/docker-registry.html">docker-registry</a></li>
 </ul>
 
 

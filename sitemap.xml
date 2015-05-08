@@ -5,21 +5,21 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/</loc>
-<lastmod>2015-04-25T15:01:01-00:00</lastmod>
+<lastmod>2015-05-08T09:47:22-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>/archives.html</loc>
-<lastmod>2015-04-25T15:01:01-00:00</lastmod>
+<lastmod>2015-05-08T09:47:22-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>/categories.html</loc>
-<lastmod>2015-04-25T15:01:01-00:00</lastmod>
+<lastmod>2015-05-08T09:47:22-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -32,6 +32,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>/pages/2015/04/29/docker-registry.html</loc>
+<lastmod>2015-04-29T00:00:00+08:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+
+<url>
 <loc>/pages/2015/04/25/docker-mysql-compose.html</loc>
 <lastmod>2015-04-25T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
@@ -39,7 +46,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
+<loc>/pages/2015/04/23/old_post.html</loc>
+<lastmod>2015-04-23T00:00:00+08:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+
+<url>
 <loc>/ops/index.html</loc>
+<lastmod>2015-04-29T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>/uncategorized/index.html</loc>
+<lastmod>2015-04-23T00:00:00+08:06</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>/tag/docker-compose.html</loc>
 <lastmod>2015-04-25T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
@@ -47,14 +75,14 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/tag/docker.html</loc>
-<lastmod>2015-04-25T00:00:00+08:06</lastmod>
+<lastmod>2015-04-29T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/compose.html</loc>
-<lastmod>2015-04-25T00:00:00+08:06</lastmod>
+<loc>/tag/docker-registry.html</loc>
+<lastmod>2015-04-29T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -68,7 +96,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/author/eryx-lee.html</loc>
-<lastmod>2015-04-25T00:00:00+08:06</lastmod>
+<lastmod>2015-04-29T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
