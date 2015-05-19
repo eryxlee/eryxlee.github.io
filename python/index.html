@@ -2,7 +2,7 @@
 <html lang="zh_cn">
 <head>
 
-        <title>Learning & Thoughts - docker-compose</title>
+        <title>Learning & Thoughts</title>
         <meta charset="utf-8" />
 
 
@@ -54,7 +54,7 @@
             </div>
 
 <section id="content">
-
+<h2>Articles in the python category</h2>
 
 
    <div class="row">
@@ -63,31 +63,34 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">MySQL docker image 的简单用法</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2> </header>
                                 <footer class="post-info">
-                                    <abbr class="published" title="2015-04-25T00:00:00+08:00"> 2015-04-25 </abbr>
+                                    <abbr class="published" title="2015-05-19T00:00:00+08:00"> 2015-05-19 </abbr>
                                     <address class="vcard author">By 
                                     <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>自从有了Docker compose，各种开发、测试等环境的搭建就变成了一件很简单的事情。因此，趁着周末有时间，准备使用docker compose搭建一个Pyramid的开发环境。
-整个搭建过程都很简单，不过在使用MySQL的官方image时，也遇到了几个小问题，简单做个记录。</p>
-<h3>1. 使用最新的image</h3>
-<p>因原来使用的MySQL是一个确定的版本，因此在使用image时，也指定了数据库的版本作为tag，结果说明里面的几个属性一直在出各种各样的问题，换成last的image，一切正常。</p>
-<h3>2. 注意数据目录</h3>
-<p>因为将数据目录映射到了host上，因此instance关掉，删除之后，数据文件还是保留在硬盘上的，如果之前的配置中出现过错误，就会影响后面的instance。在搭建过程中，就有一次发现mysql目录变成了root权限，结果在启动过程中一直报错误：mysql_1 | ERROR: 1005  Can't create table 'db' (errno: 13)</p>
-<h3>3. 新建数据库、用户</h3>
-<p>该image只有在没有发现"$DATADIR/mysql"这个目录下，才会去初始化数据库、设置root密码 ...</p> </div><!-- /.entry-content -->
+                                <div class="entry-content"> <p>SQLAlchemy ORM定义中一张表必须要有primary key，最通常的就是定义一个id字段，并设置成主键，如果一张表在OR-Mapping时没有定义主键程序就会报错。</p>
+<h3>1. 为什么必须要有主键</h3>
+<p>SQLAlchemy大量使用了Session，而在一个Session中存放的ORM对象都会使用一个叫identity map的数据结构唯一映射到一条具体的数据库记录，只有这样，对ORM对象的update、delete等操作才会直接反应到数据库数据上。因此，要使用SQLAlchemy ORM，主键是不可或缺的。
+但现实中，确实会存在一些表没有定义主键，或使用了复合主键，在SQLAlchemy中该怎么处理呢？</p>
+<h3>2. 数据库中没有主键</h3>
+<p>在数据库字段中选择几个字段，只要组合起来能够满足唯一性，非空，就可以把他们当做主键来处理，也就是说数据库中可以没有定义主键，但ORM定义中定义一个虚拟的主键，这样就转变成了复合主键的定义问题。如果找不到这样的字段组合，那么就无法使用SQLAlchemy的OR-Mapping了。</p>
+<h3>3. 复合主键的定义</h3>
+<p>SQLAlchemy的OR-Mapping中可以对多个字段定义primary_key=True，只要多个字段定义了该参数，就能构造出复合主键。</p>
+<div class="highlight"><pre><span class="n">class</span> <span class="n">SomeClass</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="p">=</span> &quot;<span class="n">some_table_with_no_pk</span>&quot;
 
-                                <div class="medium primary btn"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">Read more <i class="icon-arrow-right"></i></a></div>
+    <span class="n">uid</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+    <span class="n">bar ...</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/docker.html">docker</a>
-                                            <a class="danger label" href="/tag/docker-compose.html">docker-compose</a>
-                                            <a class="danger label" href="/tag/mysql.html">mysql</a>
+                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
                                 </div>
 
 
