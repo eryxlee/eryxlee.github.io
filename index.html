@@ -63,6 +63,47 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/07/20/api-multi-format-output-using-pyramid.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出">使用Pyramid机制完成API的多格式输出</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-07-20T00:00:00+08:00"> 2015-07-20 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>在API开发的过程中，经常会需要根据传入的format参数来选择不同格式的输出结果，如JSON，XML等。正巧，pyramid中renderer机制可以很方便的进行各种不同格式内容的输出，而且基本很少涉及到代码的大量修改。</p>
+<h3>1. 直接在代码中判断format参数</h3>
+<p>可以在pyramid的view中直接判断format参数，然后根据值不同分别render不同的response。如下：</p>
+<div class="highlight"><pre><span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api1&#39;</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">api1</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">data</span> <span class="p">=</span> <span class="n">dict</span><span class="p">(</span>
+        <span class="n">one</span><span class="p">=</span>1<span class="p">,</span>
+        <span class="n">two</span><span class="p">=</span><span class="s">&#39;2&#39;</span><span class="p">)</span>
+
+    <span class="n">format</span> <span class="p">=</span> <span class="n">request</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;format&#39;</span><span class="p">,</span> <span class="s">&#39;json&#39;</span><span class="p">).</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;xml.mako&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;myjson&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>2. 通过view_config中的request_param参数来配置</h3>
+<p>上面的代码能完成按format参数输出不同内容的需要，但该方法毕竟已经将这个逻辑写到了代码中，那么 ...</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/07/20/api-multi-format-output-using-pyramid.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                            <a class="danger label" href="/tag/api.html">api</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-05-19T00:00:00+08:00"> 2015-05-19 </abbr>
@@ -245,12 +286,13 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-4"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-4"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-4"><a href="/tag/docker-registry.html">docker-registry</a></li>
 	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-4"><a href="/tag/docker-registry.html">docker-registry</a></li>
 	    <li class="tag-4"><a href="/tag/docker-compose.html">docker-compose</a></li>
+	    <li class="tag-4"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="/tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-4"><a href="/tag/api.html">api</a></li>
+	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
 </ul>
 
 

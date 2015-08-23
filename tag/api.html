@@ -2,7 +2,7 @@
 <html lang="zh_cn">
 <head>
 
-        <title>Learning & Thoughts - docker-compose</title>
+        <title>Learning & Thoughts - api</title>
         <meta charset="utf-8" />
 
 
@@ -63,31 +63,41 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">MySQL docker image 的简单用法</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="/pages/2015/07/20/api-multi-format-output-using-pyramid.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出">使用Pyramid机制完成API的多格式输出</a></h2> </header>
                                 <footer class="post-info">
-                                    <abbr class="published" title="2015-04-25T00:00:00+08:00"> 2015-04-25 </abbr>
+                                    <abbr class="published" title="2015-07-20T00:00:00+08:00"> 2015-07-20 </abbr>
                                     <address class="vcard author">By 
                                     <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>自从有了Docker compose，各种开发、测试等环境的搭建就变成了一件很简单的事情。因此，趁着周末有时间，准备使用docker compose搭建一个Pyramid的开发环境。
-整个搭建过程都很简单，不过在使用MySQL的官方image时，也遇到了几个小问题，简单做个记录。</p>
-<h3>1. 使用最新的image</h3>
-<p>因原来使用的MySQL是一个确定的版本，因此在使用image时，也指定了数据库的版本作为tag，结果说明里面的几个属性一直在出各种各样的问题，换成last的image，一切正常。</p>
-<h3>2. 注意数据目录</h3>
-<p>因为将数据目录映射到了host上，因此instance关掉，删除之后，数据文件还是保留在硬盘上的，如果之前的配置中出现过错误，就会影响后面的instance。在搭建过程中，就有一次发现mysql目录变成了root权限，结果在启动过程中一直报错误：mysql_1 | ERROR: 1005  Can't create table 'db' (errno: 13)</p>
-<h3>3. 新建数据库、用户</h3>
-<p>该image只有在没有发现"$DATADIR/mysql"这个目录下，才会去初始化数据库、设置root密码 ...</p> </div><!-- /.entry-content -->
+                                <div class="entry-content"> <p>在API开发的过程中，经常会需要根据传入的format参数来选择不同格式的输出结果，如JSON，XML等。正巧，pyramid中renderer机制可以很方便的进行各种不同格式内容的输出，而且基本很少涉及到代码的大量修改。</p>
+<h3>1. 直接在代码中判断format参数</h3>
+<p>可以在pyramid的view中直接判断format参数，然后根据值不同分别render不同的response。如下：</p>
+<div class="highlight"><pre><span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api1&#39;</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">api1</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">data</span> <span class="p">=</span> <span class="n">dict</span><span class="p">(</span>
+        <span class="n">one</span><span class="p">=</span>1<span class="p">,</span>
+        <span class="n">two</span><span class="p">=</span><span class="s">&#39;2&#39;</span><span class="p">)</span>
 
-                                <div class="medium primary btn"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">Read more <i class="icon-arrow-right"></i></a></div>
+    <span class="n">format</span> <span class="p">=</span> <span class="n">request</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;format&#39;</span><span class="p">,</span> <span class="s">&#39;json&#39;</span><span class="p">).</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;xml.mako&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;myjson&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>2. 通过view_config中的request_param参数来配置</h3>
+<p>上面的代码能完成按format参数输出不同内容的需要，但该方法毕竟已经将这个逻辑写到了代码中，那么 ...</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/07/20/api-multi-format-output-using-pyramid.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/docker.html">docker</a>
-                                            <a class="danger label" href="/tag/docker-compose.html">docker-compose</a>
-                                            <a class="danger label" href="/tag/mysql.html">mysql</a>
+                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                            <a class="danger label" href="/tag/api.html">api</a>
                                 </div>
 
 
