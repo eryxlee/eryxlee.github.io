@@ -63,6 +63,38 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">sqlalchemy中怎么使用IS NULL条件</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-01T00:00:00+08:00"> 2015-08-01 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>在使用sqlalchemy过程中，不小心犯了个小错误：在看一个查询语句时，发现一个从句 A.status == None 提示有PEP8警告，就好心改成了A.status is None。结果，单元测试各种出错。一看生成的SQl语句，发现status is null这个从句没有生成，这是为什么呢？</p>
+<p>仔细看看代码，终于发现A.status is None肯定是假值，在or从句中，被自动忽略了。</p>
+<p>那么，这里怎么写才能避免PEP8警告呢？通过查看SQLAlchemy的文档，可以看到如下用法：</p>
+<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">None</span><span class="p">)</span>
+
+# <span class="n">alternatively</span><span class="p">,</span> <span class="k">if</span> <span class="n">pep8</span><span class="o">/</span><span class="n">linters</span> <span class="n">are</span> <span class="n">a</span> <span class="n">concern</span>
+<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">is_</span><span class="p">(</span><span class="n">None</span><span class="p">))</span>
+</pre></div>
+
+
+<p>好了，没警告了 ...</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-05-19T00:00:00+08:00"> 2015-05-19 </abbr>
@@ -119,13 +151,10 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/docker-registry.html">docker-registry</a></li>
-	    <li class="tag-4"><a href="/tag/docker-compose.html">docker-compose</a></li>
-	    <li class="tag-4"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-2"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-4"><a href="/tag/api.html">api</a></li>
 	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
+	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-1"><a href="/tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-2"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
 </ul>
 
 

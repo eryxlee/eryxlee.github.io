@@ -2,7 +2,7 @@
 <html lang="zh_cn">
 <head>
 
-        <title>Pyramid 的 docker 容器</title>
+        <title>使用Pyramid机制完成API的多格式输出（续）</title>
         <meta charset="utf-8" />
 
 
@@ -61,69 +61,52 @@
 
             <header>
               <h2 class="entry-title">
-                <a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark"
-                   title="Permalink to Pyramid 的 docker 容器">Pyramid 的 docker 容器</a></h2>
+                <a href="/pages/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark"
+                   title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">使用Pyramid机制完成API的多格式输出（续）</a></h2>
            
             </header>
             <footer class="post-info">
-              <abbr class="published" title="2015-05-12T00:00:00+08:00">
-                2015-05-12
+              <abbr class="published" title="2015-07-23T00:00:00+08:00">
+                2015-07-23
               </abbr>
               <address class="vcard author">By 
                 <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
               </address>
             </footer><!-- /.post-info -->
             <div class="entry-content">
-              <p>这是一个Pyramid项目的docker 框架，它由docker compose来管理多个pyramid项目需要用到的容器。</p>
-<p>但因pyramid还有一些像python setup.py develop、initialize_db之类的项目初始化命令，在pyramid本身功能上的整合还不理想。</p>
-<p>另，因pypi在国内访问很慢，可以替换到豆瓣的源。</p>
-<h3>1. 启动</h3>
-<div class="highlight"><pre><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span>  启动整个系统
-<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span> <span class="n">mysql</span>  单独启动<span class="n">mysql</span>容器
+              <p>在上一篇文章中，简单归纳了pyramid中3种格式化输出的方式，不过在实际使用过程中，还有另外一种方式：即view的处理中也稍有不同，这样就需要对同一个URL写两个不同的view。</p>
+<p>首先，在main函数中加入一个route的Predicate。</p>
+<div class="highlight"><pre><span class="n">config</span><span class="p">.</span><span class="n">add_route_predicate</span><span class="p">(</span><span class="s">&#39;format&#39;</span><span class="p">,</span> <span class="n">FormatPredicate</span><span class="p">)</span>
 </pre></div>
 
 
-<p>注意，这里容器的名字是系统按照目录名，容器名，序号自动生成的，不能自己定义名字，参见https://github.com/docker/compose/issues/652</p>
-<h3>2. 进入MySQL</h3>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">link</span> <span class="n">pyramid_mysql_1</span><span class="p">:</span><span class="n">mysql</span> <span class="o">--</span><span class="n">rm</span> <span class="n">mysql</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;exec mysql -h mysql -P 3306 -uroot -p&#39;</span>
+<p>另外，route定义也要做一定的变换。</p>
+<div class="highlight"><pre>    <span class="n">config</span><span class="p">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;api4_json&#39;</span><span class="p">,</span> <span class="s">&#39;/api4&#39;</span><span class="p">,</span> <span class="n">format</span><span class="p">=</span>&quot;<span class="n">json</span>&quot;<span class="p">)</span>
+    <span class="n">config</span><span class="p">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;api4_txt&#39;</span><span class="p">,</span> <span class="s">&#39;/api4&#39;</span><span class="p">,</span> <span class="n">format</span><span class="p">=</span>&quot;<span class="n">txt</span>&quot;<span class="p">)</span>
 </pre></div>
 
 
-<h3>3. 进入Redis</h3>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">link</span> <span class="n">pyramid_redis_1</span><span class="p">:</span><span class="n">redis</span> <span class="o">--</span><span class="n">rm</span> <span class="n">redis</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;exec redis-cli -h redis -p 6379&#39;</span>
+<p>这样，就可以定义两个不同的view了。</p>
+<div class="highlight"><pre><span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api4_json&#39;</span><span class="p">,</span> <span class="n">request_method</span><span class="p">=</span>&quot;<span class="n">POST</span>&quot;<span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;myjson&#39;</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">api4_json_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">pass</span>
+
+<span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api4_txt&#39;</span><span class="p">,</span> <span class="n">request_method</span><span class="p">=</span>&quot;<span class="n">POST</span>&quot;<span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;api4.mako&#39;</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">api4_txt_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">pass</span>
 </pre></div>
 
 
-<h3>4. Pyramid项目管理</h3>
-<p>创建一个新的pyramid项目</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">volumes</span><span class="o">-</span><span class="n">from</span> <span class="n">pyramid_app_1</span> <span class="o">--</span><span class="n">rm</span> <span class="n">pyramid_app</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;pcreate -t alchemy mytest&#39;</span>
-</pre></div>
-
-
-<p>运行python setup.py develop</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">exec</span> <span class="n">pyramid_app_1</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;cd mytest;python setup.py develop&#39;</span>
-</pre></div>
-
-
-<p>初始化数据库</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">exec</span> <span class="n">pyramid_app_1</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;cd mytest;initialize_mytest_db development.ini&#39;</span>
-</pre></div>
-
-
-<p>启动pyramid项目</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">exec</span> <span class="n">pyramid_app_1</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;cd mytest;pserve development.ini&#39;</span>
-</pre></div>
-
-
-<p>进入pyramid项目</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">exec</span> <span class="n">pyramid_app_1</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span>
+<p>不过这种方式下，在写集成测试用例的时候需要注意，format这个参数一定要写在URL中，而不能出现在params参数中，要不会出现404错误，如：</p>
+<div class="highlight"><pre><span class="n">res</span> <span class="p">=</span> <span class="n">self</span><span class="p">.</span><span class="n">app</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/api4?format=json&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">=</span><span class="n">params</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="p">.</span><span class="n">status</span><span class="p">,</span> <span class="s">&#39;200 OK&#39;</span><span class="p">)</span>
 </pre></div>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
               <div id="disqus_thread"></div>
               <script type="text/javascript">
-                var disqus_identifier = "pages/2015/05/12/docker-pyramid.html";
+                var disqus_identifier = "pages/2015/07/23/api-multi-format-output-using-pyramid-2.html";
                 (function() {
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
                 dsq.src = 'http://eryxlee.disqus.com/embed.js';
