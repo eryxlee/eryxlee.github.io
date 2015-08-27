@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>Pyramid 事务处理及其注意事项</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="/">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2015/08/07/transaction-pyramid-tm-notes.html" rel="bookmark"
+                   title="Permalink to Pyramid 事务处理及其注意事项">Pyramid 事务处理及其注意事项</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-08-07T00:00:00+08:00">
+                2015-08-07
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>Pyramid 提供了一个事务处理的tween -- pyramid_tm，可以通过配置方式很方便得添加事务支持。</p>
+<h3>1. pyramid_tm的安装配置</h3>
+<p>在正确安装了pyramid_tm之后，只要在main函数中加入：</p>
+<div class="highlight"><pre><span class="n">config</span><span class="p">.</span><span class="n">include</span><span class="p">(</span><span class="s">&#39;pyramid_tm&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>或在ini文件中加入：</p>
+<div class="highlight"><pre><span class="k">[app:myapp]</span>
+<span class="na">pyramid.includes</span> <span class="o">=</span> <span class="s">pyramid_tm</span>
+</pre></div>
+
+
+<p>即可对所有view提供事务管理支持。</p>
+<h3>2. 正常的事务处理</h3>
+<p>在正常情况下，业务代码中不需要参杂事务处理代码，如下：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>该view运行之后，数据库中对应数据就改成了2，即事务自动在view结束后提交。</p>
+<h3>3. 业务异常时的事务处理</h3>
+<p>如果在view中抛出了不能处理的异常，则事务自动回滚。如下：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>该view运行后，数据库中数据未改变，console端可以看到ROLLBACK输出。</p>
+<h3>4. DBSession的commit</h3>
+<p>在配置了pyramid_tm之后，DBSession的commit功能会抛出异常</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+        <span class="n">DBSession</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>运行该view，将抛出下面的异常：
+AssertionError: Transaction must be committed using the transaction manager</p>
+<h3>5. 直接调用transaction.commit</h3>
+<p>如果直接在view代码中调用了transaction.commit，则将会提交该语句之前的所有数据库操作。</p>
+<div class="highlight"><pre><span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;home&#39;</span><span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;templates/mytemplate.pt&#39;</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+        <span class="n">transaction</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>运行该view，可以发现数据库数据已经改变。也就是说，transaction.commit已经将这之前的数据操作提交，尽管后面抛出了异常，也不能再回退已经提交的数据。</p>
+<h3>6. doom的运用</h3>
+<p>transaction提供了一个doom函数，会使commit无效。如下：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+        <span class="n">transaction</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>运行该view，将会抛出异常：
+DoomedTransaction: transaction doomed, cannot commit。如果在代码中不调用commit，那么会怎么样呢？</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>运行该view，发现数据库中数据不会改变，运行也不抛错，可以从console中看到已经ROLLBACK</p>
+<h3>7. 结合transaction.manager</h3>
+<p>很多时候，我们还会使用transaction.manager来达到事务处理目的，通过with语句，可以很清晰界定一个事务范围。如下所示：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
+            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>让我们再改变一下，在with中增加一个异常，如下：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
+            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+            <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>运行该view后，发现数据未改变，系统抛出异常。但如果将raise语句移出with语句块呢？如下：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+#    <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
+            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>运行该view，发现数据改变，之后抛出异常。因此with语句结束之后，就完成了提交工作。</p>
+<p>下面，让我们再加上doom来试试看：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
+            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>运行该view之后，发现数据库数据改变，系统正常，也就是说doom在这里没有起作用。</p>
+<p>我们再来改一下位置：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
+            <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
+            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
+            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
+    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>运行该view之后，抛出异常 DoomedTransaction: transaction doomed, cannot commit。也就是说，with transaction.manager重新开启了一个事务，而doom放在哪个事务当中，哪个事务就不能再commit了。</p>
+<h3>8. 结论</h3>
+<ol>
+<li>有了pyramid_tm之后，业务代码不用太多关心事务处理逻辑，该正常运行就正常运行，该出错就抛出异常。</li>
+<li>一旦运行了transaction.commit就提交了之前的事务开始了新的事务。</li>
+<li>一旦使用了with transaction.manager，也是开始了新的事务</li>
+<li>doom只对当前事务有效</li>
+<li>一旦业务代码中有了事务处理逻辑，在做单元测试的时候就需要注意是否会有垃圾数据的留存</li>
+</ol>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2015/08/07/transaction-pyramid-tm-notes.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+<!--
+<h4>Pages</h4>
+
+ <ul>
+      <li><a href="/archives.html">Archives</a></li>
+      <li><a href="/about.html">About</a></li>
+  </ul>
+//-->
+<h4>Categories</h4>
+<ul>
+		<li><a href="/ops/index.html">ops</a></li>
+		<li><a href="/python/index.html">python</a></li>
+		<li><a href="/uncategorized/index.html">uncategorized</a></li>
+</ul>
+
+
+<h4>Tags</h4>
+	<ul>
+	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
+	    <li class="tag-2"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-1"><a href="/tag/pyramid.html">pyramid</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul>
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+<nav class="widget">
+  <h4>Links</h4>
+  <ul>
+    <li><a href="http://python.org/">Python.org</a></li>
+    <li><a href="https://github.com/docker-library">Docker library</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+</body>
+</html>
