@@ -5,21 +5,21 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/</loc>
-<lastmod>2015-08-27T11:18:24-00:00</lastmod>
+<lastmod>2015-08-28T13:44:52-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>/archives.html</loc>
-<lastmod>2015-08-27T11:18:24-00:00</lastmod>
+<lastmod>2015-08-28T13:44:52-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>/categories.html</loc>
-<lastmod>2015-08-27T11:18:24-00:00</lastmod>
+<lastmod>2015-08-28T13:44:52-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -29,6 +29,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <lastmod>2014-04-25T00:00:00+08:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
+</url>
+
+<url>
+<loc>/pages/2015/08/15/pyramid-tm-configuration-and-usage.html</loc>
+<lastmod>2015-08-15T00:00:00+08:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
 </url>
 
 <url>
@@ -103,7 +110,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/python/index.html</loc>
-<lastmod>2015-08-07T00:00:00+08:06</lastmod>
+<lastmod>2015-08-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -131,7 +138,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/tag/pyramid.html</loc>
-<lastmod>2015-08-07T00:00:00+08:06</lastmod>
+<lastmod>2015-08-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -145,7 +152,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>/author/eryx-lee.html</loc>
-<lastmod>2015-08-07T00:00:00+08:06</lastmod>
+<lastmod>2015-08-15T00:00:00+08:06</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>

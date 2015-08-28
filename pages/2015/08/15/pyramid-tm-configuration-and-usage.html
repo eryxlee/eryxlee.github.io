@@ -2,7 +2,7 @@
 <html lang="zh_cn">
 <head>
 
-        <title>Pyramid 的 docker 容器</title>
+        <title>pyramid_tm 配置与使用</title>
         <meta charset="utf-8" />
 
 
@@ -61,69 +61,72 @@
 
             <header>
               <h2 class="entry-title">
-                <a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark"
-                   title="Permalink to Pyramid 的 docker 容器">Pyramid 的 docker 容器</a></h2>
+                <a href="/pages/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark"
+                   title="Permalink to pyramid_tm 配置与使用">pyramid_tm 配置与使用</a></h2>
            
             </header>
             <footer class="post-info">
-              <abbr class="published" title="2015-05-12T00:00:00+08:00">
-                2015-05-12
+              <abbr class="published" title="2015-08-15T00:00:00+08:00">
+                2015-08-15
               </abbr>
               <address class="vcard author">By 
                 <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
               </address>
             </footer><!-- /.post-info -->
             <div class="entry-content">
-              <p>这是一个Pyramid项目的docker 框架，它由docker compose来管理多个pyramid项目需要用到的容器。</p>
-<p>但因pyramid还有一些像python setup.py develop、initialize_db之类的项目初始化命令，在pyramid本身功能上的整合还不理想。</p>
-<p>另，因pypi在国内访问很慢，可以替换到豆瓣的源。</p>
-<h3>1. 启动</h3>
-<div class="highlight"><pre><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span>  启动整个系统
-<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span> <span class="n">mysql</span>  单独启动<span class="n">mysql</span>容器
+              <p>Pyramid_tm 是一个专门负责request事务处理的tween，可以通过简单的配置为request提供事务支持。而且，除了普通的事务管理之外，pyramid_tm还提供了另外几个有意思的小功能。</p>
+<h3>1. 配置定制Transaction Manager</h3>
+<p>如果对系统默认的事务管理器不满的话，可以定制一个专门的事务管理器，然后通过配置方式嵌入到系统中。</p>
+<div class="highlight"><pre><span class="n">import</span> <span class="n">transaction</span>
+
+<span class="n">def</span> <span class="n">manager_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">transaction</span><span class="p">.</span><span class="n">TransactionManager</span><span class="p">()</span>
 </pre></div>
 
 
-<p>注意，这里容器的名字是系统按照目录名，容器名，序号自动生成的，不能自己定义名字，参见https://github.com/docker/compose/issues/652</p>
-<h3>2. 进入MySQL</h3>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">link</span> <span class="n">pyramid_mysql_1</span><span class="p">:</span><span class="n">mysql</span> <span class="o">--</span><span class="n">rm</span> <span class="n">mysql</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;exec mysql -h mysql -P 3306 -uroot -p&#39;</span>
+<p>定义了hook之后，就可以在程序中或ini文件中通过简单的配置启用它：</p>
+<div class="highlight"><pre><span class="n">settings</span><span class="p">[</span><span class="s">&#39;tm.manager_hook&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">manager_hook</span>
 </pre></div>
 
 
-<h3>3. 进入Redis</h3>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">link</span> <span class="n">pyramid_redis_1</span><span class="p">:</span><span class="n">redis</span> <span class="o">--</span><span class="n">rm</span> <span class="n">redis</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;exec redis-cli -h redis -p 6379&#39;</span>
+<h3>2. 定义启用规则</h3>
+<p>启用了事务管理之后，如果有些特殊的request不希望使用默认的事务管理，也可以通过配置一个是否启用的钩子来达到这个目的：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">activate_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="n">path_info</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;/long-poll&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">False</span>
+    <span class="k">return</span> <span class="n">True</span>
 </pre></div>
 
 
-<h3>4. Pyramid项目管理</h3>
-<p>创建一个新的pyramid项目</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">volumes</span><span class="o">-</span><span class="n">from</span> <span class="n">pyramid_app_1</span> <span class="o">--</span><span class="n">rm</span> <span class="n">pyramid_app</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;pcreate -t alchemy mytest&#39;</span>
+<p>然后向系统配置这个钩子：</p>
+<div class="highlight"><pre><span class="n">settings</span><span class="p">[</span><span class="s">&#39;tm.activate_hook&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">activate_hook</span>
 </pre></div>
 
 
-<p>运行python setup.py develop</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">exec</span> <span class="n">pyramid_app_1</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;cd mytest;python setup.py develop&#39;</span>
+<h3>3. 定义一票否决规则</h3>
+<p>有的时候我们的程序会捕获部分异常，然后输出一些定制的页面，这样怎么通知系统不要提交事务呢？pyramid_tm还提供了一个一票否决的钩子：</p>
+<div class="highlight"><pre><span class="n">def</span> <span class="n">default_commit_veto</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="n">xtm</span> <span class="p">=</span> <span class="n">response</span><span class="p">.</span><span class="n">headers</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;x-tm&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xtm</span> <span class="n">is</span> <span class="n">not</span> <span class="n">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">xtm</span> !<span class="p">=</span> <span class="s">&#39;commit&#39;</span>
+    <span class="k">return</span> <span class="n">response</span><span class="p">.</span><span class="n">status</span><span class="p">.</span><span class="n">startswith</span><span class="p">((</span><span class="s">&#39;4&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">))</span>
 </pre></div>
 
 
-<p>初始化数据库</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">exec</span> <span class="n">pyramid_app_1</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;cd mytest;initialize_mytest_db development.ini&#39;</span>
+<p>上面的钩子就是通过判断response中的一些特殊信息，来决定是否需要提交事务。
+同样，通过配置启用它。</p>
+<div class="highlight"><pre><span class="n">settings</span><span class="p">[</span><span class="s">&#39;tm.commit_veto&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#39;pyramid_tm.default_commit_veto&#39;</span>
 </pre></div>
 
 
-<p>启动pyramid项目</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">exec</span> <span class="n">pyramid_app_1</span> <span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s">&#39;cd mytest;pserve development.ini&#39;</span>
-</pre></div>
-
-
-<p>进入pyramid项目</p>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">exec</span> <span class="n">pyramid_app_1</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span>
-</pre></div>
+<h3>4. 定义重试次数</h3>
+<p>pyramid_tm还提供了一个有趣的功能，就是request重试。有点时候，系统会有些短暂的异常，这一次request出错了，下一次可能就会正常了。这个时候，我们就可以用 tm.attempts 这个参数来决定重试的次数，一般设置 2-3 次就差不多了。那么，哪些异常才算是短暂的异常，会触发重试呢？transaction中提供了一个特别的异常transaction.interfaces.TransientError，只要继承了它就可以了。</p>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
               <div id="disqus_thread"></div>
               <script type="text/javascript">
-                var disqus_identifier = "pages/2015/05/12/docker-pyramid.html";
+                var disqus_identifier = "pages/2015/08/15/pyramid-tm-configuration-and-usage.html";
                 (function() {
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
                 dsq.src = 'http://eryxlee.disqus.com/embed.js';
