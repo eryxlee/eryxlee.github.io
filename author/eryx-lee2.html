@@ -2,7 +2,7 @@
 <html lang="zh_cn">
 <head>
 
-        <title>MySQL docker image 的简单用法</title>
+        <title>Learning & Thoughts - Articles by Eryx Lee</title>
         <meta charset="utf-8" />
 
 
@@ -53,73 +53,69 @@
               </ul>
             </div>
 
-<section id="content" class="body">
+<section id="content">
+<h2>Articles by Eryx Lee</h2>
+
 
    <div class="row">
+
+
         <div class="eleven columns">
-
-
-            <header>
-              <h2 class="entry-title">
-                <a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark"
-                   title="Permalink to MySQL docker image 的简单用法">MySQL docker image 的简单用法</a></h2>
-           
-            </header>
-            <footer class="post-info">
-              <abbr class="published" title="2015-04-25T00:00:00+08:00">
-                2015-04-25
-              </abbr>
-              <address class="vcard author">By 
-                <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
-              </address>
-            </footer><!-- /.post-info -->
-            <div class="entry-content">
-              <p>自从有了Docker compose，各种开发、测试等环境的搭建就变成了一件很简单的事情。因此，趁着周末有时间，准备使用docker compose搭建一个Pyramid的开发环境。
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">MySQL docker image 的简单用法</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-04-25T00:00:00+08:00"> 2015-04-25 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>自从有了Docker compose，各种开发、测试等环境的搭建就变成了一件很简单的事情。因此，趁着周末有时间，准备使用docker compose搭建一个Pyramid的开发环境。
 整个搭建过程都很简单，不过在使用MySQL的官方image时，也遇到了几个小问题，简单做个记录。</p>
 <h3>1. 使用最新的image</h3>
 <p>因原来使用的MySQL是一个确定的版本，因此在使用image时，也指定了数据库的版本作为tag，结果说明里面的几个属性一直在出各种各样的问题，换成last的image，一切正常。</p>
 <h3>2. 注意数据目录</h3>
 <p>因为将数据目录映射到了host上，因此instance关掉，删除之后，数据文件还是保留在硬盘上的，如果之前的配置中出现过错误，就会影响后面的instance。在搭建过程中，就有一次发现mysql目录变成了root权限，结果在启动过程中一直报错误：mysql_1 | ERROR: 1005  Can't create table 'db' (errno: 13)</p>
 <h3>3. 新建数据库、用户</h3>
-<p>该image只有在没有发现"$DATADIR/mysql"这个目录下，才会去初始化数据库、设置root密码，新建数据库，用户。不过在compse文件里指定一个新建数据库名称这种方式还是很适合项目框架搭建的。</p>
-<h3>4. 如果之前的构建出现错误，最好删除干净</h3>
-<p>一旦出现了错误，最好将db目录，docker instance等都删除干净了再试</p>
-<h3>5. my.cnf</h3>
-<p>该image不推荐直接配置my.cnf，而是在conf.d新建自己的配置文件，然后映射到实例中。</p>
-<p>最后，生成的compose文件片段如下：</p>
-<div class="highlight"><pre><span class="n">mysql</span><span class="o">:</span>
-    <span class="n">image</span><span class="o">:</span> <span class="s2">&quot;mysql&quot;</span>
-    <span class="n">volumes</span><span class="o">:</span>
-        <span class="o">-</span> <span class="n">db</span><span class="o">:/</span><span class="n">var</span><span class="sr">/lib/</span><span class="n">mysql</span>
-        <span class="o">-</span> <span class="n">conf</span><span class="sr">/mysql:/etc/mysql/</span><span class="n">conf</span><span class="o">.</span><span class="na">d</span>
-    <span class="n">expose</span><span class="o">:</span>
-        <span class="o">-</span> <span class="s2">&quot;3306&quot;</span>
-    <span class="n">environment</span><span class="o">:</span>
-        <span class="o">-</span> <span class="n">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="mi">123456</span>
-        <span class="o">-</span> <span class="n">MYSQL_DATABASE</span><span class="o">=</span><span class="n">dquiz</span>
-        <span class="o">-</span> <span class="n">MYSQL_USER</span><span class="o">=</span><span class="n">dquiz</span>
-        <span class="o">-</span> <span class="n">MYSQL_PASSWORD</span><span class="o">=</span><span class="n">dquiz123</span>
-</pre></div>
+<p>该image只有在没有发现"$DATADIR/mysql"这个目录下，才会去初始化数据库、设置root密码 ...</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">Read more <i class="icon-arrow-right"></i></a></div>
 
 
-<p>其中MYSQL_DATABASE定义了该项目的数据库名，MYSQL_USER、MYSQL_PASSWORD为该数据库对应的用户名、密码</p>
-            </div><!-- /.entry-content -->
-            <div class="comments">
-              <h3>Comments</h3>
-              <div id="disqus_thread"></div>
-              <script type="text/javascript">
-                var disqus_identifier = "pages/2015/04/25/docker-mysql-compose.html";
-                (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = 'http://eryxlee.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                })();
-              </script>
-            </div>
 
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/docker.html">docker</a>
+                                            <a class="danger label" href="/tag/mysql.html">mysql</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/04/23/old_post.html" rel="bookmark" title="Permalink to Old Posts">Old Posts</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-04-23T00:00:00+08:00"> 2015-04-23 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Old posts refer to http://blog.sina.com.cn/eryxlee</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/04/23/old_post.html" rel="bookmark" title="Permalink to Old Posts">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
-
+        
 <div class="three columns">
 <!--
 <h4>Pages</h4>
@@ -163,8 +159,11 @@
 
 </div> </div><!-- /.row -->
 
-
-</section>
+<p class="paginator">
+            <a href="/author/eryx-lee.html"><i class="icon-arrow-left"></i></a>
+    Page 2 / 2
+</p>
+</section><!-- /#content -->
 
        </div><!-- /.row -->
     </div><!-- /.container -->
