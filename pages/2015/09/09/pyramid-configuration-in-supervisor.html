@@ -2,7 +2,7 @@
 <html lang="zh_cn">
 <head>
 
-        <title>pyramid_tm 配置与使用</title>
+        <title>在Supervisor中配置Pyramid项目</title>
         <meta charset="utf-8" />
 
 
@@ -61,72 +61,91 @@
 
             <header>
               <h2 class="entry-title">
-                <a href="/pages/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark"
-                   title="Permalink to pyramid_tm 配置与使用">pyramid_tm 配置与使用</a></h2>
+                <a href="/pages/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark"
+                   title="Permalink to 在Supervisor中配置Pyramid项目">在Supervisor中配置Pyramid项目</a></h2>
            
             </header>
             <footer class="post-info">
-              <abbr class="published" title="2015-08-15T00:00:00+08:00">
-                2015-08-15
+              <abbr class="published" title="2015-09-09T00:00:00+08:00">
+                2015-09-09
               </abbr>
               <address class="vcard author">By 
                 <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
               </address>
             </footer><!-- /.post-info -->
             <div class="entry-content">
-              <p>Pyramid_tm 是一个专门负责request事务处理的tween，可以通过简单的配置为request提供事务支持。而且，除了普通的事务管理之外，pyramid_tm还提供了另外几个有意思的小功能。</p>
-<h3>1. 配置定制Transaction Manager</h3>
-<p>如果对系统默认的事务管理器不满的话，可以定制一个专门的事务管理器，然后通过配置方式嵌入到系统中。</p>
-<div class="highlight"><pre><span class="n">import</span> <span class="n">transaction</span>
-
-<span class="n">def</span> <span class="n">manager_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">transaction</span><span class="p">.</span><span class="n">TransactionManager</span><span class="p">()</span>
+              <p>Supervisor是一个很不错的进程管理工具，pyramid项目也能很简单的配置成Supervisor的受控项目。不过为了更好的运行pyramid程序，在正常的配置之后，还有几点地方值得注意一下。</p>
+<h3>1. 配置环境变量</h3>
+<p>pyramid项目中一个很讨厌的地方就是一旦部署到一个新的地方，就需要python setup.py develop一番，特别是在类似Docker之类的地方部署时就显得很多余，放哪里运行都不合适。其实我们完全可以通过配置PYTHONPATH环境变量来避免这种运行方式。如下：</p>
+<div class="highlight"><pre><span class="k">[program:mytest]</span>
+<span class="na">environment</span><span class="o">=</span><span class="s">PYTHONPATH=&quot;/source/MyTest&quot;</span>
+<span class="na">command</span><span class="o">=</span><span class="s">pserve development.ini</span>
+<span class="na">process_name</span><span class="o">=</span><span class="s">mytest</span>
+<span class="na">numprocs</span><span class="o">=</span><span class="s">1</span>
+<span class="na">directory</span><span class="o">=</span><span class="s">/source/MyTest</span>
+<span class="na">priority</span><span class="o">=</span><span class="s">200</span>
+<span class="na">autostart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">autorestart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">startsecs</span><span class="o">=</span><span class="s">15</span>
+<span class="na">startretries</span><span class="o">=</span><span class="s">5</span>
 </pre></div>
 
 
-<p>定义了hook之后，就可以在程序中或ini文件中通过简单的配置启用它：</p>
-<div class="highlight"><pre><span class="n">settings</span><span class="p">[</span><span class="s">&#39;tm.manager_hook&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">manager_hook</span>
+<p>这里通过环境变量配置项把项目目录加入到了PYTHONPATH中，这样没有运行setup.py也不会报找不到包了。不过这种情况需要特别注意：</p>
+<ul>
+<li>项目中使用了的包不要忘了安装。</li>
+<li>不要忘了egg_info目录，有的时候从代码管理系统中取回的代码是没egg_info目录的</li>
+</ul>
+<h3>2. 运行多个实例</h3>
+<p>有的时候需要为一个项目配置多个实例，运行在不同的端口之上。</p>
+<p>首先，在development.ini中将port参数化：</p>
+<div class="highlight"><pre><span class="k">[server:main]</span>
+<span class="na">use</span> <span class="o">=</span> <span class="s">egg:waitress#main</span>
+<span class="na">host</span> <span class="o">=</span> <span class="s">127.0.0.1</span>
+<span class="na">port</span> <span class="o">=</span> <span class="s">%(http_port)s</span>
 </pre></div>
 
 
-<h3>2. 定义启用规则</h3>
-<p>启用了事务管理之后，如果有些特殊的request不希望使用默认的事务管理，也可以通过配置一个是否启用的钩子来达到这个目的：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">activate_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="n">path_info</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;/long-poll&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">False</span>
-    <span class="k">return</span> <span class="n">True</span>
+<p>然后，在Supervisor中对应的配置文件传入端口号，同时将process_name也做一个区分：</p>
+<div class="highlight"><pre><span class="k">[program:mytest]</span>
+<span class="na">environment</span><span class="o">=</span><span class="s">PYTHONPATH=&quot;/source/MyTest&quot;</span>
+<span class="na">command</span><span class="o">=</span><span class="s">pserve development.ini http_port=50%(process_num)02d</span>
+<span class="na">process_name</span><span class="o">=</span><span class="s">%(program_name)s-%(process_num)01d</span>
+<span class="na">numprocs</span><span class="o">=</span><span class="s">2</span>
+<span class="na">numprocs_start</span><span class="o">=</span><span class="s">0</span>
+<span class="na">directory</span><span class="o">=</span><span class="s">/source/MyTest</span>
+<span class="na">priority</span><span class="o">=</span><span class="s">200</span>
+<span class="na">autostart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">autorestart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">startsecs</span><span class="o">=</span><span class="s">15</span>
+<span class="na">startretries</span><span class="o">=</span><span class="s">5</span>
 </pre></div>
 
 
-<p>然后向系统配置这个钩子：</p>
-<div class="highlight"><pre><span class="n">settings</span><span class="p">[</span><span class="s">&#39;tm.activate_hook&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">activate_hook</span>
+<h3>3. 延时命令</h3>
+<p>因Supervisor没有任务依赖关系，在有些场景下，只能把某些任务延迟一段时间运行。</p>
+<div class="highlight"><pre><span class="k">[program:mytest]</span>
+<span class="na">environment</span><span class="o">=</span><span class="s">PYTHONPATH=&quot;/source/MyTest&quot;</span>
+<span class="na">command</span><span class="o">=</span><span class="s">bash -c &#39;sleep 15 &amp;&amp; pserve development.ini&#39;</span>
+<span class="na">process_name</span><span class="o">=</span><span class="s">mytest</span>
+<span class="na">numprocs</span><span class="o">=</span><span class="s">1</span>
+<span class="na">directory</span><span class="o">=</span><span class="s">/source/MyTest</span>
+<span class="na">priority</span><span class="o">=</span><span class="s">200</span>
+<span class="na">autostart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">autorestart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">startsecs</span><span class="o">=</span><span class="s">15</span>
+<span class="na">startretries</span><span class="o">=</span><span class="s">5</span>
 </pre></div>
 
 
-<h3>3. 定义一票否决规则</h3>
-<p>有的时候我们的程序会捕获部分异常，然后输出一些定制的页面，这样怎么通知系统不要提交事务呢？pyramid_tm还提供了一个一票否决的钩子：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">default_commit_veto</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
-    <span class="n">xtm</span> <span class="p">=</span> <span class="n">response</span><span class="p">.</span><span class="n">headers</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;x-tm&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">xtm</span> <span class="n">is</span> <span class="n">not</span> <span class="n">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">xtm</span> !<span class="p">=</span> <span class="s">&#39;commit&#39;</span>
-    <span class="k">return</span> <span class="n">response</span><span class="p">.</span><span class="n">status</span><span class="p">.</span><span class="n">startswith</span><span class="p">((</span><span class="s">&#39;4&#39;</span><span class="p">,</span> <span class="s">&#39;5&#39;</span><span class="p">))</span>
-</pre></div>
-
-
-<p>上面的钩子就是通过判断response中的一些特殊信息，来决定是否需要提交事务。
-同样，通过配置启用它。</p>
-<div class="highlight"><pre><span class="n">settings</span><span class="p">[</span><span class="s">&#39;tm.commit_veto&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#39;pyramid_tm.default_commit_veto&#39;</span>
-</pre></div>
-
-
-<h3>4. 定义重试次数</h3>
-<p>pyramid_tm还提供了一个有趣的功能，就是request重试。有点时候，系统会有些短暂的异常，这一次request出错了，下一次可能就会正常了。这个时候，我们就可以用 tm.attempts 这个参数来决定重试的次数，一般设置 2-3 次就差不多了。那么，哪些异常才算是短暂的异常，会触发重试呢？transaction中提供了一个特别的异常transaction.interfaces.TransientError，只要继承了它就可以了。</p>
+<h3>4.配置gunicorn</h3>
+<p>安装gunicorn之后，使用command=gunicorn --paster development.ini即可</p>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
               <div id="disqus_thread"></div>
               <script type="text/javascript">
-                var disqus_identifier = "pages/2015/08/15/pyramid-tm-configuration-and-usage.html";
+                var disqus_identifier = "pages/2015/09/09/pyramid-configuration-in-supervisor.html";
                 (function() {
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
                 dsq.src = 'http://eryxlee.disqus.com/embed.js';

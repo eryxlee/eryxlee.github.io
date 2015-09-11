@@ -63,6 +63,48 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">在Supervisor中配置Pyramid项目</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-09-09T00:00:00+08:00"> 2015-09-09 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Supervisor是一个很不错的进程管理工具，pyramid项目也能很简单的配置成Supervisor的受控项目。不过为了更好的运行pyramid程序，在正常的配置之后，还有几点地方值得注意一下。</p>
+<h3>1. 配置环境变量</h3>
+<p>pyramid项目中一个很讨厌的地方就是一旦部署到一个新的地方，就需要python setup.py develop一番，特别是在类似Docker之类的地方部署时就显得很多余，放哪里运行都不合适。其实我们完全可以通过配置PYTHONPATH环境变量来避免这种运行方式。如下：</p>
+<div class="highlight"><pre><span class="k">[program:mytest]</span>
+<span class="na">environment</span><span class="o">=</span><span class="s">PYTHONPATH=&quot;/source/MyTest&quot;</span>
+<span class="na">command</span><span class="o">=</span><span class="s">pserve development.ini</span>
+<span class="na">process_name</span><span class="o">=</span><span class="s">mytest</span>
+<span class="na">numprocs</span><span class="o">=</span><span class="s">1</span>
+<span class="na">directory</span><span class="o">=</span><span class="s">/source/MyTest</span>
+<span class="na">priority</span><span class="o">=</span><span class="s">200</span>
+<span class="na">autostart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">autorestart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">startsecs</span><span class="o">=</span><span class="s">15</span>
+<span class="na">startretries</span><span class="o">=</span><span class="s">5</span>
+</pre></div>
+
+
+<p>这里通过环境变量配置项把项目目录加入到了PYTHONPATH中，这样没有运行setup.py也不会报找不到包了。不过这种情况需要特别注意：</p>
+<ul>
+<li>项目中使用了的包不要忘了安装。</li>
+<li>不要忘了egg_info目录，有的时候从代码管理系统中取回的代码是没egg_info目录的 ...</li></ul> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark" title="Permalink to pyramid_tm 配置与使用">pyramid_tm 配置与使用</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-15T00:00:00+08:00"> 2015-08-15 </abbr>
@@ -294,9 +336,9 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-2"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
 	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/pyramid.html">pyramid</a></li>
 	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
 </ul>
 

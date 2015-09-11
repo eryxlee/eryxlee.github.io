@@ -63,6 +63,48 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">在Supervisor中配置Pyramid项目</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-09-09T00:00:00+08:00"> 2015-09-09 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Supervisor是一个很不错的进程管理工具，pyramid项目也能很简单的配置成Supervisor的受控项目。不过为了更好的运行pyramid程序，在正常的配置之后，还有几点地方值得注意一下。</p>
+<h3>1. 配置环境变量</h3>
+<p>pyramid项目中一个很讨厌的地方就是一旦部署到一个新的地方，就需要python setup.py develop一番，特别是在类似Docker之类的地方部署时就显得很多余，放哪里运行都不合适。其实我们完全可以通过配置PYTHONPATH环境变量来避免这种运行方式。如下：</p>
+<div class="highlight"><pre><span class="k">[program:mytest]</span>
+<span class="na">environment</span><span class="o">=</span><span class="s">PYTHONPATH=&quot;/source/MyTest&quot;</span>
+<span class="na">command</span><span class="o">=</span><span class="s">pserve development.ini</span>
+<span class="na">process_name</span><span class="o">=</span><span class="s">mytest</span>
+<span class="na">numprocs</span><span class="o">=</span><span class="s">1</span>
+<span class="na">directory</span><span class="o">=</span><span class="s">/source/MyTest</span>
+<span class="na">priority</span><span class="o">=</span><span class="s">200</span>
+<span class="na">autostart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">autorestart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">startsecs</span><span class="o">=</span><span class="s">15</span>
+<span class="na">startretries</span><span class="o">=</span><span class="s">5</span>
+</pre></div>
+
+
+<p>这里通过环境变量配置项把项目目录加入到了PYTHONPATH中，这样没有运行setup.py也不会报找不到包了。不过这种情况需要特别注意：</p>
+<ul>
+<li>项目中使用了的包不要忘了安装。</li>
+<li>不要忘了egg_info目录，有的时候从代码管理系统中取回的代码是没egg_info目录的 ...</li></ul> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/08/31/sqlalchemy-many-to-many-ordering.html" rel="bookmark" title="Permalink to SQLAlchemy many to many的排序问题">SQLAlchemy many to many的排序问题</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-31T00:00:00+08:00"> 2015-08-31 </abbr>
@@ -413,40 +455,6 @@
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Pyramid 的 docker 容器</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2015-05-12T00:00:00+08:00"> 2015-05-12 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>这是一个Pyramid项目的docker 框架，它由docker compose来管理多个pyramid项目需要用到的容器。</p>
-<p>但因pyramid还有一些像python setup.py develop、initialize_db之类的项目初始化命令，在pyramid本身功能上的整合还不理想。</p>
-<p>另，因pypi在国内访问很慢，可以替换到豆瓣的源。</p>
-<h3>1. 启动</h3>
-<div class="highlight"><pre><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span>  启动整个系统
-<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span> <span class="n">mysql</span>  单独启动<span class="n">mysql</span>容器
-</pre></div>
-
-
-<p>注意，这里容器的名字是系统按照目录名，容器名，序号自动生成的，不能自己定义名字，参见https://github.com/docker/compose/issues/652</p>
-<h3>2. 进入MySQL</h3>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">link</span> <span class="n">pyramid_mysql_1</span><span class="p">:</span><span class="n">mysql ...</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/docker.html">docker</a>
-                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -470,9 +478,9 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-2"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
 	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/pyramid.html">pyramid</a></li>
 	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
 </ul>
 
