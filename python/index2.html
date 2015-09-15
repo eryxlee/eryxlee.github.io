@@ -2,7 +2,7 @@
 <html lang="zh_cn">
 <head>
 
-        <title>SQLAlchemy 无主键、复合主键的处理</title>
+        <title>Learning & Thoughts</title>
         <meta charset="utf-8" />
 
 
@@ -53,28 +53,24 @@
               </ul>
             </div>
 
-<section id="content" class="body">
+<section id="content">
+<h2>Articles in the python category</h2>
+
 
    <div class="row">
+
+
         <div class="eleven columns">
-
-
-            <header>
-              <h2 class="entry-title">
-                <a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark"
-                   title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2>
-           
-            </header>
-            <footer class="post-info">
-              <abbr class="published" title="2015-05-19T00:00:00+08:00">
-                2015-05-19
-              </abbr>
-              <address class="vcard author">By 
-                <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
-              </address>
-            </footer><!-- /.post-info -->
-            <div class="entry-content">
-              <p>SQLAlchemy ORM定义中一张表必须要有primary key，最通常的就是定义一个id字段，并设置成主键，如果一张表在OR-Mapping时没有定义主键程序就会报错。</p>
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-05-19T00:00:00+08:00"> 2015-05-19 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>SQLAlchemy ORM定义中一张表必须要有primary key，最通常的就是定义一个id字段，并设置成主键，如果一张表在OR-Mapping时没有定义主键程序就会报错。</p>
 <h3>1. 为什么必须要有主键</h3>
 <p>SQLAlchemy大量使用了Session，而在一个Session中存放的ORM对象都会使用一个叫identity map的数据结构唯一映射到一条具体的数据库记录，只有这样，对ORM对象的update、delete等操作才会直接反应到数据库数据上。因此，要使用SQLAlchemy ORM，主键是不可或缺的。
 但现实中，确实会存在一些表没有定义主键，或使用了复合主键，在SQLAlchemy中该怎么处理呢？</p>
@@ -86,30 +82,24 @@
     <span class="n">__tablename__</span> <span class="p">=</span> &quot;<span class="n">some_table_with_no_pk</span>&quot;
 
     <span class="n">uid</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-    <span class="n">bar</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-</pre></div>
+    <span class="n">bar ...</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">Read more <i class="icon-arrow-right"></i></a></div>
 
 
-<p>当然，也可以用__mapper_args__参数来构造复合主键，如下所示：</p>
-<div class="highlight"><pre><span class="n">__mapper_args__</span> <span class="p">=</span> <span class="p">{</span>&quot;<span class="n">primary_key</span>&quot;<span class="p">:(</span><span class="n">uid</span><span class="p">,</span> <span class="n">bar</span><span class="p">)}</span>
-</pre></div>
-            </div><!-- /.entry-content -->
-            <div class="comments">
-              <h3>Comments</h3>
-              <div id="disqus_thread"></div>
-              <script type="text/javascript">
-                var disqus_identifier = "pages/2015/05/19/SQLAlchemy-no-primary-key.html";
-                (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = 'http://eryxlee.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                })();
-              </script>
-            </div>
 
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
-
+        
 <div class="three columns">
 <!--
 <h4>Pages</h4>
@@ -154,8 +144,11 @@
 
 </div> </div><!-- /.row -->
 
-
-</section>
+<p class="paginator">
+            <a href="/python/index.html"><i class="icon-arrow-left"></i></a>
+    Page 2 / 2
+</p>
+</section><!-- /#content -->
 
        </div><!-- /.row -->
     </div><!-- /.container -->

@@ -63,6 +63,43 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">体验一下Python 3.5</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-09-15T00:00:00+08:00"> 2015-09-15 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Python 3.5终于发布了，赶紧来尝鲜一把</p>
+<div class="highlight"><pre><span class="n">FROM</span> <span class="n">alpine</span><span class="p">:</span>3<span class="p">.</span>2
+<span class="n">MAINTAINER</span> <span class="n">Eryx</span> <span class="n">Lee</span> <span class="o">&lt;</span><span class="n">eryx</span><span class="p">.</span><span class="n">lee0901</span><span class="p">@</span><span class="n">gmail</span><span class="p">.</span><span class="n">com</span><span class="o">&gt;</span>
+
+<span class="n">RUN</span> <span class="n">apk</span> <span class="o">--</span><span class="n">update</span> <span class="n">add</span> <span class="o">\</span>
+    <span class="n">bash</span> <span class="o">\</span>
+    <span class="n">build</span><span class="o">-</span><span class="n">base</span> <span class="o">\</span>
+    <span class="n">clang</span> <span class="o">\</span>
+    <span class="n">openssl</span><span class="o">-</span><span class="n">dev</span>
+
+<span class="n">VOLUME</span> <span class="o">/</span><span class="n">source</span>
+
+<span class="n">ADD</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">python</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">ftp</span><span class="o">/</span><span class="n">python</span><span class="o">/</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="o">/</span><span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span> <span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span>
+
+<span class="n">RUN</span> <span class="n">cd ...</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/docker.html">docker</a>
+                                            <a class="danger label" href="/tag/python.html">python</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Pyramid 的 docker 容器</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-05-12T00:00:00+08:00"> 2015-05-12 </abbr>
@@ -189,10 +226,11 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-2"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
 	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
+	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-4"><a href="/tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
 </ul>
 
 

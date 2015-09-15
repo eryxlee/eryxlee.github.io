@@ -63,6 +63,43 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">体验一下Python 3.5</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-09-15T00:00:00+08:00"> 2015-09-15 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Python 3.5终于发布了，赶紧来尝鲜一把</p>
+<div class="highlight"><pre><span class="n">FROM</span> <span class="n">alpine</span><span class="p">:</span>3<span class="p">.</span>2
+<span class="n">MAINTAINER</span> <span class="n">Eryx</span> <span class="n">Lee</span> <span class="o">&lt;</span><span class="n">eryx</span><span class="p">.</span><span class="n">lee0901</span><span class="p">@</span><span class="n">gmail</span><span class="p">.</span><span class="n">com</span><span class="o">&gt;</span>
+
+<span class="n">RUN</span> <span class="n">apk</span> <span class="o">--</span><span class="n">update</span> <span class="n">add</span> <span class="o">\</span>
+    <span class="n">bash</span> <span class="o">\</span>
+    <span class="n">build</span><span class="o">-</span><span class="n">base</span> <span class="o">\</span>
+    <span class="n">clang</span> <span class="o">\</span>
+    <span class="n">openssl</span><span class="o">-</span><span class="n">dev</span>
+
+<span class="n">VOLUME</span> <span class="o">/</span><span class="n">source</span>
+
+<span class="n">ADD</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">python</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">ftp</span><span class="o">/</span><span class="n">python</span><span class="o">/</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="o">/</span><span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span> <span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span>
+
+<span class="n">RUN</span> <span class="n">cd ...</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/docker.html">docker</a>
+                                            <a class="danger label" href="/tag/python.html">python</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">在Supervisor中配置Pyramid项目</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-09-09T00:00:00+08:00"> 2015-09-09 </abbr>
@@ -421,40 +458,6 @@
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2015-05-19T00:00:00+08:00"> 2015-05-19 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>SQLAlchemy ORM定义中一张表必须要有primary key，最通常的就是定义一个id字段，并设置成主键，如果一张表在OR-Mapping时没有定义主键程序就会报错。</p>
-<h3>1. 为什么必须要有主键</h3>
-<p>SQLAlchemy大量使用了Session，而在一个Session中存放的ORM对象都会使用一个叫identity map的数据结构唯一映射到一条具体的数据库记录，只有这样，对ORM对象的update、delete等操作才会直接反应到数据库数据上。因此，要使用SQLAlchemy ORM，主键是不可或缺的。
-但现实中，确实会存在一些表没有定义主键，或使用了复合主键，在SQLAlchemy中该怎么处理呢？</p>
-<h3>2. 数据库中没有主键</h3>
-<p>在数据库字段中选择几个字段，只要组合起来能够满足唯一性，非空，就可以把他们当做主键来处理，也就是说数据库中可以没有定义主键，但ORM定义中定义一个虚拟的主键，这样就转变成了复合主键的定义问题。如果找不到这样的字段组合，那么就无法使用SQLAlchemy的OR-Mapping了。</p>
-<h3>3. 复合主键的定义</h3>
-<p>SQLAlchemy的OR-Mapping中可以对多个字段定义primary_key=True，只要多个字段定义了该参数，就能构造出复合主键。</p>
-<div class="highlight"><pre><span class="n">class</span> <span class="n">SomeClass</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> &quot;<span class="n">some_table_with_no_pk</span>&quot;
-
-    <span class="n">uid</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-    <span class="n">bar ...</span></pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -478,10 +481,11 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-2"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
 	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
+	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-4"><a href="/tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
 </ul>
 
 
