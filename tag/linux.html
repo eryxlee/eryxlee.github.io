@@ -2,7 +2,7 @@
 <html lang="zh_cn">
 <head>
 
-        <title>SQLAlchemy 无主键、复合主键的处理</title>
+        <title>Learning & Thoughts - linux</title>
         <meta charset="utf-8" />
 
 
@@ -53,63 +53,50 @@
               </ul>
             </div>
 
-<section id="content" class="body">
+<section id="content">
+
+
 
    <div class="row">
+
+
         <div class="eleven columns">
-
-
-            <header>
-              <h2 class="entry-title">
-                <a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark"
-                   title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2>
-           
-            </header>
-            <footer class="post-info">
-              <abbr class="published" title="2015-05-19T00:00:00+08:00">
-                2015-05-19
-              </abbr>
-              <address class="vcard author">By 
-                <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
-              </address>
-            </footer><!-- /.post-info -->
-            <div class="entry-content">
-              <p>SQLAlchemy ORM定义中一张表必须要有primary key，最通常的就是定义一个id字段，并设置成主键，如果一张表在OR-Mapping时没有定义主键程序就会报错。</p>
-<h3>1. 为什么必须要有主键</h3>
-<p>SQLAlchemy大量使用了Session，而在一个Session中存放的ORM对象都会使用一个叫identity map的数据结构唯一映射到一条具体的数据库记录，只有这样，对ORM对象的update、delete等操作才会直接反应到数据库数据上。因此，要使用SQLAlchemy ORM，主键是不可或缺的。
-但现实中，确实会存在一些表没有定义主键，或使用了复合主键，在SQLAlchemy中该怎么处理呢？</p>
-<h3>2. 数据库中没有主键</h3>
-<p>在数据库字段中选择几个字段，只要组合起来能够满足唯一性，非空，就可以把他们当做主键来处理，也就是说数据库中可以没有定义主键，但ORM定义中定义一个虚拟的主键，这样就转变成了复合主键的定义问题。如果找不到这样的字段组合，那么就无法使用SQLAlchemy的OR-Mapping了。</p>
-<h3>3. 复合主键的定义</h3>
-<p>SQLAlchemy的OR-Mapping中可以对多个字段定义primary_key=True，只要多个字段定义了该参数，就能构造出复合主键。</p>
-<div class="highlight"><pre><span class="n">class</span> <span class="n">SomeClass</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> &quot;<span class="n">some_table_with_no_pk</span>&quot;
-
-    <span class="n">uid</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-    <span class="n">bar</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">[转]Print all 256 colors for testing TERM or for a quick reference</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-10-10T00:00:00+08:00"> 2015-10-10 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>记一个比较有用的命令，转自<a href="http://www.commandlinefu.com/commands/view/6533/print-all-256-colors-for-testing-term-or-for-a-quick-reference">commandlinefu</a></p>
+<div class="highlight"><pre>( x=`tput op` y=`printf %$((<span class="cp">${</span><span class="n">COLUMNS</span><span class="cp">}</span>-6))s`;for i in {0..256};do o=00<span class="nv">$i</span>;echo -e <span class="cp">${</span><span class="n">o</span><span class="p">:</span><span class="err">$</span><span class="p">{</span><span class="c">#o</span><span class="cp">}</span>-3:3} `tput setaf <span class="nv">$i</span>;tput setab <span class="nv">$i</span>`<span class="cp">${</span><span class="n">y</span><span class="o">//</span> <span class="o">/=</span><span class="cp">}</span><span class="nv">$x</span>;done; )
 </pre></div>
 
 
-<p>当然，也可以用__mapper_args__参数来构造复合主键，如下所示：</p>
-<div class="highlight"><pre><span class="n">__mapper_args__</span> <span class="p">=</span> <span class="p">{</span>&quot;<span class="n">primary_key</span>&quot;<span class="p">:(</span><span class="n">uid</span><span class="p">,</span> <span class="n">bar</span><span class="p">)}</span>
-</pre></div>
-            </div><!-- /.entry-content -->
-            <div class="comments">
-              <h3>Comments</h3>
-              <div id="disqus_thread"></div>
-              <script type="text/javascript">
-                var disqus_identifier = "pages/2015/05/19/SQLAlchemy-no-primary-key.html";
-                (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = 'http://eryxlee.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                })();
-              </script>
-            </div>
+<p>也可以写出函数放入到.bash_profile中：</p>
+<div class="highlight"><pre>aa_256 ()
+{
+( x=`tput op` y=`printf %$((<span class="cp">${</span><span class="n">COLUMNS</span><span class="cp">}</span>-6))s`;
+for i in {0 ...</pre></div> </div><!-- /.entry-content -->
 
+                                <div class="medium primary btn"><a href="/pages/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/linux.html">linux</a>
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
-
+        
 <div class="three columns">
 <!--
 <h4>Pages</h4>
@@ -155,8 +142,10 @@
 
 </div> </div><!-- /.row -->
 
-
-</section>
+<p class="paginator">
+    Page 1 / 1
+</p>
+</section><!-- /#content -->
 
        </div><!-- /.row -->
     </div><!-- /.container -->

@@ -63,6 +63,37 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">[转]Print all 256 colors for testing TERM or for a quick reference</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-10-10T00:00:00+08:00"> 2015-10-10 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>记一个比较有用的命令，转自<a href="http://www.commandlinefu.com/commands/view/6533/print-all-256-colors-for-testing-term-or-for-a-quick-reference">commandlinefu</a></p>
+<div class="highlight"><pre>( x=`tput op` y=`printf %$((<span class="cp">${</span><span class="n">COLUMNS</span><span class="cp">}</span>-6))s`;for i in {0..256};do o=00<span class="nv">$i</span>;echo -e <span class="cp">${</span><span class="n">o</span><span class="p">:</span><span class="err">$</span><span class="p">{</span><span class="c">#o</span><span class="cp">}</span>-3:3} `tput setaf <span class="nv">$i</span>;tput setab <span class="nv">$i</span>`<span class="cp">${</span><span class="n">y</span><span class="o">//</span> <span class="o">/=</span><span class="cp">}</span><span class="nv">$x</span>;done; )
+</pre></div>
+
+
+<p>也可以写出函数放入到.bash_profile中：</p>
+<div class="highlight"><pre>aa_256 ()
+{
+( x=`tput op` y=`printf %$((<span class="cp">${</span><span class="n">COLUMNS</span><span class="cp">}</span>-6))s`;
+for i in {0 ...</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/linux.html">linux</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Pyramid 的 docker 容器</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-05-12T00:00:00+08:00"> 2015-05-12 </abbr>
@@ -189,11 +220,12 @@
 
 <h4>Tags</h4>
 	<ul>
+	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
+	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-4"><a href="/tag/python.html">python</a></li>
 	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
 	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-4"><a href="/tag/python.html">python</a></li>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
 </ul>
 
 
