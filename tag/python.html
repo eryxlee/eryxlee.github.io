@@ -63,6 +63,44 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/10/15/the-order-of-ordereddict.html" rel="bookmark" title="Permalink to OrderedDict的顺序问题">OrderedDict的顺序问题</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-10-15T00:00:00+08:00"> 2015-10-15 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>一直比较习惯用类似</p>
+<div class="highlight"><pre>data = dict(f=12, a=5, e=6)
+</pre></div>
+
+
+<p>这种方式来初始化字典。有一次需要用到排序的字典类型，就想当然的写了</p>
+<div class="highlight"><pre>data = collections.OrderedDict(f=12, a=5, e=6)
+</pre></div>
+
+
+<p>总以为这样传入参数形成的字典也是按指定的顺序排序的，结果得到的却是：</p>
+<div class="highlight"><pre>OrderedDict([(&#39;a&#39;, 5), (&#39;e&#39;, 6), (&#39;f&#39;, 12)])
+</pre></div>
+
+
+<p>OrderedDict的初始化参数竟然是没有排序的！！！</p>
+<p>The signature is the same as regular dictionaries, but keyword arguments are not recommended because their insertion order is ...</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/10/15/the-order-of-ordereddict.html" rel="bookmark" title="Permalink to OrderedDict的顺序问题">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/python.html">python</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">体验一下Python 3.5</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-09-15T00:00:00+08:00"> 2015-09-15 </abbr>
@@ -122,12 +160,12 @@
 
 <h4>Tags</h4>
 	<ul>
+	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
 	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
 	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-4"><a href="/tag/python.html">python</a></li>
 	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 
