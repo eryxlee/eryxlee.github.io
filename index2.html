@@ -63,6 +63,38 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">sqlalchemy中怎么使用IS NULL条件</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-01T00:00:00+08:00"> 2015-08-01 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>在使用sqlalchemy过程中，不小心犯了个小错误：在看一个查询语句时，发现一个从句 A.status == None 提示有PEP8警告，就好心改成了A.status is None。结果，单元测试各种出错。一看生成的SQl语句，发现status is null这个从句没有生成，这是为什么呢？</p>
+<p>仔细看看代码，终于发现A.status is None肯定是假值，在or从句中，被自动忽略了。</p>
+<p>那么，这里怎么写才能避免PEP8警告呢？通过查看SQLAlchemy的文档，可以看到如下用法：</p>
+<div class="highlight"><pre>query.filter(User.name == None)
+
+# alternatively, if pep8/linters are a concern
+query.filter(User.name.is_(None))
+</pre></div>
+
+
+<p>好了，没警告了 ...</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">使用Pyramid机制完成API的多格式输出（续）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-07-23T00:00:00+08:00"> 2015-07-23 </abbr>
@@ -72,23 +104,23 @@
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>在上一篇文章中，简单归纳了pyramid中3种格式化输出的方式，不过在实际使用过程中，还有另外一种方式：即view的处理中也稍有不同，这样就需要对同一个URL写两个不同的view。</p>
 <p>首先，在main函数中加入一个route的Predicate。</p>
-<div class="highlight"><pre><span class="n">config</span><span class="p">.</span><span class="n">add_route_predicate</span><span class="p">(</span><span class="s">&#39;format&#39;</span><span class="p">,</span> <span class="n">FormatPredicate</span><span class="p">)</span>
+<div class="highlight"><pre>config.add_route_predicate(&#39;format&#39;, FormatPredicate)
 </pre></div>
 
 
 <p>另外，route定义也要做一定的变换。</p>
-<div class="highlight"><pre>    <span class="n">config</span><span class="p">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;api4_json&#39;</span><span class="p">,</span> <span class="s">&#39;/api4&#39;</span><span class="p">,</span> <span class="n">format</span><span class="p">=</span>&quot;<span class="n">json</span>&quot;<span class="p">)</span>
-    <span class="n">config</span><span class="p">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;api4_txt&#39;</span><span class="p">,</span> <span class="s">&#39;/api4&#39;</span><span class="p">,</span> <span class="n">format</span><span class="p">=</span>&quot;<span class="n">txt</span>&quot;<span class="p">)</span>
+<div class="highlight"><pre>    config.add_route(&#39;api4_json&#39;, &#39;/api4&#39;, format=&quot;json&quot;)
+    config.add_route(&#39;api4_txt&#39;, &#39;/api4&#39;, format=&quot;txt&quot;)
 </pre></div>
 
 
 <p>这样，就可以定义两个不同的view了。</p>
-<div class="highlight"><pre><span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api4_json&#39;</span><span class="p">,</span> <span class="n">request_method</span><span class="p">=</span>&quot;<span class="n">POST</span>&quot;<span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;myjson&#39;</span><span class="p">)</span>
-<span class="n">def</span> <span class="n">api4_json_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">pass</span>
+<div class="highlight"><pre>@view_config(route_name=&#39;api4_json&#39;, request_method=&quot;POST&quot;, renderer=&#39;myjson&#39;)
+def api4_json_view(request):
+    pass
 
-<span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api4_txt&#39;</span><span class="p">,</span> <span class="n">request_method</span><span class="p">=</span>&quot;<span class="n">POST</span>&quot;<span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;api4.mako&#39;</span><span class="p">)</span>
-<span class="n">def</span> <span class="n">api4_txt_view</span><span class="p">(</span><span class="n">request ...</span></pre></div> </div><!-- /.entry-content -->
+@view_config(route_name=&#39;api4_txt&#39;, request_method=&quot;POST&quot;, renderer=&#39;api4.mako&#39;)
+def api4_txt_view(request ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -113,17 +145,17 @@
                                 <div class="entry-content"> <p>在API开发的过程中，经常会需要根据传入的format参数来选择不同格式的输出结果，如JSON，XML等。正巧，pyramid中renderer机制可以很方便的进行各种不同格式内容的输出，而且基本很少涉及到代码的大量修改。</p>
 <h3>1. 直接在代码中判断format参数</h3>
 <p>可以在pyramid的view中直接判断format参数，然后根据值不同分别render不同的response。如下：</p>
-<div class="highlight"><pre><span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api1&#39;</span><span class="p">)</span>
-<span class="n">def</span> <span class="n">api1</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">data</span> <span class="p">=</span> <span class="n">dict</span><span class="p">(</span>
-        <span class="n">one</span><span class="p">=</span>1<span class="p">,</span>
-        <span class="n">two</span><span class="p">=</span><span class="s">&#39;2&#39;</span><span class="p">)</span>
+<div class="highlight"><pre>@view_config(route_name=&#39;api1&#39;)
+def api1(request):
+    data = dict(
+        one=1,
+        two=&#39;2&#39;)
 
-    <span class="n">format</span> <span class="p">=</span> <span class="n">request</span><span class="p">.</span><span class="n">params</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;format&#39;</span><span class="p">,</span> <span class="s">&#39;json&#39;</span><span class="p">).</span><span class="n">lower</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">format</span> <span class="o">==</span> <span class="s">&#39;xml&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;xml.mako&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    format = request.params.get(&#39;format&#39;, &#39;json&#39;).lower()
+    if format == &#39;xml&#39;:
+        return render_to_response(&#39;xml.mako&#39;, data, request)
 
-    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;myjson&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    return render_to_response(&#39;myjson&#39;, data, request)
 </pre></div>
 
 
@@ -158,10 +190,10 @@
 <p>在数据库字段中选择几个字段，只要组合起来能够满足唯一性，非空，就可以把他们当做主键来处理，也就是说数据库中可以没有定义主键，但ORM定义中定义一个虚拟的主键，这样就转变成了复合主键的定义问题。如果找不到这样的字段组合，那么就无法使用SQLAlchemy的OR-Mapping了。</p>
 <h3>3. 复合主键的定义</h3>
 <p>SQLAlchemy的OR-Mapping中可以对多个字段定义primary_key=True，只要多个字段定义了该参数，就能构造出复合主键。</p>
-<div class="highlight"><pre><span class="n">class</span> <span class="n">SomeClass</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> &quot;<span class="n">some_table_with_no_pk</span>&quot;
+<div class="highlight"><pre><span class="k">class</span> <span class="n">SomeClass</span>(<span class="n">Base</span>):
+    <span class="n">__tablename__</span> = <span class="s">&quot;some_table_with_no_pk&quot;</span>
 
-    <span class="n">uid</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+    <span class="n">uid</span> = <span class="n">Column</span>(<span class="n">Integer</span>, <span class="n">primary_key</span>=<span class="nb">True</span>)
     <span class="n">bar ...</span></pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">Read more <i class="icon-arrow-right"></i></a></div>
@@ -188,14 +220,14 @@
 <p>但因pyramid还有一些像python setup.py develop、initialize_db之类的项目初始化命令，在pyramid本身功能上的整合还不理想。</p>
 <p>另，因pypi在国内访问很慢，可以替换到豆瓣的源。</p>
 <h3>1. 启动</h3>
-<div class="highlight"><pre><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span>  启动整个系统
-<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span> <span class="n">mysql</span>  单独启动<span class="n">mysql</span>容器
+<div class="highlight"><pre>docker-compose -p pyramid up  启动整个系统
+docker-compose -p pyramid up mysql  单独启动mysql容器
 </pre></div>
 
 
 <p>注意，这里容器的名字是系统按照目录名，容器名，序号自动生成的，不能自己定义名字，参见https://github.com/docker/compose/issues/652</p>
 <h3>2. 进入MySQL</h3>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">link</span> <span class="n">pyramid_mysql_1</span><span class="p">:</span><span class="n">mysql ...</span></pre></div> </div><!-- /.entry-content -->
+<div class="highlight"><pre>docker run -it --link pyramid_mysql_1:mysql --rm mysql sh -c ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -220,23 +252,23 @@
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>本文主要内容源自docker registry里的README，不过后面有几个原文有误的地方做了点小修改。</p>
 <h3>1. 安装Docker</h3>
-<div class="highlight"><pre><span class="n">yum</span> <span class="n">update</span>
+<div class="highlight"><pre>yum update
 
-<span class="n">wget</span> <span class="o">-</span><span class="n">qO</span><span class="o">-</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">get</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span><span class="o">/</span> <span class="o">|</span> <span class="n">sh</span>
-<span class="n">systemctl</span> <span class="n">restart</span>  <span class="n">docker</span><span class="p">.</span><span class="n">service</span>
-<span class="n">systemctl</span> <span class="n">enable</span> <span class="n">docker</span><span class="p">.</span><span class="n">service</span>
+wget -qO- https://get.docker.com/ | sh
+systemctl restart  docker.service
+systemctl enable docker.service
 </pre></div>
 
 
 <h3>2. 安装Docker Compose</h3>
-<div class="highlight"><pre><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">pypa</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">get</span><span class="o">-</span><span class="n">pip</span><span class="p">.</span><span class="n">py</span>
-<span class="n">python</span> <span class="n">get</span><span class="o">-</span><span class="n">pip</span><span class="p">.</span><span class="n">py</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span>
+<div class="highlight"><pre>wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+pip install docker-compose
 </pre></div>
 
 
 <h3>3. 下载Docker registry</h3>
-<div class="highlight"><pre><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">docker</span><span class="o">/</span><span class="n">distribution ...</span></pre></div> </div><!-- /.entry-content -->
+<div class="highlight"><pre>wget https://github.com/docker/distribution/archive/v2.0 ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -323,12 +355,6 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

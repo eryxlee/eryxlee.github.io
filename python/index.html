@@ -109,20 +109,20 @@
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>Python 3.5终于发布了，赶紧来尝鲜一把</p>
-<div class="highlight"><pre><span class="n">FROM</span> <span class="n">alpine</span><span class="p">:</span>3<span class="p">.</span>2
-<span class="n">MAINTAINER</span> <span class="n">Eryx</span> <span class="n">Lee</span> <span class="o">&lt;</span><span class="n">eryx</span><span class="p">.</span><span class="n">lee0901</span><span class="p">@</span><span class="n">gmail</span><span class="p">.</span><span class="n">com</span><span class="o">&gt;</span>
+<div class="highlight"><pre>FROM alpine:3.2
+MAINTAINER Eryx Lee &lt;eryx.lee0901@gmail.com&gt;
 
-<span class="n">RUN</span> <span class="n">apk</span> <span class="o">--</span><span class="n">update</span> <span class="n">add</span> <span class="o">\</span>
-    <span class="n">bash</span> <span class="o">\</span>
-    <span class="n">build</span><span class="o">-</span><span class="n">base</span> <span class="o">\</span>
-    <span class="n">clang</span> <span class="o">\</span>
-    <span class="n">openssl</span><span class="o">-</span><span class="n">dev</span>
+RUN apk --update add \
+    bash \
+    build-base \
+    clang \
+    openssl-dev
 
-<span class="n">VOLUME</span> <span class="o">/</span><span class="n">source</span>
+VOLUME /source
 
-<span class="n">ADD</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">python</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">ftp</span><span class="o">/</span><span class="n">python</span><span class="o">/</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="o">/</span><span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span> <span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span>
+ADD https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tgz /source/Python-3.5.0.tgz
 
-<span class="n">RUN</span> <span class="n">cd ...</span></pre></div> </div><!-- /.entry-content -->
+RUN cd source &amp;&amp; tar -zxvf Python-3 ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -188,19 +188,19 @@
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>SQLAlchemy支持many to many的关联管理，不过实际使用中，经常需要两侧取到的数据都是排序的，文档里面还没看到类似例子，这里倒是有一个<a href="https://julo.ch/blog/sqlalchemy-many-to-many-ordering/" title="Ordering your sqlalchemy many-to-many relationship">案例</a>，不过略显复杂。实际测试了一下，relationship应该是可以带两个排序参数的，下面就给出测试代码，重点在relationship的参数上：</p>
-<div class="highlight"><pre>    <span class="n">engine</span> <span class="p">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;sqlite:///:memory:&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-    <span class="n">Session</span> <span class="p">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="p">=</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">session</span> <span class="p">=</span> <span class="n">Session</span><span class="p">()</span>
+<div class="highlight"><pre>    engine = create_engine(&#39;sqlite:///:memory:&#39;, echo=True)
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
-    <span class="n">Base</span> <span class="p">=</span> <span class="n">declarative_base</span><span class="p">()</span>
-    <span class="n">association_table</span> <span class="p">=</span> <span class="n">Table</span><span class="p">(</span><span class="s">&#39;association&#39;</span><span class="p">,</span> <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">,</span>
-                              <span class="n">Column</span><span class="p">(</span><span class="s">&#39;left_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;left.id&#39;</span><span class="p">)),</span>
-                              <span class="n">Column</span><span class="p">(</span><span class="s">&#39;right_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;right.id&#39;</span><span class="p">))</span>
-                              <span class="p">)</span>
+    Base = declarative_base()
+    association_table = Table(&#39;association&#39;, Base.metadata,
+                              Column(&#39;left_id&#39;, Integer, ForeignKey(&#39;left.id&#39;)),
+                              Column(&#39;right_id&#39;, Integer, ForeignKey(&#39;right.id&#39;))
+                              )
 
-    <span class="n">class</span> <span class="n">Left</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-        <span class="n">__tablename__</span> <span class="p">=</span> <span class="s">&#39;left&#39;</span>
-        <span class="n">id ...</span></pre></div> </div><!-- /.entry-content -->
+    class Left(Base):
+        __tablename__ = &#39;left&#39;
+        id ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/08/31/sqlalchemy-many-to-many-ordering.html" rel="bookmark" title="Permalink to SQLAlchemy many to many的排序问题">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -225,20 +225,20 @@
                                 <div class="entry-content"> <p>在现实项目中，数据库经常是已经建好的。因此，要再去逐个字段去重新声明一下显然是很无聊的。SQLAlchemy早就在这方面提供了利用反射机制自动加载的功能，而且在ORM中也可以使用这种机制。</p>
 <h3>1. ORM中的reflection</h3>
 <p>直接通过declarative_base返回的Base基类不具备自动加载功能，需要加入DeferredReflection的支持，如下：</p>
-<div class="highlight"><pre><span class="c"># 因类定义在前，无法传入engine参数，需要使用DeferredReflection机制</span>
-<span class="n">Base</span> <span class="p">=</span> <span class="n">declarative_base</span><span class="p">(</span><span class="n">cls</span><span class="p">=</span><span class="n">DeferredReflection</span><span class="p">)</span>
+<div class="highlight"><pre># 因类定义在前，无法传入engine参数，需要使用DeferredReflection机制
+Base = declarative_base(cls=DeferredReflection)
 
 
-<span class="c"># 利用反射机制根据现有数据库表定义User 类，这时类属性均与字段名一样</span>
-<span class="nb">class</span> <span class="n">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> <span class="s">&#39;user&#39;</span>
+# 利用反射机制根据现有数据库表定义User 类，这时类属性均与字段名一样
+class User(Base):
+    __tablename__ = &#39;user&#39;
 </pre></div>
 
 
 <p>在定义好类之后，还需要Base.prepare一下，否则会抛出unmapped异常。</p>
-<div class="highlight"><pre>    <span class="n">engine</span> <span class="p">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;mysql://root:@127.0.0.1:3306/test?charset=utf8&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+<div class="highlight"><pre>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
     <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">Session</span> <span class="p">=</span> <span class="n">sessionmaker ...</span></pre></div> </div><!-- /.entry-content -->
+    <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker ...</span></pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -264,12 +264,12 @@
 <p>不过在SQLAlchemy ORM的深入应用中，也会有很多大大小小的问题等着去解决。下面就简单说说比较常见的数据库字段名与类属性之间的映射关系。</p>
 <h3>1. 正常场景</h3>
 <p>在正常场景中，ORM类的定义非常简单。</p>
-<div class="highlight"><pre><span class="n">class</span> <span class="n">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> <span class="s">&#39;user&#39;</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="n">User</span>(<span class="n">Base</span>):
+    <span class="n">__tablename__</span> = <span class="s">&#39;user&#39;</span>
 
-    <span class="n">id</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-    <span class="n">first_name</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span>10<span class="p">))</span>
-    <span class="n">last_name</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span>10<span class="p">))</span>
+    <span class="n">id</span> = <span class="n">Column</span>(<span class="n">Integer</span>, <span class="n">primary_key</span>=<span class="nb">True</span>)
+    <span class="n">first_name</span> = <span class="n">Column</span>(<span class="n">String</span>(<span class="mi">10</span>))
+    <span class="n">last_name</span> = <span class="n">Column</span>(<span class="n">String</span>(<span class="mi">10</span>))
 </pre></div>
 
 
@@ -300,29 +300,29 @@
                                 <div class="entry-content"> <p>Pyramid_tm 是一个专门负责request事务处理的tween，可以通过简单的配置为request提供事务支持。而且，除了普通的事务管理之外，pyramid_tm还提供了另外几个有意思的小功能。</p>
 <h3>1. 配置定制Transaction Manager</h3>
 <p>如果对系统默认的事务管理器不满的话，可以定制一个专门的事务管理器，然后通过配置方式嵌入到系统中。</p>
-<div class="highlight"><pre><span class="n">import</span> <span class="n">transaction</span>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">transaction</span>
 
-<span class="n">def</span> <span class="n">manager_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">transaction</span><span class="p">.</span><span class="n">TransactionManager</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">manager_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">transaction</span><span class="o">.</span><span class="n">TransactionManager</span><span class="p">()</span>
 </pre></div>
 
 
 <p>定义了hook之后，就可以在程序中或ini文件中通过简单的配置启用它：</p>
-<div class="highlight"><pre><span class="n">settings</span><span class="p">[</span><span class="s">&#39;tm.manager_hook&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">manager_hook</span>
+<div class="highlight"><pre>settings[&#39;tm.manager_hook&#39;] = manager_hook
 </pre></div>
 
 
 <h3>2. 定义启用规则</h3>
 <p>启用了事务管理之后，如果有些特殊的request不希望使用默认的事务管理，也可以通过配置一个是否启用的钩子来达到这个目的：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">activate_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="p">.</span><span class="n">path_info</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;/long-poll&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">False</span>
-    <span class="k">return</span> <span class="n">True</span>
+<div class="highlight"><pre>def activate_hook(request):
+    if request.path_info.startswith(&#39;/long-poll&#39;):
+        return False
+    return True
 </pre></div>
 
 
 <p>然后向系统配置这个钩子：</p>
-<div class="highlight"><pre><span class="n">settings</span><span class="p">[</span><span class="s">&#39;tm.activate_hook&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="n">activate_hook</span>
+<div class="highlight"><pre>settings[&#39;tm.activate_hook&#39;] = activate_hook
 </pre></div>
 
 
@@ -351,7 +351,7 @@
                                 <div class="entry-content"> <p>Pyramid 提供了一个事务处理的tween -- pyramid_tm，可以通过配置方式很方便得添加事务支持。</p>
 <h3>1. pyramid_tm的安装配置</h3>
 <p>在正确安装了pyramid_tm之后，只要在main函数中加入：</p>
-<div class="highlight"><pre><span class="n">config</span><span class="p">.</span><span class="n">include</span><span class="p">(</span><span class="s">&#39;pyramid_tm&#39;</span><span class="p">)</span>
+<div class="highlight"><pre>config.include(&#39;pyramid_tm&#39;)
 </pre></div>
 
 
@@ -364,13 +364,13 @@
 <p>即可对所有view提供事务管理支持。</p>
 <h3>2. 正常的事务处理</h3>
 <p>在正常情况下，业务代码中不需要参杂事务处理代码，如下：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return ...</span></pre></div> </div><!-- /.entry-content -->
+<div class="highlight"><pre>def my_view(request):
+    try:
+        one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+        one.value = 2
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/08/07/transaction-pyramid-tm-notes.html" rel="bookmark" title="Permalink to Pyramid 事务处理及其注意事项">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -395,10 +395,10 @@
                                 <div class="entry-content"> <p>在使用sqlalchemy过程中，不小心犯了个小错误：在看一个查询语句时，发现一个从句 A.status == None 提示有PEP8警告，就好心改成了A.status is None。结果，单元测试各种出错。一看生成的SQl语句，发现status is null这个从句没有生成，这是为什么呢？</p>
 <p>仔细看看代码，终于发现A.status is None肯定是假值，在or从句中，被自动忽略了。</p>
 <p>那么，这里怎么写才能避免PEP8警告呢？通过查看SQLAlchemy的文档，可以看到如下用法：</p>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">None</span><span class="p">)</span>
+<div class="highlight"><pre>query.filter(User.name == None)
 
-# <span class="n">alternatively</span><span class="p">,</span> <span class="k">if</span> <span class="n">pep8</span><span class="o">/</span><span class="n">linters</span> <span class="n">are</span> <span class="n">a</span> <span class="n">concern</span>
-<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">is_</span><span class="p">(</span><span class="n">None</span><span class="p">))</span>
+# alternatively, if pep8/linters are a concern
+query.filter(User.name.is_(None))
 </pre></div>
 
 
@@ -426,23 +426,23 @@
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>在上一篇文章中，简单归纳了pyramid中3种格式化输出的方式，不过在实际使用过程中，还有另外一种方式：即view的处理中也稍有不同，这样就需要对同一个URL写两个不同的view。</p>
 <p>首先，在main函数中加入一个route的Predicate。</p>
-<div class="highlight"><pre><span class="n">config</span><span class="p">.</span><span class="n">add_route_predicate</span><span class="p">(</span><span class="s">&#39;format&#39;</span><span class="p">,</span> <span class="n">FormatPredicate</span><span class="p">)</span>
+<div class="highlight"><pre>config.add_route_predicate(&#39;format&#39;, FormatPredicate)
 </pre></div>
 
 
 <p>另外，route定义也要做一定的变换。</p>
-<div class="highlight"><pre>    <span class="n">config</span><span class="p">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;api4_json&#39;</span><span class="p">,</span> <span class="s">&#39;/api4&#39;</span><span class="p">,</span> <span class="n">format</span><span class="p">=</span>&quot;<span class="n">json</span>&quot;<span class="p">)</span>
-    <span class="n">config</span><span class="p">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;api4_txt&#39;</span><span class="p">,</span> <span class="s">&#39;/api4&#39;</span><span class="p">,</span> <span class="n">format</span><span class="p">=</span>&quot;<span class="n">txt</span>&quot;<span class="p">)</span>
+<div class="highlight"><pre>    config.add_route(&#39;api4_json&#39;, &#39;/api4&#39;, format=&quot;json&quot;)
+    config.add_route(&#39;api4_txt&#39;, &#39;/api4&#39;, format=&quot;txt&quot;)
 </pre></div>
 
 
 <p>这样，就可以定义两个不同的view了。</p>
-<div class="highlight"><pre><span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api4_json&#39;</span><span class="p">,</span> <span class="n">request_method</span><span class="p">=</span>&quot;<span class="n">POST</span>&quot;<span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;myjson&#39;</span><span class="p">)</span>
-<span class="n">def</span> <span class="n">api4_json_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">pass</span>
+<div class="highlight"><pre>@view_config(route_name=&#39;api4_json&#39;, request_method=&quot;POST&quot;, renderer=&#39;myjson&#39;)
+def api4_json_view(request):
+    pass
 
-<span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api4_txt&#39;</span><span class="p">,</span> <span class="n">request_method</span><span class="p">=</span>&quot;<span class="n">POST</span>&quot;<span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;api4.mako&#39;</span><span class="p">)</span>
-<span class="n">def</span> <span class="n">api4_txt_view</span><span class="p">(</span><span class="n">request ...</span></pre></div> </div><!-- /.entry-content -->
+@view_config(route_name=&#39;api4_txt&#39;, request_method=&quot;POST&quot;, renderer=&#39;api4.mako&#39;)
+def api4_txt_view(request ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -479,12 +479,6 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

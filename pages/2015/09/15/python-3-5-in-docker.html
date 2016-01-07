@@ -75,22 +75,22 @@
             </footer><!-- /.post-info -->
             <div class="entry-content">
               <p>Python 3.5终于发布了，赶紧来尝鲜一把</p>
-<div class="highlight"><pre><span class="n">FROM</span> <span class="n">alpine</span><span class="p">:</span>3<span class="p">.</span>2
-<span class="n">MAINTAINER</span> <span class="n">Eryx</span> <span class="n">Lee</span> <span class="o">&lt;</span><span class="n">eryx</span><span class="p">.</span><span class="n">lee0901</span><span class="p">@</span><span class="n">gmail</span><span class="p">.</span><span class="n">com</span><span class="o">&gt;</span>
+<div class="highlight"><pre>FROM alpine:3.2
+MAINTAINER Eryx Lee &lt;eryx.lee0901@gmail.com&gt;
 
-<span class="n">RUN</span> <span class="n">apk</span> <span class="o">--</span><span class="n">update</span> <span class="n">add</span> <span class="o">\</span>
-    <span class="n">bash</span> <span class="o">\</span>
-    <span class="n">build</span><span class="o">-</span><span class="n">base</span> <span class="o">\</span>
-    <span class="n">clang</span> <span class="o">\</span>
-    <span class="n">openssl</span><span class="o">-</span><span class="n">dev</span>
+RUN apk --update add \
+    bash \
+    build-base \
+    clang \
+    openssl-dev
 
-<span class="n">VOLUME</span> <span class="o">/</span><span class="n">source</span>
+VOLUME /source
 
-<span class="n">ADD</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">python</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">ftp</span><span class="o">/</span><span class="n">python</span><span class="o">/</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="o">/</span><span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span> <span class="o">/</span><span class="n">source</span><span class="o">/</span><span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span>
+ADD https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tgz /source/Python-3.5.0.tgz
 
-<span class="n">RUN</span> <span class="n">cd</span> <span class="n">source</span> <span class="o">&amp;&amp;</span> <span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0<span class="p">.</span><span class="n">tgz</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">Python</span><span class="o">-</span>3<span class="p">.</span>5<span class="p">.</span>0 <span class="o">&amp;&amp;</span> <span class="o">./</span><span class="n">configure</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>
+RUN cd source &amp;&amp; tar -zxvf Python-3.5.0.tgz &amp;&amp; cd Python-3.5.0 &amp;&amp; ./configure &amp;&amp; make &amp;&amp; make install
 
-<span class="n">CMD</span> <span class="p">[</span>&quot;<span class="n">python3</span>&quot;<span class="p">]</span>
+CMD [&quot;python3&quot;]
 </pre></div>
             </div><!-- /.entry-content -->
             <div class="comments">
@@ -128,12 +128,6 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

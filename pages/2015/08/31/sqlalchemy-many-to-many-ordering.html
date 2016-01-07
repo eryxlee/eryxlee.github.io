@@ -75,68 +75,68 @@
             </footer><!-- /.post-info -->
             <div class="entry-content">
               <p>SQLAlchemy支持many to many的关联管理，不过实际使用中，经常需要两侧取到的数据都是排序的，文档里面还没看到类似例子，这里倒是有一个<a href="https://julo.ch/blog/sqlalchemy-many-to-many-ordering/" title="Ordering your sqlalchemy many-to-many relationship">案例</a>，不过略显复杂。实际测试了一下，relationship应该是可以带两个排序参数的，下面就给出测试代码，重点在relationship的参数上：</p>
-<div class="highlight"><pre>    <span class="n">engine</span> <span class="p">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;sqlite:///:memory:&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-    <span class="n">Session</span> <span class="p">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="p">=</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">session</span> <span class="p">=</span> <span class="n">Session</span><span class="p">()</span>
+<div class="highlight"><pre>    engine = create_engine(&#39;sqlite:///:memory:&#39;, echo=True)
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
-    <span class="n">Base</span> <span class="p">=</span> <span class="n">declarative_base</span><span class="p">()</span>
-    <span class="n">association_table</span> <span class="p">=</span> <span class="n">Table</span><span class="p">(</span><span class="s">&#39;association&#39;</span><span class="p">,</span> <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">,</span>
-                              <span class="n">Column</span><span class="p">(</span><span class="s">&#39;left_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;left.id&#39;</span><span class="p">)),</span>
-                              <span class="n">Column</span><span class="p">(</span><span class="s">&#39;right_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;right.id&#39;</span><span class="p">))</span>
-                              <span class="p">)</span>
+    Base = declarative_base()
+    association_table = Table(&#39;association&#39;, Base.metadata,
+                              Column(&#39;left_id&#39;, Integer, ForeignKey(&#39;left.id&#39;)),
+                              Column(&#39;right_id&#39;, Integer, ForeignKey(&#39;right.id&#39;))
+                              )
 
-    <span class="n">class</span> <span class="n">Left</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-        <span class="n">__tablename__</span> <span class="p">=</span> <span class="s">&#39;left&#39;</span>
-        <span class="n">id</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-        <span class="n">rights</span> <span class="p">=</span> <span class="n">relationship</span><span class="p">(</span>&quot;<span class="n">Right</span>&quot;<span class="p">,</span>
-                              <span class="n">secondary</span><span class="p">=</span><span class="n">association_table</span><span class="p">,</span>
-                              <span class="n">order_by</span><span class="p">=</span>&quot;<span class="n">desc</span><span class="p">(</span><span class="n">Right</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>&quot;<span class="p">,</span>
-                              <span class="n">backref</span><span class="p">=</span><span class="n">backref</span><span class="p">(</span>&quot;<span class="n">lefts</span>&quot;<span class="p">,</span> <span class="n">order_by</span><span class="p">=</span><span class="n">desc</span><span class="p">(</span><span class="n">id</span><span class="p">)))</span>
+    class Left(Base):
+        __tablename__ = &#39;left&#39;
+        id = Column(Integer, primary_key=True)
+        rights = relationship(&quot;Right&quot;,
+                              secondary=association_table,
+                              order_by=&quot;desc(Right.id)&quot;,
+                              backref=backref(&quot;lefts&quot;, order_by=desc(id)))
 
-    <span class="n">class</span> <span class="n">Right</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-        <span class="n">__tablename__</span> <span class="p">=</span> <span class="s">&#39;right&#39;</span>
-        <span class="n">id</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+    class Right(Base):
+        __tablename__ = &#39;right&#39;
+        id = Column(Integer, primary_key=True)
 
-    <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">left1</span> <span class="p">=</span> <span class="n">Left</span><span class="p">(</span><span class="n">id</span><span class="p">=</span>1<span class="p">)</span>
-    <span class="n">left2</span> <span class="p">=</span> <span class="n">Left</span><span class="p">(</span><span class="n">id</span><span class="p">=</span>2<span class="p">)</span>
-    <span class="n">left3</span> <span class="p">=</span> <span class="n">Left</span><span class="p">(</span><span class="n">id</span><span class="p">=</span>3<span class="p">)</span>
-    <span class="n">right1</span> <span class="p">=</span> <span class="n">Right</span><span class="p">(</span><span class="n">id</span><span class="p">=</span>1<span class="p">)</span>
-    <span class="n">right2</span> <span class="p">=</span> <span class="n">Right</span><span class="p">(</span><span class="n">id</span><span class="p">=</span>2<span class="p">)</span>
-    <span class="n">left1</span><span class="p">.</span><span class="n">rights</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">right1</span><span class="p">)</span>
-    <span class="n">left1</span><span class="p">.</span><span class="n">rights</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">right2</span><span class="p">)</span>
-    <span class="n">left2</span><span class="p">.</span><span class="n">rights</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">right1</span><span class="p">)</span>
-    <span class="n">left3</span><span class="p">.</span><span class="n">rights</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">right2</span><span class="p">)</span>
-    <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">left1</span><span class="p">)</span>
-    <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">left2</span><span class="p">)</span>
-    <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">left3</span><span class="p">)</span>
-    <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">right1</span><span class="p">)</span>
-    <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">right2</span><span class="p">)</span>
-    <span class="n">session</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
-    <span class="n">row</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">Left</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">Left</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 1<span class="p">).</span><span class="n">first</span><span class="p">()</span>
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 1
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">rights</span><span class="p">[</span>0<span class="p">].</span><span class="n">id</span> <span class="o">==</span> 2
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">rights</span><span class="p">[</span>1<span class="p">].</span><span class="n">id</span> <span class="o">==</span> 1
-    <span class="n">assert</span> <span class="n">len</span><span class="p">(</span><span class="n">row</span><span class="p">.</span><span class="n">rights</span><span class="p">)</span> <span class="o">==</span> 2
-    <span class="n">row</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">Left</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">Left</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 2<span class="p">).</span><span class="n">first</span><span class="p">()</span>
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 2
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">rights</span><span class="p">[</span>0<span class="p">].</span><span class="n">id</span> <span class="o">==</span> 1
-    <span class="n">assert</span> <span class="n">len</span><span class="p">(</span><span class="n">row</span><span class="p">.</span><span class="n">rights</span><span class="p">)</span> <span class="o">==</span> 1
-    <span class="n">row</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">Left</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">Left</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 3<span class="p">).</span><span class="n">first</span><span class="p">()</span>
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 3
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">rights</span><span class="p">[</span>0<span class="p">].</span><span class="n">id</span> <span class="o">==</span> 2
-    <span class="n">assert</span> <span class="n">len</span><span class="p">(</span><span class="n">row</span><span class="p">.</span><span class="n">rights</span><span class="p">)</span> <span class="o">==</span> 1
-    <span class="n">row</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">Right</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">Right</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 1<span class="p">).</span><span class="n">first</span><span class="p">()</span>
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 1
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">lefts</span><span class="p">[</span>0<span class="p">].</span><span class="n">id</span> <span class="o">==</span> 2
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">lefts</span><span class="p">[</span>1<span class="p">].</span><span class="n">id</span> <span class="o">==</span> 1
-    <span class="n">assert</span> <span class="n">len</span><span class="p">(</span><span class="n">row</span><span class="p">.</span><span class="n">lefts</span><span class="p">)</span> <span class="o">==</span> 2
-    <span class="n">row</span> <span class="p">=</span> <span class="n">session</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">Right</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">Right</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 2<span class="p">).</span><span class="n">first</span><span class="p">()</span>
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">id</span> <span class="o">==</span> 2
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">lefts</span><span class="p">[</span>0<span class="p">].</span><span class="n">id</span> <span class="o">==</span> 3
-    <span class="n">assert</span> <span class="n">row</span><span class="p">.</span><span class="n">lefts</span><span class="p">[</span>1<span class="p">].</span><span class="n">id</span> <span class="o">==</span> 1
-    <span class="n">assert</span> <span class="n">len</span><span class="p">(</span><span class="n">row</span><span class="p">.</span><span class="n">lefts</span><span class="p">)</span> <span class="o">==</span> 2
-    <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">drop_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    Base.metadata.create_all(engine)
+    left1 = Left(id=1)
+    left2 = Left(id=2)
+    left3 = Left(id=3)
+    right1 = Right(id=1)
+    right2 = Right(id=2)
+    left1.rights.append(right1)
+    left1.rights.append(right2)
+    left2.rights.append(right1)
+    left3.rights.append(right2)
+    session.add(left1)
+    session.add(left2)
+    session.add(left3)
+    session.add(right1)
+    session.add(right2)
+    session.commit()
+    row = session.query(Left).filter(Left.id == 1).first()
+    assert row.id == 1
+    assert row.rights[0].id == 2
+    assert row.rights[1].id == 1
+    assert len(row.rights) == 2
+    row = session.query(Left).filter(Left.id == 2).first()
+    assert row.id == 2
+    assert row.rights[0].id == 1
+    assert len(row.rights) == 1
+    row = session.query(Left).filter(Left.id == 3).first()
+    assert row.id == 3
+    assert row.rights[0].id == 2
+    assert len(row.rights) == 1
+    row = session.query(Right).filter(Right.id == 1).first()
+    assert row.id == 1
+    assert row.lefts[0].id == 2
+    assert row.lefts[1].id == 1
+    assert len(row.lefts) == 2
+    row = session.query(Right).filter(Right.id == 2).first()
+    assert row.id == 2
+    assert row.lefts[0].id == 3
+    assert row.lefts[1].id == 1
+    assert len(row.lefts) == 2
+    Base.metadata.drop_all(engine)
 </pre></div>
             </div><!-- /.entry-content -->
             <div class="comments">
@@ -174,12 +174,6 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

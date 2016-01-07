@@ -63,6 +63,33 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html" rel="bookmark" title="Permalink to Docker machine虚拟机网络地址配置">Docker machine虚拟机网络地址配置</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-12-02T00:00:00+08:00"> 2015-12-02 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>因家里网络调整，将网段设置成了192.168.99.＊网段，一直也就没注意。不过后来一次突然发现，docker machine无法启动了，抛出了下面的错误：</p>
+<div class="highlight"><pre>This machine has been allocated an IP address, but Docker Machine could not
+reach it successfully.
+
+SSH for the machine should still work, but connecting to exposed ports, such as
+the Docker daemon port (usually &lt;ip&gt;:2376), may not work ...</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html" rel="bookmark" title="Permalink to Docker machine虚拟机网络地址配置">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/docker.html">docker</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">[转]Print all 256 colors for testing TERM or for a quick reference</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-10-10T00:00:00+08:00"> 2015-10-10 </abbr>
@@ -105,14 +132,14 @@ for i in {0 ...</pre></div> </div><!-- /.entry-content -->
 <p>但因pyramid还有一些像python setup.py develop、initialize_db之类的项目初始化命令，在pyramid本身功能上的整合还不理想。</p>
 <p>另，因pypi在国内访问很慢，可以替换到豆瓣的源。</p>
 <h3>1. 启动</h3>
-<div class="highlight"><pre><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span>  启动整个系统
-<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">p</span> <span class="n">pyramid</span> <span class="n">up</span> <span class="n">mysql</span>  单独启动<span class="n">mysql</span>容器
+<div class="highlight"><pre>docker-compose -p pyramid up  启动整个系统
+docker-compose -p pyramid up mysql  单独启动mysql容器
 </pre></div>
 
 
 <p>注意，这里容器的名字是系统按照目录名，容器名，序号自动生成的，不能自己定义名字，参见https://github.com/docker/compose/issues/652</p>
 <h3>2. 进入MySQL</h3>
-<div class="highlight"><pre><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">link</span> <span class="n">pyramid_mysql_1</span><span class="p">:</span><span class="n">mysql ...</span></pre></div> </div><!-- /.entry-content -->
+<div class="highlight"><pre>docker run -it --link pyramid_mysql_1:mysql --rm mysql sh -c ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -137,23 +164,23 @@ for i in {0 ...</pre></div> </div><!-- /.entry-content -->
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>本文主要内容源自docker registry里的README，不过后面有几个原文有误的地方做了点小修改。</p>
 <h3>1. 安装Docker</h3>
-<div class="highlight"><pre><span class="n">yum</span> <span class="n">update</span>
+<div class="highlight"><pre>yum update
 
-<span class="n">wget</span> <span class="o">-</span><span class="n">qO</span><span class="o">-</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">get</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span><span class="o">/</span> <span class="o">|</span> <span class="n">sh</span>
-<span class="n">systemctl</span> <span class="n">restart</span>  <span class="n">docker</span><span class="p">.</span><span class="n">service</span>
-<span class="n">systemctl</span> <span class="n">enable</span> <span class="n">docker</span><span class="p">.</span><span class="n">service</span>
+wget -qO- https://get.docker.com/ | sh
+systemctl restart  docker.service
+systemctl enable docker.service
 </pre></div>
 
 
 <h3>2. 安装Docker Compose</h3>
-<div class="highlight"><pre><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">pypa</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">get</span><span class="o">-</span><span class="n">pip</span><span class="p">.</span><span class="n">py</span>
-<span class="n">python</span> <span class="n">get</span><span class="o">-</span><span class="n">pip</span><span class="p">.</span><span class="n">py</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span>
+<div class="highlight"><pre>wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+pip install docker-compose
 </pre></div>
 
 
 <h3>3. 下载Docker registry</h3>
-<div class="highlight"><pre><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">docker</span><span class="o">/</span><span class="n">distribution ...</span></pre></div> </div><!-- /.entry-content -->
+<div class="highlight"><pre>wget https://github.com/docker/distribution/archive/v2.0 ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -220,12 +247,6 @@ for i in {0 ...</pre></div> </div><!-- /.entry-content -->
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

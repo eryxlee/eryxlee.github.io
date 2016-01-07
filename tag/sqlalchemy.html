@@ -71,19 +71,19 @@
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>SQLAlchemy支持many to many的关联管理，不过实际使用中，经常需要两侧取到的数据都是排序的，文档里面还没看到类似例子，这里倒是有一个<a href="https://julo.ch/blog/sqlalchemy-many-to-many-ordering/" title="Ordering your sqlalchemy many-to-many relationship">案例</a>，不过略显复杂。实际测试了一下，relationship应该是可以带两个排序参数的，下面就给出测试代码，重点在relationship的参数上：</p>
-<div class="highlight"><pre>    <span class="n">engine</span> <span class="p">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;sqlite:///:memory:&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-    <span class="n">Session</span> <span class="p">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="p">=</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">session</span> <span class="p">=</span> <span class="n">Session</span><span class="p">()</span>
+<div class="highlight"><pre>    engine = create_engine(&#39;sqlite:///:memory:&#39;, echo=True)
+    Session = sessionmaker(bind=engine)
+    session = Session()
 
-    <span class="n">Base</span> <span class="p">=</span> <span class="n">declarative_base</span><span class="p">()</span>
-    <span class="n">association_table</span> <span class="p">=</span> <span class="n">Table</span><span class="p">(</span><span class="s">&#39;association&#39;</span><span class="p">,</span> <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">,</span>
-                              <span class="n">Column</span><span class="p">(</span><span class="s">&#39;left_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;left.id&#39;</span><span class="p">)),</span>
-                              <span class="n">Column</span><span class="p">(</span><span class="s">&#39;right_id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;right.id&#39;</span><span class="p">))</span>
-                              <span class="p">)</span>
+    Base = declarative_base()
+    association_table = Table(&#39;association&#39;, Base.metadata,
+                              Column(&#39;left_id&#39;, Integer, ForeignKey(&#39;left.id&#39;)),
+                              Column(&#39;right_id&#39;, Integer, ForeignKey(&#39;right.id&#39;))
+                              )
 
-    <span class="n">class</span> <span class="n">Left</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-        <span class="n">__tablename__</span> <span class="p">=</span> <span class="s">&#39;left&#39;</span>
-        <span class="n">id ...</span></pre></div> </div><!-- /.entry-content -->
+    class Left(Base):
+        __tablename__ = &#39;left&#39;
+        id ...</pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/08/31/sqlalchemy-many-to-many-ordering.html" rel="bookmark" title="Permalink to SQLAlchemy many to many的排序问题">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -108,20 +108,20 @@
                                 <div class="entry-content"> <p>在现实项目中，数据库经常是已经建好的。因此，要再去逐个字段去重新声明一下显然是很无聊的。SQLAlchemy早就在这方面提供了利用反射机制自动加载的功能，而且在ORM中也可以使用这种机制。</p>
 <h3>1. ORM中的reflection</h3>
 <p>直接通过declarative_base返回的Base基类不具备自动加载功能，需要加入DeferredReflection的支持，如下：</p>
-<div class="highlight"><pre><span class="c"># 因类定义在前，无法传入engine参数，需要使用DeferredReflection机制</span>
-<span class="n">Base</span> <span class="p">=</span> <span class="n">declarative_base</span><span class="p">(</span><span class="n">cls</span><span class="p">=</span><span class="n">DeferredReflection</span><span class="p">)</span>
+<div class="highlight"><pre># 因类定义在前，无法传入engine参数，需要使用DeferredReflection机制
+Base = declarative_base(cls=DeferredReflection)
 
 
-<span class="c"># 利用反射机制根据现有数据库表定义User 类，这时类属性均与字段名一样</span>
-<span class="nb">class</span> <span class="n">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> <span class="s">&#39;user&#39;</span>
+# 利用反射机制根据现有数据库表定义User 类，这时类属性均与字段名一样
+class User(Base):
+    __tablename__ = &#39;user&#39;
 </pre></div>
 
 
 <p>在定义好类之后，还需要Base.prepare一下，否则会抛出unmapped异常。</p>
-<div class="highlight"><pre>    <span class="n">engine</span> <span class="p">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;mysql://root:@127.0.0.1:3306/test?charset=utf8&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+<div class="highlight"><pre>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
     <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">Session</span> <span class="p">=</span> <span class="n">sessionmaker ...</span></pre></div> </div><!-- /.entry-content -->
+    <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker ...</span></pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">Read more <i class="icon-arrow-right"></i></a></div>
 
@@ -147,12 +147,12 @@
 <p>不过在SQLAlchemy ORM的深入应用中，也会有很多大大小小的问题等着去解决。下面就简单说说比较常见的数据库字段名与类属性之间的映射关系。</p>
 <h3>1. 正常场景</h3>
 <p>在正常场景中，ORM类的定义非常简单。</p>
-<div class="highlight"><pre><span class="n">class</span> <span class="n">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> <span class="s">&#39;user&#39;</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="n">User</span>(<span class="n">Base</span>):
+    <span class="n">__tablename__</span> = <span class="s">&#39;user&#39;</span>
 
-    <span class="n">id</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-    <span class="n">first_name</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span>10<span class="p">))</span>
-    <span class="n">last_name</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span>10<span class="p">))</span>
+    <span class="n">id</span> = <span class="n">Column</span>(<span class="n">Integer</span>, <span class="n">primary_key</span>=<span class="nb">True</span>)
+    <span class="n">first_name</span> = <span class="n">Column</span>(<span class="n">String</span>(<span class="mi">10</span>))
+    <span class="n">last_name</span> = <span class="n">Column</span>(<span class="n">String</span>(<span class="mi">10</span>))
 </pre></div>
 
 
@@ -183,10 +183,10 @@
                                 <div class="entry-content"> <p>在使用sqlalchemy过程中，不小心犯了个小错误：在看一个查询语句时，发现一个从句 A.status == None 提示有PEP8警告，就好心改成了A.status is None。结果，单元测试各种出错。一看生成的SQl语句，发现status is null这个从句没有生成，这是为什么呢？</p>
 <p>仔细看看代码，终于发现A.status is None肯定是假值，在or从句中，被自动忽略了。</p>
 <p>那么，这里怎么写才能避免PEP8警告呢？通过查看SQLAlchemy的文档，可以看到如下用法：</p>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">None</span><span class="p">)</span>
+<div class="highlight"><pre>query.filter(User.name == None)
 
-# <span class="n">alternatively</span><span class="p">,</span> <span class="k">if</span> <span class="n">pep8</span><span class="o">/</span><span class="n">linters</span> <span class="n">are</span> <span class="n">a</span> <span class="n">concern</span>
-<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">is_</span><span class="p">(</span><span class="n">None</span><span class="p">))</span>
+# alternatively, if pep8/linters are a concern
+query.filter(User.name.is_(None))
 </pre></div>
 
 
@@ -220,10 +220,10 @@
 <p>在数据库字段中选择几个字段，只要组合起来能够满足唯一性，非空，就可以把他们当做主键来处理，也就是说数据库中可以没有定义主键，但ORM定义中定义一个虚拟的主键，这样就转变成了复合主键的定义问题。如果找不到这样的字段组合，那么就无法使用SQLAlchemy的OR-Mapping了。</p>
 <h3>3. 复合主键的定义</h3>
 <p>SQLAlchemy的OR-Mapping中可以对多个字段定义primary_key=True，只要多个字段定义了该参数，就能构造出复合主键。</p>
-<div class="highlight"><pre><span class="n">class</span> <span class="n">SomeClass</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> &quot;<span class="n">some_table_with_no_pk</span>&quot;
+<div class="highlight"><pre><span class="k">class</span> <span class="n">SomeClass</span>(<span class="n">Base</span>):
+    <span class="n">__tablename__</span> = <span class="s">&quot;some_table_with_no_pk&quot;</span>
 
-    <span class="n">uid</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+    <span class="n">uid</span> = <span class="n">Column</span>(<span class="n">Integer</span>, <span class="n">primary_key</span>=<span class="nb">True</span>)
     <span class="n">bar ...</span></pre></div> </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">Read more <i class="icon-arrow-right"></i></a></div>
@@ -261,12 +261,6 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

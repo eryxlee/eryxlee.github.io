@@ -82,16 +82,16 @@
 <p>在数据库字段中选择几个字段，只要组合起来能够满足唯一性，非空，就可以把他们当做主键来处理，也就是说数据库中可以没有定义主键，但ORM定义中定义一个虚拟的主键，这样就转变成了复合主键的定义问题。如果找不到这样的字段组合，那么就无法使用SQLAlchemy的OR-Mapping了。</p>
 <h3>3. 复合主键的定义</h3>
 <p>SQLAlchemy的OR-Mapping中可以对多个字段定义primary_key=True，只要多个字段定义了该参数，就能构造出复合主键。</p>
-<div class="highlight"><pre><span class="n">class</span> <span class="n">SomeClass</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> &quot;<span class="n">some_table_with_no_pk</span>&quot;
+<div class="highlight"><pre><span class="k">class</span> <span class="n">SomeClass</span>(<span class="n">Base</span>):
+    <span class="n">__tablename__</span> = <span class="s">&quot;some_table_with_no_pk&quot;</span>
 
-    <span class="n">uid</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
-    <span class="n">bar</span> <span class="p">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+    <span class="n">uid</span> = <span class="n">Column</span>(<span class="n">Integer</span>, <span class="n">primary_key</span>=<span class="nb">True</span>)
+    <span class="n">bar</span> = <span class="n">Column</span>(<span class="n">String</span>, <span class="n">primary_key</span>=<span class="nb">True</span>)
 </pre></div>
 
 
 <p>当然，也可以用__mapper_args__参数来构造复合主键，如下所示：</p>
-<div class="highlight"><pre><span class="n">__mapper_args__</span> <span class="p">=</span> <span class="p">{</span>&quot;<span class="n">primary_key</span>&quot;<span class="p">:(</span><span class="n">uid</span><span class="p">,</span> <span class="n">bar</span><span class="p">)}</span>
+<div class="highlight"><pre>__mapper_args__ = {&quot;primary_key&quot;:(uid, bar)}
 </pre></div>
             </div><!-- /.entry-content -->
             <div class="comments">
@@ -129,12 +129,6 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

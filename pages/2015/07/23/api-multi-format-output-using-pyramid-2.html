@@ -76,30 +76,30 @@
             <div class="entry-content">
               <p>在上一篇文章中，简单归纳了pyramid中3种格式化输出的方式，不过在实际使用过程中，还有另外一种方式：即view的处理中也稍有不同，这样就需要对同一个URL写两个不同的view。</p>
 <p>首先，在main函数中加入一个route的Predicate。</p>
-<div class="highlight"><pre><span class="n">config</span><span class="p">.</span><span class="n">add_route_predicate</span><span class="p">(</span><span class="s">&#39;format&#39;</span><span class="p">,</span> <span class="n">FormatPredicate</span><span class="p">)</span>
+<div class="highlight"><pre>config.add_route_predicate(&#39;format&#39;, FormatPredicate)
 </pre></div>
 
 
 <p>另外，route定义也要做一定的变换。</p>
-<div class="highlight"><pre>    <span class="n">config</span><span class="p">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;api4_json&#39;</span><span class="p">,</span> <span class="s">&#39;/api4&#39;</span><span class="p">,</span> <span class="n">format</span><span class="p">=</span>&quot;<span class="n">json</span>&quot;<span class="p">)</span>
-    <span class="n">config</span><span class="p">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;api4_txt&#39;</span><span class="p">,</span> <span class="s">&#39;/api4&#39;</span><span class="p">,</span> <span class="n">format</span><span class="p">=</span>&quot;<span class="n">txt</span>&quot;<span class="p">)</span>
+<div class="highlight"><pre>    config.add_route(&#39;api4_json&#39;, &#39;/api4&#39;, format=&quot;json&quot;)
+    config.add_route(&#39;api4_txt&#39;, &#39;/api4&#39;, format=&quot;txt&quot;)
 </pre></div>
 
 
 <p>这样，就可以定义两个不同的view了。</p>
-<div class="highlight"><pre><span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api4_json&#39;</span><span class="p">,</span> <span class="n">request_method</span><span class="p">=</span>&quot;<span class="n">POST</span>&quot;<span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;myjson&#39;</span><span class="p">)</span>
-<span class="n">def</span> <span class="n">api4_json_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">pass</span>
+<div class="highlight"><pre>@view_config(route_name=&#39;api4_json&#39;, request_method=&quot;POST&quot;, renderer=&#39;myjson&#39;)
+def api4_json_view(request):
+    pass
 
-<span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;api4_txt&#39;</span><span class="p">,</span> <span class="n">request_method</span><span class="p">=</span>&quot;<span class="n">POST</span>&quot;<span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;api4.mako&#39;</span><span class="p">)</span>
-<span class="n">def</span> <span class="n">api4_txt_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">pass</span>
+@view_config(route_name=&#39;api4_txt&#39;, request_method=&quot;POST&quot;, renderer=&#39;api4.mako&#39;)
+def api4_txt_view(request):
+    pass
 </pre></div>
 
 
 <p>不过这种方式下，在写集成测试用例的时候需要注意，format这个参数一定要写在URL中，而不能出现在params参数中，要不会出现404错误，如：</p>
-<div class="highlight"><pre><span class="n">res</span> <span class="p">=</span> <span class="n">self</span><span class="p">.</span><span class="n">app</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">&#39;/api4?format=json&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">=</span><span class="n">params</span><span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="p">.</span><span class="n">status</span><span class="p">,</span> <span class="s">&#39;200 OK&#39;</span><span class="p">)</span>
+<div class="highlight"><pre>res = self.app.post(&#39;/api4?format=json&#39;, params=params)
+self.assertEqual(res.status, &#39;200 OK&#39;)
 </pre></div>
             </div><!-- /.entry-content -->
             <div class="comments">
@@ -137,12 +137,6 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

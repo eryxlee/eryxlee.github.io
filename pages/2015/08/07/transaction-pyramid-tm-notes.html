@@ -77,7 +77,7 @@
               <p>Pyramid 提供了一个事务处理的tween -- pyramid_tm，可以通过配置方式很方便得添加事务支持。</p>
 <h3>1. pyramid_tm的安装配置</h3>
 <p>在正确安装了pyramid_tm之后，只要在main函数中加入：</p>
-<div class="highlight"><pre><span class="n">config</span><span class="p">.</span><span class="n">include</span><span class="p">(</span><span class="s">&#39;pyramid_tm&#39;</span><span class="p">)</span>
+<div class="highlight"><pre>config.include(&#39;pyramid_tm&#39;)
 </pre></div>
 
 
@@ -90,42 +90,42 @@
 <p>即可对所有view提供事务管理支持。</p>
 <h3>2. 正常的事务处理</h3>
 <p>在正常情况下，业务代码中不需要参杂事务处理代码，如下：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+    try:
+        one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+        one.value = 2
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
 <p>该view运行之后，数据库中对应数据就改成了2，即事务自动在view结束后提交。</p>
 <h3>3. 业务异常时的事务处理</h3>
 <p>如果在view中抛出了不能处理的异常，则事务自动回滚。如下：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+    try:
+        one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+        one.value = 2
+        raise Exception(&quot;error&quot;)
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
 <p>该view运行后，数据库中数据未改变，console端可以看到ROLLBACK输出。</p>
 <h3>4. DBSession的commit</h3>
 <p>在配置了pyramid_tm之后，DBSession的commit功能会抛出异常</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-        <span class="n">DBSession</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
-        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+    try:
+        one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+        one.value = 2
+        DBSession.commit()
+        raise Exception(&quot;error&quot;)
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
@@ -133,114 +133,114 @@
 AssertionError: Transaction must be committed using the transaction manager</p>
 <h3>5. 直接调用transaction.commit</h3>
 <p>如果直接在view代码中调用了transaction.commit，则将会提交该语句之前的所有数据库操作。</p>
-<div class="highlight"><pre><span class="p">@</span><span class="n">view_config</span><span class="p">(</span><span class="n">route_name</span><span class="p">=</span><span class="s">&#39;home&#39;</span><span class="p">,</span> <span class="n">renderer</span><span class="p">=</span><span class="s">&#39;templates/mytemplate.pt&#39;</span><span class="p">)</span>
-<span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-        <span class="n">transaction</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
-        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>@view_config(route_name=&#39;home&#39;, renderer=&#39;templates/mytemplate.pt&#39;)
+def my_view(request):
+    try:
+        one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+        one.value = 2
+        transaction.commit()
+        raise Exception(&quot;error&quot;)
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
 <p>运行该view，可以发现数据库数据已经改变。也就是说，transaction.commit已经将这之前的数据操作提交，尽管后面抛出了异常，也不能再回退已经提交的数据。</p>
 <h3>6. doom的运用</h3>
 <p>transaction提供了一个doom函数，会使commit无效。如下：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-        <span class="n">transaction</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
-        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+    transaction.doom()
+    try:
+        one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+        one.value = 2
+        transaction.commit()
+        raise Exception(&quot;error&quot;)
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
 <p>运行该view，将会抛出异常：
 DoomedTransaction: transaction doomed, cannot commit。如果在代码中不调用commit，那么会怎么样呢？</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-        <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+    transaction.doom()
+    try:
+        one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+        one.value = 2
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
 <p>运行该view，发现数据库中数据不会改变，运行也不抛错，可以从console中看到已经ROLLBACK</p>
 <h3>7. 结合transaction.manager</h3>
 <p>很多时候，我们还会使用transaction.manager来达到事务处理目的，通过with语句，可以很清晰界定一个事务范围。如下所示：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
-            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+    try:
+        with transaction.manager:
+            one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+            one.value = 2
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
 <p>让我们再改变一下，在with中增加一个异常，如下：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
-            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-            <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+    try:
+        with transaction.manager:
+            one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+            one.value = 2
+            raise Exception(&quot;error&quot;)
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
 <p>运行该view后，发现数据未改变，系统抛出异常。但如果将raise语句移出with语句块呢？如下：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-#    <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
-            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-        <span class="n">raise</span> <span class="n">Exception</span><span class="p">(</span>&quot;<span class="n">error</span>&quot;<span class="p">)</span>
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+#    transaction.doom()
+    try:
+        with transaction.manager:
+            one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+            one.value = 2
+        raise Exception(&quot;error&quot;)
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
 <p>运行该view，发现数据改变，之后抛出异常。因此with语句结束之后，就完成了提交工作。</p>
 <p>下面，让我们再加上doom来试试看：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
-            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+    transaction.doom()
+    try:
+        with transaction.manager:
+            one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+            one.value = 2
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
 <p>运行该view之后，发现数据库数据改变，系统正常，也就是说doom在这里没有起作用。</p>
 <p>我们再来改一下位置：</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">my_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">with</span> <span class="n">transaction</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span>
-            <span class="n">transaction</span><span class="p">.</span><span class="n">doom</span><span class="p">()</span>
-            <span class="n">one</span> <span class="p">=</span> <span class="n">DBSession</span><span class="p">.</span><span class="n">query</span><span class="p">(</span><span class="n">MyModel</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">MyModel</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;one&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">()</span>
-            <span class="n">one</span><span class="p">.</span><span class="n">value</span> <span class="p">=</span> 2
-    <span class="n">except</span> <span class="n">DBAPIError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">conn_err_msg</span><span class="p">,</span> <span class="n">content_type</span><span class="p">=</span><span class="s">&#39;text/plain&#39;</span><span class="p">,</span> <span class="n">status_int</span><span class="p">=</span>500<span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s">&#39;one&#39;</span><span class="p">:</span> <span class="n">one</span><span class="p">,</span> <span class="s">&#39;project&#39;</span><span class="p">:</span> <span class="s">&#39;MyTest&#39;</span><span class="p">}</span>
+<div class="highlight"><pre>def my_view(request):
+    try:
+        with transaction.manager:
+            transaction.doom()
+            one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+            one.value = 2
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return {&#39;one&#39;: one, &#39;project&#39;: &#39;MyTest&#39;}
 </pre></div>
 
 
@@ -289,12 +289,6 @@ DoomedTransaction: transaction doomed, cannot commit。如果在代码中不调�
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

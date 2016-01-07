@@ -77,90 +77,90 @@
               <p>在使用sqlalchemy过程中，不小心犯了个小错误：在看一个查询语句时，发现一个从句 A.status == None 提示有PEP8警告，就好心改成了A.status is None。结果，单元测试各种出错。一看生成的SQl语句，发现status is null这个从句没有生成，这是为什么呢？</p>
 <p>仔细看看代码，终于发现A.status is None肯定是假值，在or从句中，被自动忽略了。</p>
 <p>那么，这里怎么写才能避免PEP8警告呢？通过查看SQLAlchemy的文档，可以看到如下用法：</p>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">None</span><span class="p">)</span>
+<div class="highlight"><pre>query.filter(User.name == None)
 
-# <span class="n">alternatively</span><span class="p">,</span> <span class="k">if</span> <span class="n">pep8</span><span class="o">/</span><span class="n">linters</span> <span class="n">are</span> <span class="n">a</span> <span class="n">concern</span>
-<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">is_</span><span class="p">(</span><span class="n">None</span><span class="p">))</span>
+# alternatively, if pep8/linters are a concern
+query.filter(User.name.is_(None))
 </pre></div>
 
 
 <p>好了，没警告了，这世界清静了。</p>
 <p>下面列一下其他几个操作符的用法：
 1. 相等</p>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;ed&#39;</span><span class="p">)</span>
+<div class="highlight"><pre>query.filter(User.name == &#39;ed&#39;)
 </pre></div>
 
 
 <ol>
 <li>不等</li>
 </ol>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> !<span class="p">=</span> <span class="s">&#39;ed&#39;</span><span class="p">)</span>
+<div class="highlight"><pre>query.filter(User.name != &#39;ed&#39;)
 </pre></div>
 
 
 <ol>
 <li>like</li>
 </ol>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">like</span><span class="p">(</span><span class="s">&#39;%ed%&#39;</span><span class="p">))</span>
+<div class="highlight"><pre>query.filter(User.name.like(&#39;%ed%&#39;))
 </pre></div>
 
 
 <ol>
 <li>in</li>
 </ol>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">in_</span><span class="p">([</span><span class="s">&#39;ed&#39;</span><span class="p">,</span> <span class="s">&#39;wendy&#39;</span><span class="p">,</span> <span class="s">&#39;jack&#39;</span><span class="p">]))</span>
+<div class="highlight"><pre>query.filter(User.name.in_([&#39;ed&#39;, &#39;wendy&#39;, &#39;jack&#39;]))
 </pre></div>
 
 
 <ol>
 <li>not in</li>
 </ol>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">~</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">in_</span><span class="p">([</span><span class="s">&#39;ed&#39;</span><span class="p">,</span> <span class="s">&#39;wendy&#39;</span><span class="p">,</span> <span class="s">&#39;jack&#39;</span><span class="p">]))</span>
+<div class="highlight"><pre>query.filter(~User.name.in_([&#39;ed&#39;, &#39;wendy&#39;, &#39;jack&#39;]))
 </pre></div>
 
 
 <ol>
 <li>is null</li>
 </ol>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">None</span><span class="p">)</span>
-<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">is_</span><span class="p">(</span><span class="n">None</span><span class="p">))</span>
+<div class="highlight"><pre>query.filter(User.name == None)
+query.filter(User.name.is_(None))
 </pre></div>
 
 
 <ol>
 <li>is not null</li>
 </ol>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> !<span class="p">=</span> <span class="n">None</span><span class="p">)</span>
-<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">isnot</span><span class="p">(</span><span class="n">None</span><span class="p">))</span>
+<div class="highlight"><pre>query.filter(User.name != None)
+query.filter(User.name.isnot(None))
 </pre></div>
 
 
 <ol>
 <li>and</li>
 </ol>
-<div class="highlight"><pre><span class="n">from</span> <span class="n">sqlalchemy</span> <span class="n">import</span> <span class="n">and_</span>
-<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">and_</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;ed&#39;</span><span class="p">,</span> <span class="n">User</span><span class="p">.</span><span class="n">fullname</span> <span class="o">==</span> <span class="s">&#39;Ed Jones&#39;</span><span class="p">))</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">and_</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">and_</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;ed&#39;</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">fullname</span> <span class="o">==</span> <span class="s">&#39;Ed Jones&#39;</span><span class="p">))</span>
 
-# 传入多个表达式
-<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;ed&#39;</span><span class="p">,</span> <span class="n">User</span><span class="p">.</span><span class="n">fullname</span> <span class="o">==</span> <span class="s">&#39;Ed Jones&#39;</span><span class="p">)</span>
+<span class="c"># 传入多个表达式</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;ed&#39;</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">fullname</span> <span class="o">==</span> <span class="s">&#39;Ed Jones&#39;</span><span class="p">)</span>
 
-# <span class="n">filter</span>级联
-<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;ed&#39;</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">fullname</span> <span class="o">==</span> <span class="s">&#39;Ed Jones&#39;</span><span class="p">)</span>
+<span class="c"># filter级联</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;ed&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">fullname</span> <span class="o">==</span> <span class="s">&#39;Ed Jones&#39;</span><span class="p">)</span>
 </pre></div>
 
 
 <ol>
 <li>or</li>
 </ol>
-<div class="highlight"><pre><span class="n">from</span> <span class="n">sqlalchemy</span> <span class="n">import</span> <span class="n">or_</span>
-<span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">or_</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;ed&#39;</span><span class="p">,</span> <span class="n">User</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;wendy&#39;</span><span class="p">))</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">or_</span>
+<span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">or_</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;ed&#39;</span><span class="p">,</span> <span class="n">User</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;wendy&#39;</span><span class="p">))</span>
 </pre></div>
 
 
 <ol>
 <li>match</li>
 </ol>
-<div class="highlight"><pre><span class="n">query</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="s">&#39;wendy&#39;</span><span class="p">))</span>
+<div class="highlight"><pre>query.filter(User.name.match(&#39;wendy&#39;))
 </pre></div>
             </div><!-- /.entry-content -->
             <div class="comments">
@@ -198,12 +198,6 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 

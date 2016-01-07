@@ -77,28 +77,28 @@
               <p>在现实项目中，数据库经常是已经建好的。因此，要再去逐个字段去重新声明一下显然是很无聊的。SQLAlchemy早就在这方面提供了利用反射机制自动加载的功能，而且在ORM中也可以使用这种机制。</p>
 <h3>1. ORM中的reflection</h3>
 <p>直接通过declarative_base返回的Base基类不具备自动加载功能，需要加入DeferredReflection的支持，如下：</p>
-<div class="highlight"><pre><span class="c"># 因类定义在前，无法传入engine参数，需要使用DeferredReflection机制</span>
-<span class="n">Base</span> <span class="p">=</span> <span class="n">declarative_base</span><span class="p">(</span><span class="n">cls</span><span class="p">=</span><span class="n">DeferredReflection</span><span class="p">)</span>
+<div class="highlight"><pre># 因类定义在前，无法传入engine参数，需要使用DeferredReflection机制
+Base = declarative_base(cls=DeferredReflection)
 
 
-<span class="c"># 利用反射机制根据现有数据库表定义User 类，这时类属性均与字段名一样</span>
-<span class="nb">class</span> <span class="n">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="p">=</span> <span class="s">&#39;user&#39;</span>
+# 利用反射机制根据现有数据库表定义User 类，这时类属性均与字段名一样
+class User(Base):
+    __tablename__ = &#39;user&#39;
 </pre></div>
 
 
 <p>在定义好类之后，还需要Base.prepare一下，否则会抛出unmapped异常。</p>
-<div class="highlight"><pre>    <span class="n">engine</span> <span class="p">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;mysql://root:@127.0.0.1:3306/test?charset=utf8&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+<div class="highlight"><pre>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
     <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">Session</span> <span class="p">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="p">=</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">session</span> <span class="p">=</span> <span class="n">Session</span><span class="p">()</span>
+    <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
 
-    # <span class="n">prepare</span>调用时才使用反射机制
+    <span class="cp"># prepare调用时才使用反射机制</span>
     <span class="n">Base</span><span class="p">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
 
-    <span class="n">ed_user</span> <span class="p">=</span> <span class="n">User</span><span class="p">()</span>
-    <span class="n">ed_user</span><span class="p">.</span><span class="n">name</span> <span class="p">=</span> <span class="s">&#39;ed&#39;</span>
-    <span class="n">ed_user</span><span class="p">.</span><span class="n">password</span> <span class="p">=</span> <span class="s">&#39;password&#39;</span>
+    <span class="n">ed_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">ed</span><span class="err">&#39;</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">password</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">password</span><span class="err">&#39;</span>
 
     <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">ed_user</span><span class="p">)</span>
     <span class="n">session</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
@@ -107,28 +107,28 @@
 
 <h3>2. 自动装载后字段的改名</h3>
 <p>使用了自动加载之后，就不能再用column来重新定义属性名了。那么如果还想改变名字怎么办呢？SQLAlchemy同样也提供了这方面的支持。加入如下函数：</p>
-<div class="highlight"><pre><span class="c"># 将每个字段的名字加上一个前缀作为类的属性名</span>
-<span class="p">@</span><span class="n">event</span><span class="p">.</span><span class="n">listens_for</span><span class="p">(</span><span class="n">Table</span><span class="p">,</span> <span class="s">&quot;column_reflect&quot;</span><span class="p">)</span>
-<span class="n">def</span> <span class="n">column_reflect</span><span class="p">(</span><span class="n">inspector</span><span class="p">,</span> <span class="nb">table</span><span class="p">,</span> <span class="n">column_info</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">table</span><span class="p">.</span><span class="n">metadata</span> <span class="n">is</span> <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">:</span>
-        <span class="c"># set column.key = &quot;attr_&lt;lower_case_name&gt;&quot;</span>
-        <span class="n">column_info</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;attr_%s&quot;</span> <span class="c">% column_info[&#39;name&#39;].lower()</span>
+<div class="highlight"><pre># 将每个字段的名字加上一个前缀作为类的属性名
+@event.listens_for(Table, &quot;column_reflect&quot;)
+def column_reflect(inspector, table, column_info):
+    if table.metadata is Base.metadata:
+        # set column.key = &quot;attr_&lt;lower_case_name&gt;&quot;
+        column_info[&#39;key&#39;] = &quot;attr_%s&quot; % column_info[&#39;name&#39;].lower()
 </pre></div>
 
 
 <p>现在就可以使用变更过之后的属性名了。</p>
-<div class="highlight"><pre>    <span class="n">engine</span> <span class="p">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;mysql://root:@127.0.0.1:3306/test?charset=utf8&#39;</span><span class="p">,</span> <span class="n">echo</span><span class="p">=</span><span class="n">True</span><span class="p">)</span>
+<div class="highlight"><pre>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
     <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">Session</span> <span class="p">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="p">=</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">session</span> <span class="p">=</span> <span class="n">Session</span><span class="p">()</span>
+    <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
 
-    # <span class="n">prepare</span>调用时才使用反射机制
+    <span class="cp"># prepare调用时才使用反射机制</span>
     <span class="n">Base</span><span class="p">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
 
-    <span class="n">ed_user</span> <span class="p">=</span> <span class="n">User</span><span class="p">()</span>
-    <span class="n">ed_user</span><span class="p">.</span><span class="n">attr_name</span> <span class="p">=</span> <span class="s">&#39;ed&#39;</span>
-    <span class="n">ed_user</span><span class="p">.</span><span class="n">attr_password</span> <span class="p">=</span> <span class="s">&#39;password&#39;</span>
-    <span class="n">ed_user</span><span class="p">.</span><span class="n">attr_from</span> <span class="p">=</span> <span class="s">&#39;usa&#39;</span>
+    <span class="n">ed_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">attr_name</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">ed</span><span class="err">&#39;</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">attr_password</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">password</span><span class="err">&#39;</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">attr_from</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">usa</span><span class="err">&#39;</span>
 
     <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">ed_user</span><span class="p">)</span>
     <span class="n">session</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
@@ -169,12 +169,6 @@
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-4"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 </ul>
 
 
