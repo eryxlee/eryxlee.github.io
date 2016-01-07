@@ -63,6 +63,29 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/12/03/mysql-macos-lib-error.html" rel="bookmark" title="Permalink to MAC OS 上安装MySQL 5.7.10后Python连接问题">MAC OS 上安装MySQL 5.7.10后Python连接问题</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-12-03T00:00:00+08:00"> 2015-12-03 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>通过brew安装了最新版本的MySQL，在python中import MySQLdb发现找不到libmysqlclient.18.dylib文件。而MySQL 5.7.10带的lib文件是libmysqlclient.20.dylib。经过测试后，发现直接讲文件改名链接过来也是可以用的。</p>
+<p><code>sudo ln -s /usr/local/opt/mysql/lib/libmysqlclient.20.dylib /usr/local/lib/libmysqlclient.18.dylib</code> </p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/12/03/mysql-macos-lib-error.html" rel="bookmark" title="Permalink to MAC OS 上安装MySQL 5.7.10后Python连接问题">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/mysql.html">mysql</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">MySQL docker image 的简单用法</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-04-25T00:00:00+08:00"> 2015-04-25 </abbr>
@@ -107,6 +130,7 @@
 //-->
 <h4>Categories</h4>
 <ul>
+		<li><a href="/mysql/index.html">mysql</a></li>
 		<li><a href="/ops/index.html">ops</a></li>
 		<li><a href="/python/index.html">python</a></li>
 		<li><a href="/uncategorized/index.html">uncategorized</a></li>

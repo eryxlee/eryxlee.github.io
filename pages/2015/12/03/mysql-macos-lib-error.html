@@ -2,7 +2,7 @@
 <html lang="zh_cn">
 <head>
 
-        <title>Learning & Thoughts</title>
+        <title>MAC OS 上安装MySQL 5.7.10后Python连接问题</title>
         <meta charset="utf-8" />
 
 
@@ -53,39 +53,46 @@
               </ul>
             </div>
 
-<section id="content">
-<h2>Articles in the uncategorized category</h2>
-
+<section id="content" class="body">
 
    <div class="row">
-
-
         <div class="eleven columns">
-                 <ol id="post-list">
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/04/23/old_post.html" rel="bookmark" title="Permalink to Old Posts">Old Posts</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2015-04-23T00:00:00+08:00"> 2015-04-23 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>Old posts refer to http://blog.sina.com.cn/eryxlee</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/pages/2015/04/23/old_post.html" rel="bookmark" title="Permalink to Old Posts">Read more <i class="icon-arrow-right"></i></a></div>
 
 
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2015/12/03/mysql-macos-lib-error.html" rel="bookmark"
+                   title="Permalink to MAC OS 上安装MySQL 5.7.10后Python连接问题">MAC OS 上安装MySQL 5.7.10后Python连接问题</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-12-03T00:00:00+08:00">
+                2015-12-03
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>通过brew安装了最新版本的MySQL，在python中import MySQLdb发现找不到libmysqlclient.18.dylib文件。而MySQL 5.7.10带的lib文件是libmysqlclient.20.dylib。经过测试后，发现直接讲文件改名链接过来也是可以用的。</p>
+<p><code>sudo ln -s /usr/local/opt/mysql/lib/libmysqlclient.20.dylib /usr/local/lib/libmysqlclient.18.dylib</code> </p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2015/12/03/mysql-macos-lib-error.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
 
-                                <div class="row tag-row">
-                                </div>
-
-
-
-                        </article></li>
-                </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
-        
+
 <div class="three columns">
 <!--
 <h4>Pages</h4>
@@ -126,10 +133,8 @@
 
 </div> </div><!-- /.row -->
 
-<p class="paginator">
-    Page 1 / 1
-</p>
-</section><!-- /#content -->
+
+</section>
 
        </div><!-- /.row -->
     </div><!-- /.container -->
