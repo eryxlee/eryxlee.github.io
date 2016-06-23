@@ -63,6 +63,43 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark" title="Permalink to SQLAlchemy ORM中字段名的几种变化">SQLAlchemy ORM中字段名的几种变化</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-21T00:00:00+08:00"> 2015-08-21 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>在不是非常需要考虑性能的地方，SQLAlchemy ORM是一个很便捷的架设与数据库与对象之间的桥梁。通过ORM，普通开发者就可以快速地写出比较安全可靠应用系统。</p>
+<p>不过在SQLAlchemy ORM的深入应用中，也会有很多大大小小的问题等着去解决。下面就简单说说比较常见的数据库字段名与类属性之间的映射关系。</p>
+<h3>1. 正常场景</h3>
+<p>在正常场景中，ORM类的定义非常简单。</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="n">User</span>(<span class="n">Base</span>):
+    <span class="n">__tablename__</span> = <span class="s">&#39;user&#39;</span>
+
+    <span class="n">id</span> = <span class="n">Column</span>(<span class="n">Integer</span>, <span class="n">primary_key</span>=<span class="nb">True</span>)
+    <span class="n">first_name</span> = <span class="n">Column</span>(<span class="n">String</span>(<span class="mi">10</span>))
+    <span class="n">last_name</span> = <span class="n">Column</span>(<span class="n">String</span>(<span class="mi">10</span>))
+</pre></div>
+
+
+<p>这是一个很简单的ORM类定义，类名为User，继承自Base，包含3个属性id, first_name, last_name。对应的表名为user。其中也至少包含跟上面名字相同的3个字段.</p>
+<h3>2. 属性名、字段名不一致</h3>
+<p>但是在正常开发中，经常会要处理一些名字不一致的地方。比如，上面的表中加入了一个from字段，表示来自哪里。那么在User类中也加一个from属性么？这显然是错误的，因为from是python的关键字 ...</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark" title="Permalink to SQLAlchemy ORM中字段名的几种变化">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark" title="Permalink to pyramid_tm 配置与使用">pyramid_tm 配置与使用</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-15T00:00:00+08:00"> 2015-08-15 </abbr>
@@ -407,26 +444,6 @@ pip install docker-compose
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/04/23/old_post.html" rel="bookmark" title="Permalink to Old Posts">Old Posts</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2015-04-23T00:00:00+08:00"> 2015-04-23 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>Old posts refer to http://blog.sina.com.cn/eryxlee</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/pages/2015/04/23/old_post.html" rel="bookmark" title="Permalink to Old Posts">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -451,12 +468,12 @@ pip install docker-compose
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
 	    <li class="tag-2"><a href="/tag/mysql.html">mysql</a></li>
 	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
+	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
 	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
 </ul>
 
 
@@ -479,7 +496,8 @@ pip install docker-compose
 
 <p class="paginator">
             <a href="/author/eryx-lee.html"><i class="icon-arrow-left"></i></a>
-    Page 2 / 2
+    Page 2 / 3
+        <a href="/author/eryx-lee3.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
 

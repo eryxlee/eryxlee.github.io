@@ -63,6 +63,37 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2016/06/23/py2exe-2016-03-12.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directo">Requests访问HTTPS链接在使用py2exe打包后出现No such file or directo</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2016-06-23T15:28:45+08:00"> 2016-06-23 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>ry错误
+Date: 2016-03-12
+Modified: 2016-03-12
+Tags: py2exe, https
+Slug: Requests-https-py2exe-no-such-file-or-directory</p>
+<p>因安全原因，最近将部分服务升级到了HTTPS，不过这次简单的升级却导致了有些业务应用出错。具体体现是业务应用一启动就抛出requests.exceptions.SSLError: [Errno 2] No such file or directory错误。不过该应用在开发环境运行是正常的，只是使用py2exe打包成可执行文件之后才会出现该错误。
+通过表面现象，初步判断是py2exe打包时有文件遗漏。谷歌后发现requests在访问https网站时使用了一个cacert.pem文件，该文件直接放在了requests包里面，而py2exe在打包时只复制了pyc文件，从而在运行时报找不到文件错误，而开发环境不报错。
+知道了具体的原因，我们就可以着手解决这个问题了：</p>
+<h3>1. 直接设置verify为False</h3>
+<p>最简单的方式就是直接在requests每次get的时候加一个参数verify=False跳过证书验证。不过这种做法需要改每个调用，而且在日志中会有一个警告错误。</p>
+<h3>2. 将cacert.pem一起打包</h3>
+<p>在py2exe配置文件中加入import requests.certs，然后在data_files中加入一项：('',[requests.certs ...</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2016/06/23/py2exe-2016-03-12.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directo">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/10/15/the-order-of-ordereddict.html" rel="bookmark" title="Permalink to OrderedDict的顺序问题">OrderedDict的顺序问题</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-10-15T00:00:00+08:00"> 2015-10-15 </abbr>
@@ -416,46 +447,6 @@ query.filter(User.name.is_(None))
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">使用Pyramid机制完成API的多格式输出（续）</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2015-07-23T00:00:00+08:00"> 2015-07-23 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>在上一篇文章中，简单归纳了pyramid中3种格式化输出的方式，不过在实际使用过程中，还有另外一种方式：即view的处理中也稍有不同，这样就需要对同一个URL写两个不同的view。</p>
-<p>首先，在main函数中加入一个route的Predicate。</p>
-<div class="highlight"><pre>config.add_route_predicate(&#39;format&#39;, FormatPredicate)
-</pre></div>
-
-
-<p>另外，route定义也要做一定的变换。</p>
-<div class="highlight"><pre>    config.add_route(&#39;api4_json&#39;, &#39;/api4&#39;, format=&quot;json&quot;)
-    config.add_route(&#39;api4_txt&#39;, &#39;/api4&#39;, format=&quot;txt&quot;)
-</pre></div>
-
-
-<p>这样，就可以定义两个不同的view了。</p>
-<div class="highlight"><pre>@view_config(route_name=&#39;api4_json&#39;, request_method=&quot;POST&quot;, renderer=&#39;myjson&#39;)
-def api4_json_view(request):
-    pass
-
-@view_config(route_name=&#39;api4_txt&#39;, request_method=&quot;POST&quot;, renderer=&#39;api4.mako&#39;)
-def api4_txt_view(request ...</pre></div> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/pages/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -480,12 +471,12 @@ def api4_txt_view(request ...</pre></div> </div><!-- /.entry-content -->
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
 	    <li class="tag-2"><a href="/tag/mysql.html">mysql</a></li>
 	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
+	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
 	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
 </ul>
 
 
