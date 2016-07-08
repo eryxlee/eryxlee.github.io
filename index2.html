@@ -63,6 +63,44 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="/pages/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">在SQLAlchemy ORM中使用反射自动装载数据库结构</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-29T00:00:00+08:00"> 2015-08-29 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>在现实项目中，数据库经常是已经建好的。因此，要再去逐个字段去重新声明一下显然是很无聊的。SQLAlchemy早就在这方面提供了利用反射机制自动加载的功能，而且在ORM中也可以使用这种机制。</p>
+<h3>1. ORM中的reflection</h3>
+<p>直接通过declarative_base返回的Base基类不具备自动加载功能，需要加入DeferredReflection的支持，如下：</p>
+<div class="highlight"><pre># 因类定义在前，无法传入engine参数，需要使用DeferredReflection机制
+Base = declarative_base(cls=DeferredReflection)
+
+
+# 利用反射机制根据现有数据库表定义User 类，这时类属性均与字段名一样
+class User(Base):
+    __tablename__ = &#39;user&#39;
+</pre></div>
+
+
+<p>在定义好类之后，还需要Base.prepare一下，否则会抛出unmapped异常。</p>
+<div class="highlight"><pre>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
+    <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker ...</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="/pages/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
                                 <header> <h2 class="entry-title"><a href="/pages/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark" title="Permalink to SQLAlchemy ORM中字段名的几种变化">SQLAlchemy ORM中字段名的几种变化</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-21T00:00:00+08:00"> 2015-08-21 </abbr>
@@ -414,36 +452,6 @@ pip install docker-compose
 
 
                         </article></li>
-                        <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">MySQL docker image 的简单用法</a></h2> </header>
-                                <footer class="post-info">
-                                    <abbr class="published" title="2015-04-25T00:00:00+08:00"> 2015-04-25 </abbr>
-                                    <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
-                                    </address>
-                                </footer><!-- /.post-info -->
-                                <div class="entry-content"> <p>自从有了Docker compose，各种开发、测试等环境的搭建就变成了一件很简单的事情。因此，趁着周末有时间，准备使用docker compose搭建一个Pyramid的开发环境。
-整个搭建过程都很简单，不过在使用MySQL的官方image时，也遇到了几个小问题，简单做个记录。</p>
-<h3>1. 使用最新的image</h3>
-<p>因原来使用的MySQL是一个确定的版本，因此在使用image时，也指定了数据库的版本作为tag，结果说明里面的几个属性一直在出各种各样的问题，换成last的image，一切正常。</p>
-<h3>2. 注意数据目录</h3>
-<p>因为将数据目录映射到了host上，因此instance关掉，删除之后，数据文件还是保留在硬盘上的，如果之前的配置中出现过错误，就会影响后面的instance。在搭建过程中，就有一次发现mysql目录变成了root权限，结果在启动过程中一直报错误：mysql_1 | ERROR: 1005  Can't create table 'db' (errno: 13)</p>
-<h3>3. 新建数据库、用户</h3>
-<p>该image只有在没有发现"$DATADIR/mysql"这个目录下，才会去初始化数据库、设置root密码 ...</p> </div><!-- /.entry-content -->
-
-                                <div class="medium primary btn"><a href="/pages/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-                                <div class="row tag-row">
-                                        <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/docker.html">docker</a>
-                                            <a class="danger label" href="/tag/mysql.html">mysql</a>
-                                </div>
-
-
-
-                        </article></li>
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -468,14 +476,14 @@ pip install docker-compose
 
 <h4>Tags</h4>
 	<ul>
-	    <li class="tag-2"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-4"><a href="/tag/py2exe.html">py2exe</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-1"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
+	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
 	    <li class="tag-4"><a href="/tag/https.html">https</a></li>
+	    <li class="tag-4"><a href="/tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="/tag/mysql.html">mysql</a></li>
+	    <li class="tag-0"><a href="/tag/docker.html">docker</a></li>
+	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
+	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
 </ul>
 
 
