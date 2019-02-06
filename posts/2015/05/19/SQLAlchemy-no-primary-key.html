@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>SQLAlchemy 无主键、复合主键的处理</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/pygment.css" />
+
+        <script src="../../../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="../../../../posts/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark"
+                   title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-05-19T00:00:00+08:00">
+                2015-05-19
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="../../../../author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>SQLAlchemy ORM定义中一张表必须要有primary key，最通常的就是定义一个id字段，并设置成主键，如果一张表在OR-Mapping时没有定义主键程序就会报错。</p>
+<h3>1. 为什么必须要有主键</h3>
+<p>SQLAlchemy大量使用了Session，而在一个Session中存放的ORM对象都会使用一个叫identity map的数据结构唯一映射到一条具体的数据库记录，只有这样，对ORM对象的update、delete等操作才会直接反应到数据库数据上。因此，要使用SQLAlchemy ORM，主键是不可或缺的。
+但现实中，确实会存在一些表没有定义主键，或使用了复合主键，在SQLAlchemy中该怎么处理呢？</p>
+<h3>2. 数据库中没有主键</h3>
+<p>在数据库字段中选择几个字段，只要组合起来能够满足唯一性，非空，就可以把他们当做主键来处理，也就是说数据库中可以没有定义主键，但ORM定义中定义一个虚拟的主键，这样就转变成了复合主键的定义问题。如果找不到这样的字段组合，那么就无法使用SQLAlchemy的OR-Mapping了。</p>
+<h3>3. 复合主键的定义</h3>
+<p>SQLAlchemy的OR-Mapping中可以对多个字段定义primary_key=True，只要多个字段定义了该参数，就能构造出复合主键。</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">SomeClass</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;some_table_with_no_pk&quot;</span>
+
+    <span class="nx">uid</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">primary_key</span><span class="o">=</span><span class="nx">True</span><span class="p">)</span>
+    <span class="nx">bar</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nb">String</span><span class="p">,</span> <span class="nx">primary_key</span><span class="o">=</span><span class="nx">True</span><span class="p">)</span>
+</pre></div>
+
+
+<p>当然，也可以用__mapper_args__参数来构造复合主键，如下所示：</p>
+<div class="highlight"><pre><span></span>__mapper_args__ = {&quot;primary_key&quot;:(uid, bar)}
+</pre></div>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "posts/2015/05/19/SQLAlchemy-no-primary-key.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../../../category/ops/index.html">ops</a></li>
+    <li><a href="../../../../category/python/index.html">python</a></li>
+    <li><a href="../../../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../../../theme/js/plugins.js"></script>
+</body>
+</html>

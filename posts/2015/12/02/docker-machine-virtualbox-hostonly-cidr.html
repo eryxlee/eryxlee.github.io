@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>Docker machine虚拟机网络地址配置</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/pygment.css" />
+
+        <script src="../../../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="../../../../posts/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html" rel="bookmark"
+                   title="Permalink to Docker machine虚拟机网络地址配置">Docker machine虚拟机网络地址配置</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-12-02T00:00:00+08:00">
+                2015-12-02
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="../../../../author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>因家里网络调整，将网段设置成了192.168.99.＊网段，一直也就没注意。不过后来一次突然发现，docker machine无法启动了，抛出了下面的错误：</p>
+<div class="highlight"><pre><span></span>This machine has been allocated an IP address, but Docker Machine could not
+reach it successfully.
+
+SSH for the machine should still work, but connecting to exposed ports, such as
+the Docker daemon port (usually &lt;ip&gt;:2376), may not work properly.
+
+You may need to add the route manually, or use another related workaround.
+
+This could be due to a VPN, proxy, or host file configuration issue.
+</pre></div>
+
+
+<p>后来才发现，docker默认分配的地址也是99网段的，因此启动docker machine需要换一个地址才行。运行如下命令：</p>
+<div class="highlight"><pre><span></span>docker-machine create --driver virtualbox --virtualbox-hostonly-cidr 192.168.60.1/24 dev
+docker-machine env dev
+docker-machine ip dev
+</pre></div>
+
+
+<p>之后一切照旧。</p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "posts/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../../../category/ops/index.html">ops</a></li>
+    <li><a href="../../../../category/python/index.html">python</a></li>
+    <li><a href="../../../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../../../theme/js/plugins.js"></script>
+</body>
+</html>

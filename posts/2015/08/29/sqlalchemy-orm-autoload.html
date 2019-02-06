@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>在SQLAlchemy ORM中使用反射自动装载数据库结构</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/pygment.css" />
+
+        <script src="../../../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="../../../../posts/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark"
+                   title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">在SQLAlchemy ORM中使用反射自动装载数据库结构</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-08-29T00:00:00+08:00">
+                2015-08-29
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="../../../../author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>在现实项目中，数据库经常是已经建好的。因此，要再去逐个字段去重新声明一下显然是很无聊的。SQLAlchemy早就在这方面提供了利用反射机制自动加载的功能，而且在ORM中也可以使用这种机制。</p>
+<h3>1. ORM中的reflection</h3>
+<p>直接通过declarative_base返回的Base基类不具备自动加载功能，需要加入DeferredReflection的支持，如下：</p>
+<div class="highlight"><pre><span></span><span class="err">#</span> <span class="err">因类定义在前，无法传入</span><span class="nx">engine参数</span><span class="err">，需要使用</span><span class="nx">DeferredReflection机制</span>
+<span class="nx">Base</span> <span class="o">=</span> <span class="nx">declarative_base</span><span class="p">(</span><span class="nx">cls</span><span class="o">=</span><span class="nx">DeferredReflection</span><span class="p">)</span>
+
+
+<span class="err">#</span> <span class="err">利用反射机制根据现有数据库表定义</span><span class="nx">User</span> <span class="err">类，这时类属性均与字段名一样</span>
+<span class="kr">class</span> <span class="nx">User</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+</pre></div>
+
+
+<p>在定义好类之后，还需要Base.prepare一下，否则会抛出unmapped异常。</p>
+<div class="highlight"><pre><span></span>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
+    <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+
+    <span class="cp"># prepare调用时才使用反射机制</span>
+    <span class="n">Base</span><span class="p">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+
+    <span class="n">ed_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">ed</span><span class="err">&#39;</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">password</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">password</span><span class="err">&#39;</span>
+
+    <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">ed_user</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+
+
+<h3>2. 自动装载后字段的改名</h3>
+<p>使用了自动加载之后，就不能再用column来重新定义属性名了。那么如果还想改变名字怎么办呢？SQLAlchemy同样也提供了这方面的支持。加入如下函数：</p>
+<div class="highlight"><pre><span></span># 将每个字段的名字加上一个前缀作为类的属性名
+@event.listens_for(Table, &quot;column_reflect&quot;)
+def column_reflect(inspector, table, column_info):
+    if table.metadata is Base.metadata:
+        # set column.key = &quot;attr_&lt;lower_case_name&gt;&quot;
+        column_info[&#39;key&#39;] = &quot;attr_%s&quot; % column_info[&#39;name&#39;].lower()
+</pre></div>
+
+
+<p>现在就可以使用变更过之后的属性名了。</p>
+<div class="highlight"><pre><span></span>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
+    <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+
+    <span class="cp"># prepare调用时才使用反射机制</span>
+    <span class="n">Base</span><span class="p">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+
+    <span class="n">ed_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">attr_name</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">ed</span><span class="err">&#39;</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">attr_password</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">password</span><span class="err">&#39;</span>
+    <span class="n">ed_user</span><span class="p">.</span><span class="n">attr_from</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">usa</span><span class="err">&#39;</span>
+
+    <span class="n">session</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">ed_user</span><span class="p">)</span>
+    <span class="n">session</span><span class="p">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "posts/2015/08/29/sqlalchemy-orm-autoload.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../../../category/ops/index.html">ops</a></li>
+    <li><a href="../../../../category/python/index.html">python</a></li>
+    <li><a href="../../../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../../../theme/js/plugins.js"></script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>Pyramid 的 docker 容器</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/pygment.css" />
+
+        <script src="../../../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="../../../../posts/2015/05/12/docker-pyramid.html" rel="bookmark"
+                   title="Permalink to Pyramid 的 docker 容器">Pyramid 的 docker 容器</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-05-12T00:00:00+08:00">
+                2015-05-12
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="../../../../author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>这是一个Pyramid项目的docker 框架，它由docker compose来管理多个pyramid项目需要用到的容器。</p>
+<p>但因pyramid还有一些像python setup.py develop、initialize_db之类的项目初始化命令，在pyramid本身功能上的整合还不理想。</p>
+<p>另，因pypi在国内访问很慢，可以替换到豆瓣的源。</p>
+<h3>1. 启动</h3>
+<div class="highlight"><pre><span></span>docker-compose -p pyramid up  启动整个系统
+docker-compose -p pyramid up mysql  单独启动mysql容器
+</pre></div>
+
+
+<p>注意，这里容器的名字是系统按照目录名，容器名，序号自动生成的，不能自己定义名字，参见https://github.com/docker/compose/issues/652</p>
+<h3>2. 进入MySQL</h3>
+<div class="highlight"><pre><span></span>docker run -it --link pyramid_mysql_1:mysql --rm mysql sh -c &#39;exec mysql -h mysql -P 3306 -uroot -p&#39;
+</pre></div>
+
+
+<h3>3. 进入Redis</h3>
+<div class="highlight"><pre><span></span>docker run -it --link pyramid_redis_1:redis --rm redis sh -c &#39;exec redis-cli -h redis -p 6379&#39;
+</pre></div>
+
+
+<h3>4. Pyramid项目管理</h3>
+<p>创建一个新的pyramid项目</p>
+<div class="highlight"><pre><span></span>docker run -it --volumes-from pyramid_app_1 --rm pyramid_app sh -c &#39;pcreate -t alchemy mytest&#39;
+</pre></div>
+
+
+<p>运行python setup.py develop</p>
+<div class="highlight"><pre><span></span>docker exec pyramid_app_1 sh -c &#39;cd mytest;python setup.py develop&#39;
+</pre></div>
+
+
+<p>初始化数据库</p>
+<div class="highlight"><pre><span></span>docker exec pyramid_app_1 sh -c &#39;cd mytest;initialize_mytest_db development.ini&#39;
+</pre></div>
+
+
+<p>启动pyramid项目</p>
+<div class="highlight"><pre><span></span>docker exec pyramid_app_1 sh -c &#39;cd mytest;pserve development.ini&#39;
+</pre></div>
+
+
+<p>进入pyramid项目</p>
+<div class="highlight"><pre><span></span>docker exec pyramid_app_1 /bin/bash
+</pre></div>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "posts/2015/05/12/docker-pyramid.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../../../category/ops/index.html">ops</a></li>
+    <li><a href="../../../../category/python/index.html">python</a></li>
+    <li><a href="../../../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../../../theme/js/plugins.js"></script>
+</body>
+</html>

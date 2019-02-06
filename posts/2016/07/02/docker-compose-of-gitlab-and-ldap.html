@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>Gitlab+LDAP的compose文件</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/pygment.css" />
+
+        <script src="../../../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="../../../../posts/2016/07/02/docker-compose-of-gitlab-and-ldap.html" rel="bookmark"
+                   title="Permalink to Gitlab+LDAP的compose文件">Gitlab+LDAP的compose文件</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2016-07-02T00:00:00+08:00">
+                2016-07-02
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="../../../../author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>简单配置了一个使用LDAP做用户认证的Gitlab服务器。</p>
+<div class="highlight"><pre><span></span><span class="n">gitlab</span><span class="o">:</span>
+    <span class="n">image</span><span class="o">:</span> <span class="n">sameersbn</span><span class="o">/</span><span class="n">gitlab</span><span class="o">:</span><span class="n">latest</span>
+    <span class="n">restart</span><span class="o">:</span> <span class="n">always</span>
+    <span class="n">environment</span><span class="o">:</span>
+        <span class="o">-</span> <span class="n">GITLAB_PORT</span><span class="o">=</span><span class="s2">&quot;80&quot;</span>
+        <span class="o">-</span> <span class="n">GITLAB_SSH_PORT</span><span class="o">=</span><span class="s2">&quot;22&quot;</span>
+        <span class="o">-</span> <span class="n">GITLAB_SECRETS_DB_KEY_BASE</span><span class="o">=</span><span class="s2">&quot;1111&quot;</span>
+        <span class="o">-</span> <span class="n">LDAP_ENABLED</span><span class="o">=</span><span class="kc">true</span>
+        <span class="o">-</span> <span class="n">LDAP_HOST</span><span class="o">=</span><span class="n">ldap</span>
+        <span class="o">-</span> <span class="n">LDAP_PORT</span><span class="o">=</span><span class="s2">&quot;389&quot;</span>
+        <span class="o">-</span> <span class="n">LDAP_UID</span><span class="o">=</span><span class="n">uid</span>
+        <span class="o">-</span> <span class="n">LDAP_METHOD</span><span class="o">=</span><span class="n">plain</span>
+        <span class="o">-</span> <span class="n">LDAP_BIND_DN</span><span class="o">=</span><span class="n">cn</span><span class="o">=</span><span class="n">admin</span><span class="o">,</span><span class="n">dc</span><span class="o">=</span><span class="n">XXXX</span><span class="o">,</span><span class="n">dc</span><span class="o">=</span><span class="n">com</span>
+        <span class="o">-</span> <span class="n">LDAP_PASS</span><span class="o">=</span><span class="n">XXXXX</span>
+        <span class="o">-</span> <span class="n">LDAP_BASE</span><span class="o">=</span><span class="n">DC</span><span class="o">=</span><span class="n">XXXX</span><span class="o">,</span><span class="n">DC</span><span class="o">=</span><span class="n">com</span>
+        <span class="o">-</span> <span class="n">LDAP_ACTIVE_DIRECTORY</span><span class="o">=</span><span class="kc">true</span>
+        <span class="o">-</span> <span class="n">LDAP_ALLOW_USERNAME_OR_EMAIL_LOGIN</span><span class="o">=</span><span class="kc">false</span>
+        <span class="o">-</span> <span class="n">GITLAB_HOST</span><span class="o">=</span><span class="n">git</span><span class="o">.</span><span class="na">XXXX</span><span class="o">.</span><span class="na">com</span>
+    <span class="n">volumes</span><span class="o">:</span>
+        <span class="o">-</span> <span class="sr">/var/run/docker.sock:/run/</span><span class="n">docker</span><span class="o">.</span><span class="na">sock</span>
+        <span class="o">-</span> <span class="sr">/usr/bin/docker:/bin/</span><span class="n">docker</span>
+        <span class="o">-</span> <span class="sr">/opt/gitlab/data:/home/git/</span><span class="n">data</span>
+        <span class="o">-</span> <span class="sr">/opt/gitlab/log:/var/log/gi</span><span class="n">tlab</span>
+    <span class="n">ports</span><span class="o">:</span>
+        <span class="o">-</span> <span class="s2">&quot;80:80&quot;</span>
+    <span class="n">links</span><span class="o">:</span>
+        <span class="o">-</span> <span class="n">mysql</span>
+        <span class="o">-</span> <span class="n">redis</span><span class="o">:</span><span class="n">redisio</span>
+        <span class="o">-</span> <span class="n">ldap</span>
+
+<span class="n">ldap</span><span class="o">:</span>
+    <span class="n">image</span><span class="o">:</span> <span class="n">osixia</span><span class="o">/</span><span class="n">openldap</span><span class="o">:</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">3</span>
+    <span class="n">restart</span><span class="o">:</span> <span class="n">always</span>
+    <span class="n">environment</span><span class="o">:</span>
+        <span class="o">-</span> <span class="n">LDAP_ORGANISATION</span><span class="o">=</span><span class="n">XXXX</span>
+        <span class="o">-</span> <span class="n">LDAP_DOMAIN</span><span class="o">=</span><span class="n">XXXX</span><span class="o">.</span><span class="na">com</span>
+        <span class="o">-</span> <span class="n">LDAP_ADMIN_PASSWORD</span><span class="o">=</span><span class="n">XXXX</span>
+
+<span class="n">mysql</span><span class="o">:</span>
+    <span class="n">image</span><span class="o">:</span> <span class="n">sameersbn</span><span class="o">/</span><span class="n">mysql</span><span class="o">:</span><span class="n">latest</span>
+    <span class="n">restart</span><span class="o">:</span> <span class="n">always</span>
+    <span class="n">volumes</span><span class="o">:</span>
+        <span class="o">-</span> <span class="sr">/opt/gitlab/mysql:/var/lib/</span><span class="n">mysql</span>
+    <span class="n">environment</span><span class="o">:</span>
+        <span class="o">-</span> <span class="n">DB_NAME</span><span class="o">=</span><span class="n">gitlabhq_production</span>
+        <span class="o">-</span> <span class="n">DB_USER</span><span class="o">=</span><span class="n">gitlab</span>
+        <span class="o">-</span> <span class="n">DB_PASS</span><span class="o">=</span><span class="n">password</span>
+
+<span class="n">redis</span><span class="o">:</span>
+    <span class="n">image</span><span class="o">:</span> <span class="n">sameersbn</span><span class="o">/</span><span class="n">redis</span><span class="o">:</span><span class="n">latest</span>
+    <span class="n">restart</span><span class="o">:</span> <span class="n">always</span>
+</pre></div>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "posts/2016/07/02/docker-compose-of-gitlab-and-ldap.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../../../category/ops/index.html">ops</a></li>
+    <li><a href="../../../../category/python/index.html">python</a></li>
+    <li><a href="../../../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../../../theme/js/plugins.js"></script>
+</body>
+</html>

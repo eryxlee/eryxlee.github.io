@@ -9,11 +9,11 @@
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
         <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
 
-        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="stylesheet" type="text/css" href="../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../theme/pygment.css" />
 
-        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+        <script src="../theme/js/libs/modernizr-2.6.2.min.js"></script>
 
 
               <script>
@@ -38,17 +38,17 @@
         <div class="row">
 
           <header id="banner" class="body">
-                  <h1><a href="/">Learning & Thoughts <strong></strong></a></h1>
+                  <h1><a href="../">Learning & Thoughts <strong></strong></a></h1>
           </header><!-- /#banner -->
 
             <div id="navigation" class="navbar row">
               <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
              
               <ul class="columns">
-                <li><a href="/">Home</a></li>
+                <li><a href="../">Home</a></li>
 
                 <li><a href="/archives.html">Archives</a></li>
-                <li><a href="/about.html">About</a></li>
+                <li><a href="../pages/about.html">About</a></li>
 
               </ul>
             </div>
@@ -63,11 +63,11 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2016-03-12T00:00:00+08:00"> 2016-03-12 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>因安全原因，最近将部分服务升级到了HTTPS，不过这次简单的升级却导致了有些业务应用出错。具体体现是业务应用一启动就抛出requests.exceptions.SSLError: [Errno 2] No such file or directory错误。不过该应用在开发环境运行是正常的，只是使用py2exe打包成可执行文件之后才会出现该错误。
@@ -77,16 +77,16 @@
 <p>最简单的方式就是直接在requests每次get的时候加一个参数verify=False跳过证书验证。不过这种做法需要改每个调用，而且在日志中会有一个警告错误。</p>
 <h3>2. 将cacert.pem一起打包</h3>
 <p>在py2exe配置文件中加入import requests.certs，然后在data_files中加入一项：('',[requests.certs.where()])，这里的requests.certs.where()返回了当前cacert.pem文件路径，在data_files中加入这一项即告诉py2exe将该文件拷贝到生成目标exe文件的相同目录。将ca文件拷贝好后，还需要在程序开头设置一下ca环境变量。
-os ...</p> </div><!-- /.entry-content -->
+os …</p> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/py2exe.html">py2exe</a>
-                                            <a class="danger label" href="/tag/https.html">https</a>
+                                            <a class="danger label" href="../tag/py2exe.html">py2exe</a>
+                                            <a class="danger label" href="../tag/https.html">https</a>
                                 </div>
 
 
@@ -97,48 +97,33 @@ os ...</p> </div><!-- /.entry-content -->
         </div><!-- /.eleven.columns -->
         
 <div class="three columns">
-<!--
-<h4>Pages</h4>
-
- <ul>
-      <li><a href="/archives.html">Archives</a></li>
-      <li><a href="/about.html">About</a></li>
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../category/mysql/index.html">mysql</a></li>
+    <li><a href="../category/ops/index.html">ops</a></li>
+    <li><a href="../category/python/index.html">python</a></li>
+    <li><a href="../category/uncategorized/index.html">uncategorized</a></li>
   </ul>
-//-->
-<h4>Categories</h4>
-<ul>
-		<li><a href="/mysql/index.html">mysql</a></li>
-		<li><a href="/ops/index.html">ops</a></li>
-		<li><a href="/python/index.html">python</a></li>
-		<li><a href="/uncategorized/index.html">uncategorized</a></li>
-</ul>
 
 
 <h4>Tags</h4>
-	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
-	    <li class="tag-4"><a href="/tag/https.html">https</a></li>
-	    <li class="tag-4"><a href="/tag/py2exe.html">py2exe</a></li>
-	    <li class="tag-2"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-0"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../tag/docker.html">docker</a></li>
 </ul>
 
 
 <nav class="widget">
   <h4>Social</h4>
-  <ul>
+  <ul class="blank">
     <li><a href="http://weibo.com/eryxlee">微博</a></li>
-  </ul>
-</nav>
-
-<nav class="widget">
-  <h4>Links</h4>
-  <ul>
-    <li><a href="http://python.org/">Python.org</a></li>
-    <li><a href="https://github.com/docker-library">Docker library</a></li>
   </ul>
 </nav>
 
@@ -195,8 +180,8 @@ os ...</p> </div><!-- /.entry-content -->
         (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
 </script>
-  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
-  <script src="/theme/js/libs/gumby.min.js"></script>
-  <script src="/theme/js/plugins.js"></script>
+  <script src="../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../theme/js/libs/gumby.min.js"></script>
+  <script src="../theme/js/plugins.js"></script>
 </body>
 </html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>Learning & Thoughts</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../theme/pygment.css" />
+
+        <script src="../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content">
+<h2>Articles in the ops category</h2>
+
+
+   <div class="row">
+
+
+        <div class="eleven columns">
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2016/07/02/docker-compose-of-gitlab-and-ldap.html" rel="bookmark" title="Permalink to Gitlab+LDAP的compose文件">Gitlab+LDAP的compose文件</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2016-07-02T00:00:00+08:00"> 2016-07-02 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>简单配置了一个使用LDAP做用户认证的Gitlab服务器。</p>
+<div class="highlight"><pre><span></span><span class="n">gitlab</span><span class="o">:</span>
+    <span class="n">image</span><span class="o">:</span> <span class="n">sameersbn</span><span class="o">/</span><span class="n">gitlab</span><span class="o">:</span><span class="n">latest</span>
+    <span class="n">restart</span><span class="o">:</span> <span class="n">always</span>
+    <span class="n">environment</span><span class="o">:</span>
+        <span class="o">-</span> <span class="n">GITLAB_PORT</span><span class="o">=</span><span class="s2">&quot;80&quot;</span>
+        <span class="o">-</span> <span class="n">GITLAB_SSH_PORT</span><span class="o">=</span><span class="s2">&quot;22&quot;</span>
+        <span class="o">-</span> <span class="n">GITLAB_SECRETS_DB_KEY_BASE</span><span class="o">=</span><span class="s2">&quot;1111&quot;</span>
+        <span class="o">-</span> <span class="n">LDAP_ENABLED</span><span class="o">=</span><span class="kc">true</span>
+        <span class="o">-</span> <span class="n">LDAP_HOST</span><span class="o">=</span><span class="n">ldap</span>
+        <span class="o">-</span> <span class="n">LDAP_PORT</span><span class="o">=</span><span class="s2">&quot;389&quot;</span>
+        <span class="o">-</span> <span class="n">LDAP_UID</span><span class="o">=</span><span class="n">uid</span>
+        <span class="o">-</span> <span class="n">LDAP_METHOD</span><span class="o">=</span><span class="n">plain</span>
+        <span class="o">-</span> <span class="n">LDAP_BIND_DN</span><span class="o">=</span><span class="n">cn</span><span class="o">=</span><span class="n">admin</span><span class="o">,</span><span class="n">dc</span><span class="o">=</span><span class="n">XXXX</span><span class="o">,</span><span class="n">dc</span><span class="o">=</span><span class="n">com</span>
+        <span class="o">-</span> <span class="n">LDAP_PASS</span><span class="o">=</span><span class="n">XXXXX</span>
+        <span class="o">-</span> <span class="n">LDAP_BASE</span><span class="o">=</span><span class="n">DC</span><span class="o">=</span><span class="n">XXXX</span><span class="o">,</span><span class="n">DC</span><span class="o">=</span><span class="n">com</span>
+        <span class="o">-</span> <span class="n">LDAP_ACTIVE_DIRECTORY</span><span class="o">=</span><span class="kc">true</span>
+        <span class="o">-</span> <span class="n">LDAP_ALLOW_USERNAME_OR_EMAIL_LOGIN</span><span class="o">=</span><span class="kc">false</span>
+        <span class="o">-</span> <span class="n">GITLAB_HOST</span><span class="o">=</span><span class="n">git</span><span class="o">.</span><span class="na">XXXX</span><span class="o">.</span><span class="na">com</span>
+    <span class="n">volumes</span><span class="o">:</span>
+        <span class="o">-</span> <span class="sr">/var/run …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2016/07/02/docker-compose-of-gitlab-and-ldap.html" rel="bookmark" title="Permalink to Gitlab+LDAP的compose文件">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/docker.html">docker</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html" rel="bookmark" title="Permalink to Docker machine虚拟机网络地址配置">Docker machine虚拟机网络地址配置</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-12-02T00:00:00+08:00"> 2015-12-02 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>因家里网络调整，将网段设置成了192.168.99.＊网段，一直也就没注意。不过后来一次突然发现，docker machine无法启动了，抛出了下面的错误：</p>
+<div class="highlight"><pre><span></span>This machine has been allocated an IP address, but Docker Machine could not
+reach it successfully.
+
+SSH for the machine should still work, but connecting to exposed ports, such as
+the Docker daemon port (usually &lt;ip&gt;:2376), may not work …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html" rel="bookmark" title="Permalink to Docker machine虚拟机网络地址配置">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/docker.html">docker</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">[转]Print all 256 colors for testing TERM or for a quick reference</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-10-10T00:00:00+08:00"> 2015-10-10 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>记一个比较有用的命令，转自<a href="http://www.commandlinefu.com/commands/view/6533/print-all-256-colors-for-testing-term-or-for-a-quick-reference">commandlinefu</a></p>
+<div class="highlight"><pre><span></span>( x=`tput op` y=`printf %$((<span class="cp">${</span><span class="n">COLUMNS</span><span class="cp">}</span>-6))s`;for i in {0..256};do o=00<span class="nv">$i</span>;echo -e <span class="cp">${</span><span class="n">o</span><span class="p">:</span><span class="err">$</span><span class="p">{</span><span class="c1">#o</span><span class="cp">}</span>-3:3} `tput setaf <span class="nv">$i</span>;tput setab <span class="nv">$i</span>`<span class="cp">${</span><span class="n">y</span><span class="o">//</span> <span class="o">/=</span><span class="cp">}</span><span class="nv">$x</span>;done; )
+</pre></div>
+
+
+<p>也可以写出函数放入到.bash_profile中：</p>
+<div class="highlight"><pre><span></span>aa_256 ()
+{
+( x=`tput op` y=`printf %$((<span class="cp">${</span><span class="n">COLUMNS</span><span class="cp">}</span>-6))s`;
+for i in {0 …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/linux.html">linux</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Pyramid 的 docker 容器</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-05-12T00:00:00+08:00"> 2015-05-12 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>这是一个Pyramid项目的docker 框架，它由docker compose来管理多个pyramid项目需要用到的容器。</p>
+<p>但因pyramid还有一些像python setup.py develop、initialize_db之类的项目初始化命令，在pyramid本身功能上的整合还不理想。</p>
+<p>另，因pypi在国内访问很慢，可以替换到豆瓣的源。</p>
+<h3>1. 启动</h3>
+<div class="highlight"><pre><span></span>docker-compose -p pyramid up  启动整个系统
+docker-compose -p pyramid up mysql  单独启动mysql容器
+</pre></div>
+
+
+<p>注意，这里容器的名字是系统按照目录名，容器名，序号自动生成的，不能自己定义名字，参见https://github.com/docker/compose/issues/652</p>
+<h3>2. 进入MySQL</h3>
+<div class="highlight"><pre><span></span>docker run -it --link pyramid_mysql_1:mysql --rm mysql sh -c …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/docker.html">docker</a>
+                                            <a class="danger label" href="../../tag/pyramid.html">pyramid</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">CentOS 7 搭建Docker registry</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-04-29T00:00:00+08:00"> 2015-04-29 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>本文主要内容源自docker registry里的README，不过后面有几个原文有误的地方做了点小修改。</p>
+<h3>1. 安装Docker</h3>
+<div class="highlight"><pre><span></span>yum update
+
+wget -qO- https://get.docker.com/ | sh
+systemctl restart  docker.service
+systemctl enable docker.service
+</pre></div>
+
+
+<h3>2. 安装Docker Compose</h3>
+<div class="highlight"><pre><span></span>wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+pip install docker-compose
+</pre></div>
+
+
+<h3>3. 下载Docker registry</h3>
+<div class="highlight"><pre><span></span>wget https://github.com/docker/distribution/archive/v2.0 …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/docker.html">docker</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">MySQL docker image 的简单用法</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-04-25T00:00:00+08:00"> 2015-04-25 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>自从有了Docker compose，各种开发、测试等环境的搭建就变成了一件很简单的事情。因此，趁着周末有时间，准备使用docker compose搭建一个Pyramid的开发环境。
+整个搭建过程都很简单，不过在使用MySQL的官方image时，也遇到了几个小问题，简单做个记录。</p>
+<h3>1. 使用最新的image</h3>
+<p>因原来使用的MySQL是一个确定的版本，因此在使用image时，也指定了数据库的版本作为tag，结果说明里面的几个属性一直在出各种各样的问题，换成last的image，一切正常。</p>
+<h3>2. 注意数据目录</h3>
+<p>因为将数据目录映射到了host上，因此instance关掉，删除之后，数据文件还是保留在硬盘上的，如果之前的配置中出现过错误，就会影响后面的instance。在搭建过程中，就有一次发现mysql目录变成了root权限，结果在启动过程中一直报错误：mysql_1 | ERROR: 1005  Can't create table 'db' (errno: 13)</p>
+<h3>3. 新建数据库、用户</h3>
+<p>该image只有在没有发现"$DATADIR/mysql"这个目录下，才会去初始化数据库、设置root密码，新建数据库 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/04/25/docker-mysql-compose.html" rel="bookmark" title="Permalink to MySQL docker image 的简单用法">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/docker.html">docker</a>
+                                            <a class="danger label" href="../../tag/mysql.html">mysql</a>
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../category/ops/index.html">ops</a></li>
+    <li><a href="../../category/python/index.html">python</a></li>
+    <li><a href="../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+<p class="paginator">
+    Page 1 / 1
+</p>
+</section><!-- /#content -->
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../theme/js/plugins.js"></script>
+</body>
+</html>

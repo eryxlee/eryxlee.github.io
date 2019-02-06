@@ -9,11 +9,11 @@
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
         <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
 
-        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="stylesheet" type="text/css" href="../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../theme/pygment.css" />
 
-        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+        <script src="../theme/js/libs/modernizr-2.6.2.min.js"></script>
 
 
               <script>
@@ -38,17 +38,17 @@
         <div class="row">
 
           <header id="banner" class="body">
-                  <h1><a href="/">Learning & Thoughts <strong></strong></a></h1>
+                  <h1><a href="../">Learning & Thoughts <strong></strong></a></h1>
           </header><!-- /#banner -->
 
             <div id="navigation" class="navbar row">
               <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
              
               <ul class="columns">
-                <li><a href="/">Home</a></li>
+                <li><a href="../">Home</a></li>
 
                 <li><a href="/archives.html">Archives</a></li>
-                <li><a href="/about.html">About</a></li>
+                <li><a href="../pages/about.html">About</a></li>
 
               </ul>
             </div>
@@ -63,92 +63,91 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">在SQLAlchemy ORM中使用反射自动装载数据库结构</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">在SQLAlchemy ORM中使用反射自动装载数据库结构</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-29T00:00:00+08:00"> 2015-08-29 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>在现实项目中，数据库经常是已经建好的。因此，要再去逐个字段去重新声明一下显然是很无聊的。SQLAlchemy早就在这方面提供了利用反射机制自动加载的功能，而且在ORM中也可以使用这种机制。</p>
 <h3>1. ORM中的reflection</h3>
 <p>直接通过declarative_base返回的Base基类不具备自动加载功能，需要加入DeferredReflection的支持，如下：</p>
-<div class="highlight"><pre># 因类定义在前，无法传入engine参数，需要使用DeferredReflection机制
-Base = declarative_base(cls=DeferredReflection)
+<div class="highlight"><pre><span></span><span class="err">#</span> <span class="err">因类定义在前，无法传入</span><span class="nx">engine参数</span><span class="err">，需要使用</span><span class="nx">DeferredReflection机制</span>
+<span class="nx">Base</span> <span class="o">=</span> <span class="nx">declarative_base</span><span class="p">(</span><span class="nx">cls</span><span class="o">=</span><span class="nx">DeferredReflection</span><span class="p">)</span>
 
 
-# 利用反射机制根据现有数据库表定义User 类，这时类属性均与字段名一样
-class User(Base):
-    __tablename__ = &#39;user&#39;
+<span class="err">#</span> <span class="err">利用反射机制根据现有数据库表定义</span><span class="nx">User</span> <span class="err">类，这时类属性均与字段名一样</span>
+<span class="kr">class</span> <span class="nx">User</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
 </pre></div>
 
 
 <p>在定义好类之后，还需要Base.prepare一下，否则会抛出unmapped异常。</p>
-<div class="highlight"><pre>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
-    <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker ...</span></pre></div> </div><!-- /.entry-content -->
+<div class="highlight"><pre><span></span>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
+    <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all …</span></pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                            <a class="danger label" href="../tag/sqlalchemy.html">SQLAlchemy</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark" title="Permalink to SQLAlchemy ORM中字段名的几种变化">SQLAlchemy ORM中字段名的几种变化</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark" title="Permalink to SQLAlchemy ORM中字段名的几种变化">SQLAlchemy ORM中字段名的几种变化</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-21T00:00:00+08:00"> 2015-08-21 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>在不是非常需要考虑性能的地方，SQLAlchemy ORM是一个很便捷的架设与数据库与对象之间的桥梁。通过ORM，普通开发者就可以快速地写出比较安全可靠应用系统。</p>
 <p>不过在SQLAlchemy ORM的深入应用中，也会有很多大大小小的问题等着去解决。下面就简单说说比较常见的数据库字段名与类属性之间的映射关系。</p>
 <h3>1. 正常场景</h3>
 <p>在正常场景中，ORM类的定义非常简单。</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="n">User</span>(<span class="n">Base</span>):
-    <span class="n">__tablename__</span> = <span class="s">&#39;user&#39;</span>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">User</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
 
-    <span class="n">id</span> = <span class="n">Column</span>(<span class="n">Integer</span>, <span class="n">primary_key</span>=<span class="nb">True</span>)
-    <span class="n">first_name</span> = <span class="n">Column</span>(<span class="n">String</span>(<span class="mi">10</span>))
-    <span class="n">last_name</span> = <span class="n">Column</span>(<span class="n">String</span>(<span class="mi">10</span>))
+    <span class="nx">id</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">primary_key</span><span class="o">=</span><span class="nx">True</span><span class="p">)</span>
+    <span class="nx">first_name</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+    <span class="nx">last_name</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
 </pre></div>
 
 
 <p>这是一个很简单的ORM类定义，类名为User，继承自Base，包含3个属性id, first_name, last_name。对应的表名为user。其中也至少包含跟上面名字相同的3个字段.</p>
 <h3>2. 属性名、字段名不一致</h3>
-<p>但是在正常开发中，经常会要处理一些名字不一致的地方。比如，上面的表中加入了一个from字段，表示来自哪里。那么在User类中也加一个from属性么？这显然是错误的，因为from是python的关键字 ...</p> </div><!-- /.entry-content -->
+<p>但是在正常开发中，经常会要处理一些名字不一致的地方。比如，上面的表中加入了一个from字段，表示来自哪里。那么在User类中也加一个from属性么？这显然是错误的，因为from是python的关键字 …</p> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark" title="Permalink to SQLAlchemy ORM中字段名的几种变化">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark" title="Permalink to SQLAlchemy ORM中字段名的几种变化">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                            <a class="danger label" href="../tag/sqlalchemy.html">SQLAlchemy</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark" title="Permalink to pyramid_tm 配置与使用">pyramid_tm 配置与使用</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark" title="Permalink to pyramid_tm 配置与使用">pyramid_tm 配置与使用</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-15T00:00:00+08:00"> 2015-08-15 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>Pyramid_tm 是一个专门负责request事务处理的tween，可以通过简单的配置为request提供事务支持。而且，除了普通的事务管理之外，pyramid_tm还提供了另外几个有意思的小功能。</p>
 <h3>1. 配置定制Transaction Manager</h3>
 <p>如果对系统默认的事务管理器不满的话，可以定制一个专门的事务管理器，然后通过配置方式嵌入到系统中。</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">transaction</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">transaction</span>
 
 <span class="k">def</span> <span class="nf">manager_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">transaction</span><span class="o">.</span><span class="n">TransactionManager</span><span class="p">()</span>
@@ -156,13 +155,13 @@ class User(Base):
 
 
 <p>定义了hook之后，就可以在程序中或ini文件中通过简单的配置启用它：</p>
-<div class="highlight"><pre>settings[&#39;tm.manager_hook&#39;] = manager_hook
+<div class="highlight"><pre><span></span>settings[&#39;tm.manager_hook&#39;] = manager_hook
 </pre></div>
 
 
 <h3>2. 定义启用规则</h3>
 <p>启用了事务管理之后，如果有些特殊的request不希望使用默认的事务管理，也可以通过配置一个是否启用的钩子来达到这个目的：</p>
-<div class="highlight"><pre>def activate_hook(request):
+<div class="highlight"><pre><span></span>def activate_hook(request):
     if request.path_info.startswith(&#39;/long-poll&#39;):
         return False
     return True
@@ -170,41 +169,41 @@ class User(Base):
 
 
 <p>然后向系统配置这个钩子：</p>
-<div class="highlight"><pre>settings[&#39;tm.activate_hook&#39;] = activate_hook
+<div class="highlight"><pre><span></span>settings[&#39;tm.activate_hook&#39;] = activate_hook
 </pre></div>
 
 
-<h3>3. 定义一票否决规则 ...</h3> </div><!-- /.entry-content -->
+<h3>3. 定义一票否决规则 …</h3> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark" title="Permalink to pyramid_tm 配置与使用">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark" title="Permalink to pyramid_tm 配置与使用">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                            <a class="danger label" href="../tag/pyramid.html">pyramid</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/08/07/transaction-pyramid-tm-notes.html" rel="bookmark" title="Permalink to Pyramid 事务处理及其注意事项">Pyramid 事务处理及其注意事项</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/08/07/transaction-pyramid-tm-notes.html" rel="bookmark" title="Permalink to Pyramid 事务处理及其注意事项">Pyramid 事务处理及其注意事项</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-07T00:00:00+08:00"> 2015-08-07 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>Pyramid 提供了一个事务处理的tween -- pyramid_tm，可以通过配置方式很方便得添加事务支持。</p>
 <h3>1. pyramid_tm的安装配置</h3>
 <p>在正确安装了pyramid_tm之后，只要在main函数中加入：</p>
-<div class="highlight"><pre>config.include(&#39;pyramid_tm&#39;)
+<div class="highlight"><pre><span></span>config.include(&#39;pyramid_tm&#39;)
 </pre></div>
 
 
 <p>或在ini文件中加入：</p>
-<div class="highlight"><pre><span class="k">[app:myapp]</span>
+<div class="highlight"><pre><span></span><span class="k">[app:myapp]</span>
 <span class="na">pyramid.includes</span> <span class="o">=</span> <span class="s">pyramid_tm</span>
 </pre></div>
 
@@ -212,110 +211,110 @@ class User(Base):
 <p>即可对所有view提供事务管理支持。</p>
 <h3>2. 正常的事务处理</h3>
 <p>在正常情况下，业务代码中不需要参杂事务处理代码，如下：</p>
-<div class="highlight"><pre>def my_view(request):
+<div class="highlight"><pre><span></span>def my_view(request):
     try:
         one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
         one.value = 2
     except DBAPIError:
         return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
-    return ...</pre></div> </div><!-- /.entry-content -->
+    return …</pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/08/07/transaction-pyramid-tm-notes.html" rel="bookmark" title="Permalink to Pyramid 事务处理及其注意事项">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/08/07/transaction-pyramid-tm-notes.html" rel="bookmark" title="Permalink to Pyramid 事务处理及其注意事项">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                            <a class="danger label" href="../tag/pyramid.html">pyramid</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">sqlalchemy中怎么使用IS NULL条件</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">sqlalchemy中怎么使用IS NULL条件</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-01T00:00:00+08:00"> 2015-08-01 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>在使用sqlalchemy过程中，不小心犯了个小错误：在看一个查询语句时，发现一个从句 A.status == None 提示有PEP8警告，就好心改成了A.status is None。结果，单元测试各种出错。一看生成的SQl语句，发现status is null这个从句没有生成，这是为什么呢？</p>
 <p>仔细看看代码，终于发现A.status is None肯定是假值，在or从句中，被自动忽略了。</p>
 <p>那么，这里怎么写才能避免PEP8警告呢？通过查看SQLAlchemy的文档，可以看到如下用法：</p>
-<div class="highlight"><pre>query.filter(User.name == None)
+<div class="highlight"><pre><span></span>query.filter(User.name == None)
 
 # alternatively, if pep8/linters are a concern
 query.filter(User.name.is_(None))
 </pre></div>
 
 
-<p>好了，没警告了 ...</p> </div><!-- /.entry-content -->
+<p>好了，没警告了 …</p> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                            <a class="danger label" href="../tag/sqlalchemy.html">SQLAlchemy</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">使用Pyramid机制完成API的多格式输出（续）</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">使用Pyramid机制完成API的多格式输出（续）</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-07-23T00:00:00+08:00"> 2015-07-23 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>在上一篇文章中，简单归纳了pyramid中3种格式化输出的方式，不过在实际使用过程中，还有另外一种方式：即view的处理中也稍有不同，这样就需要对同一个URL写两个不同的view。</p>
 <p>首先，在main函数中加入一个route的Predicate。</p>
-<div class="highlight"><pre>config.add_route_predicate(&#39;format&#39;, FormatPredicate)
+<div class="highlight"><pre><span></span>config.add_route_predicate(&#39;format&#39;, FormatPredicate)
 </pre></div>
 
 
 <p>另外，route定义也要做一定的变换。</p>
-<div class="highlight"><pre>    config.add_route(&#39;api4_json&#39;, &#39;/api4&#39;, format=&quot;json&quot;)
+<div class="highlight"><pre><span></span>    config.add_route(&#39;api4_json&#39;, &#39;/api4&#39;, format=&quot;json&quot;)
     config.add_route(&#39;api4_txt&#39;, &#39;/api4&#39;, format=&quot;txt&quot;)
 </pre></div>
 
 
 <p>这样，就可以定义两个不同的view了。</p>
-<div class="highlight"><pre>@view_config(route_name=&#39;api4_json&#39;, request_method=&quot;POST&quot;, renderer=&#39;myjson&#39;)
+<div class="highlight"><pre><span></span>@view_config(route_name=&#39;api4_json&#39;, request_method=&quot;POST&quot;, renderer=&#39;myjson&#39;)
 def api4_json_view(request):
     pass
 
 @view_config(route_name=&#39;api4_txt&#39;, request_method=&quot;POST&quot;, renderer=&#39;api4.mako&#39;)
-def api4_txt_view(request ...</pre></div> </div><!-- /.entry-content -->
+def api4_txt_view(request …</pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/07/23/api-multi-format-output-using-pyramid-2.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出（续）">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                            <a class="danger label" href="../tag/pyramid.html">pyramid</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/07/20/api-multi-format-output-using-pyramid.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出">使用Pyramid机制完成API的多格式输出</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/07/20/api-multi-format-output-using-pyramid.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出">使用Pyramid机制完成API的多格式输出</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-07-20T00:00:00+08:00"> 2015-07-20 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>在API开发的过程中，经常会需要根据传入的format参数来选择不同格式的输出结果，如JSON，XML等。正巧，pyramid中renderer机制可以很方便的进行各种不同格式内容的输出，而且基本很少涉及到代码的大量修改。</p>
 <h3>1. 直接在代码中判断format参数</h3>
 <p>可以在pyramid的view中直接判断format参数，然后根据值不同分别render不同的response。如下：</p>
-<div class="highlight"><pre>@view_config(route_name=&#39;api1&#39;)
+<div class="highlight"><pre><span></span>@view_config(route_name=&#39;api1&#39;)
 def api1(request):
     data = dict(
         one=1,
@@ -330,26 +329,26 @@ def api1(request):
 
 
 <h3>2. 通过view_config中的request_param参数来配置</h3>
-<p>上面的代码能完成按format参数输出不同内容的需要，但该方法毕竟已经将这个逻辑写到了代码中，那么 ...</p> </div><!-- /.entry-content -->
+<p>上面的代码能完成按format参数输出不同内容的需要，但该方法毕竟已经将这个逻辑写到了代码中，那么 …</p> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/07/20/api-multi-format-output-using-pyramid.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/07/20/api-multi-format-output-using-pyramid.html" rel="bookmark" title="Permalink to 使用Pyramid机制完成API的多格式输出">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                            <a class="danger label" href="../tag/pyramid.html">pyramid</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">SQLAlchemy 无主键、复合主键的处理</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-05-19T00:00:00+08:00"> 2015-05-19 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>SQLAlchemy ORM定义中一张表必须要有primary key，最通常的就是定义一个id字段，并设置成主键，如果一张表在OR-Mapping时没有定义主键程序就会报错。</p>
@@ -360,69 +359,69 @@ def api1(request):
 <p>在数据库字段中选择几个字段，只要组合起来能够满足唯一性，非空，就可以把他们当做主键来处理，也就是说数据库中可以没有定义主键，但ORM定义中定义一个虚拟的主键，这样就转变成了复合主键的定义问题。如果找不到这样的字段组合，那么就无法使用SQLAlchemy的OR-Mapping了。</p>
 <h3>3. 复合主键的定义</h3>
 <p>SQLAlchemy的OR-Mapping中可以对多个字段定义primary_key=True，只要多个字段定义了该参数，就能构造出复合主键。</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="n">SomeClass</span>(<span class="n">Base</span>):
-    <span class="n">__tablename__</span> = <span class="s">&quot;some_table_with_no_pk&quot;</span>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">SomeClass</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">__tablename__</span> <span class="o">=</span> <span class="s2">&quot;some_table_with_no_pk&quot;</span>
 
-    <span class="n">uid</span> = <span class="n">Column</span>(<span class="n">Integer</span>, <span class="n">primary_key</span>=<span class="nb">True</span>)
-    <span class="n">bar ...</span></pre></div> </div><!-- /.entry-content -->
+    <span class="nx">uid</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">primary_key</span><span class="o">=</span><span class="nx">True</span><span class="p">)</span>
+    <span class="nx">bar …</span></pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/05/19/SQLAlchemy-no-primary-key.html" rel="bookmark" title="Permalink to SQLAlchemy 无主键、复合主键的处理">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                            <a class="danger label" href="../tag/sqlalchemy.html">SQLAlchemy</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Pyramid 的 docker 容器</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Pyramid 的 docker 容器</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-05-12T00:00:00+08:00"> 2015-05-12 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>这是一个Pyramid项目的docker 框架，它由docker compose来管理多个pyramid项目需要用到的容器。</p>
 <p>但因pyramid还有一些像python setup.py develop、initialize_db之类的项目初始化命令，在pyramid本身功能上的整合还不理想。</p>
 <p>另，因pypi在国内访问很慢，可以替换到豆瓣的源。</p>
 <h3>1. 启动</h3>
-<div class="highlight"><pre>docker-compose -p pyramid up  启动整个系统
+<div class="highlight"><pre><span></span>docker-compose -p pyramid up  启动整个系统
 docker-compose -p pyramid up mysql  单独启动mysql容器
 </pre></div>
 
 
 <p>注意，这里容器的名字是系统按照目录名，容器名，序号自动生成的，不能自己定义名字，参见https://github.com/docker/compose/issues/652</p>
 <h3>2. 进入MySQL</h3>
-<div class="highlight"><pre>docker run -it --link pyramid_mysql_1:mysql --rm mysql sh -c ...</pre></div> </div><!-- /.entry-content -->
+<div class="highlight"><pre><span></span>docker run -it --link pyramid_mysql_1:mysql --rm mysql sh -c …</pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/05/12/docker-pyramid.html" rel="bookmark" title="Permalink to Pyramid 的 docker 容器">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/docker.html">docker</a>
-                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                            <a class="danger label" href="../tag/docker.html">docker</a>
+                                            <a class="danger label" href="../tag/pyramid.html">pyramid</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">CentOS 7 搭建Docker registry</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="../posts/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">CentOS 7 搭建Docker registry</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-04-29T00:00:00+08:00"> 2015-04-29 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="../author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>本文主要内容源自docker registry里的README，不过后面有几个原文有误的地方做了点小修改。</p>
 <h3>1. 安装Docker</h3>
-<div class="highlight"><pre>yum update
+<div class="highlight"><pre><span></span>yum update
 
 wget -qO- https://get.docker.com/ | sh
 systemctl restart  docker.service
@@ -431,22 +430,22 @@ systemctl enable docker.service
 
 
 <h3>2. 安装Docker Compose</h3>
-<div class="highlight"><pre>wget https://bootstrap.pypa.io/get-pip.py
+<div class="highlight"><pre><span></span>wget https://bootstrap.pypa.io/get-pip.py
 python get-pip.py
 pip install docker-compose
 </pre></div>
 
 
 <h3>3. 下载Docker registry</h3>
-<div class="highlight"><pre>wget https://github.com/docker/distribution/archive/v2.0 ...</pre></div> </div><!-- /.entry-content -->
+<div class="highlight"><pre><span></span>wget https://github.com/docker/distribution/archive/v2.0 …</pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="../posts/2015/04/29/docker-registry.html" rel="bookmark" title="Permalink to CentOS 7 搭建Docker registry">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/docker.html">docker</a>
+                                            <a class="danger label" href="../tag/docker.html">docker</a>
                                 </div>
 
 
@@ -457,57 +456,42 @@ pip install docker-compose
         </div><!-- /.eleven.columns -->
         
 <div class="three columns">
-<!--
-<h4>Pages</h4>
-
- <ul>
-      <li><a href="/archives.html">Archives</a></li>
-      <li><a href="/about.html">About</a></li>
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../category/mysql/index.html">mysql</a></li>
+    <li><a href="../category/ops/index.html">ops</a></li>
+    <li><a href="../category/python/index.html">python</a></li>
+    <li><a href="../category/uncategorized/index.html">uncategorized</a></li>
   </ul>
-//-->
-<h4>Categories</h4>
-<ul>
-		<li><a href="/mysql/index.html">mysql</a></li>
-		<li><a href="/ops/index.html">ops</a></li>
-		<li><a href="/python/index.html">python</a></li>
-		<li><a href="/uncategorized/index.html">uncategorized</a></li>
-</ul>
 
 
 <h4>Tags</h4>
-	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
-	    <li class="tag-4"><a href="/tag/https.html">https</a></li>
-	    <li class="tag-4"><a href="/tag/py2exe.html">py2exe</a></li>
-	    <li class="tag-2"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-0"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../tag/docker.html">docker</a></li>
 </ul>
 
 
 <nav class="widget">
   <h4>Social</h4>
-  <ul>
+  <ul class="blank">
     <li><a href="http://weibo.com/eryxlee">微博</a></li>
-  </ul>
-</nav>
-
-<nav class="widget">
-  <h4>Links</h4>
-  <ul>
-    <li><a href="http://python.org/">Python.org</a></li>
-    <li><a href="https://github.com/docker-library">Docker library</a></li>
   </ul>
 </nav>
 
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-            <a href="/author/eryx-lee.html"><i class="icon-arrow-left"></i></a>
+            <a href="../author/eryx-lee.html"><i class="icon-arrow-left"></i></a>
     Page 2 / 3
-        <a href="/author/eryx-lee3.html"><i class="icon-arrow-right"></i></a>
+        <a href="../author/eryx-lee3.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
 
@@ -557,8 +541,8 @@ pip install docker-compose
         (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
 </script>
-  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
-  <script src="/theme/js/libs/gumby.min.js"></script>
-  <script src="/theme/js/plugins.js"></script>
+  <script src="../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../theme/js/libs/gumby.min.js"></script>
+  <script src="../theme/js/plugins.js"></script>
 </body>
 </html>

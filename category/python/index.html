@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>Learning & Thoughts</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../theme/pygment.css" />
+
+        <script src="../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content">
+<h2>Articles in the python category</h2>
+
+
+   <div class="row">
+
+
+        <div class="eleven columns">
+                 <ol id="post-list">
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2016-03-12T00:00:00+08:00"> 2016-03-12 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>因安全原因，最近将部分服务升级到了HTTPS，不过这次简单的升级却导致了有些业务应用出错。具体体现是业务应用一启动就抛出requests.exceptions.SSLError: [Errno 2] No such file or directory错误。不过该应用在开发环境运行是正常的，只是使用py2exe打包成可执行文件之后才会出现该错误。
+通过表面现象，初步判断是py2exe打包时有文件遗漏。谷歌后发现requests在访问https网站时使用了一个cacert.pem文件，该文件直接放在了requests包里面，而py2exe在打包时只复制了pyc文件，从而在运行时报找不到文件错误，而开发环境不报错。
+知道了具体的原因，我们就可以着手解决这个问题了：</p>
+<h3>1. 直接设置verify为False</h3>
+<p>最简单的方式就是直接在requests每次get的时候加一个参数verify=False跳过证书验证。不过这种做法需要改每个调用，而且在日志中会有一个警告错误。</p>
+<h3>2. 将cacert.pem一起打包</h3>
+<p>在py2exe配置文件中加入import requests.certs，然后在data_files中加入一项：('',[requests.certs.where()])，这里的requests.certs.where()返回了当前cacert.pem文件路径，在data_files中加入这一项即告诉py2exe将该文件拷贝到生成目标exe文件的相同目录。将ca文件拷贝好后，还需要在程序开头设置一下ca环境变量。
+os …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/py2exe.html">py2exe</a>
+                                            <a class="danger label" href="../../tag/https.html">https</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/10/15/the-order-of-ordereddict.html" rel="bookmark" title="Permalink to OrderedDict的顺序问题">OrderedDict的顺序问题</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-10-15T00:00:00+08:00"> 2015-10-15 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>一直比较习惯用类似</p>
+<div class="highlight"><pre><span></span>data = dict(f=12, a=5, e=6)
+</pre></div>
+
+
+<p>这种方式来初始化字典。有一次需要用到排序的字典类型，就想当然的写了</p>
+<div class="highlight"><pre><span></span>data = collections.OrderedDict(f=12, a=5, e=6)
+</pre></div>
+
+
+<p>总以为这样传入参数形成的字典也是按指定的顺序排序的，结果得到的却是：</p>
+<div class="highlight"><pre><span></span>OrderedDict([(&#39;a&#39;, 5), (&#39;e&#39;, 6), (&#39;f&#39;, 12)])
+</pre></div>
+
+
+<p>OrderedDict的初始化参数竟然是没有排序的！！！</p>
+<p>The signature is the same as regular dictionaries, but keyword arguments are not recommended because their insertion order is …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/10/15/the-order-of-ordereddict.html" rel="bookmark" title="Permalink to OrderedDict的顺序问题">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/python.html">python</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">体验一下Python 3.5</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-09-15T00:00:00+08:00"> 2015-09-15 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Python 3.5终于发布了，赶紧来尝鲜一把</p>
+<div class="highlight"><pre><span></span>FROM alpine:3.2
+MAINTAINER Eryx Lee &lt;eryx.lee0901@gmail.com&gt;
+
+RUN apk --update add \
+    bash \
+    build-base \
+    clang \
+    openssl-dev
+
+VOLUME /source
+
+ADD https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tgz /source/Python-3.5.0.tgz
+
+RUN cd source &amp;&amp; tar -zxvf Python-3 …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/docker.html">docker</a>
+                                            <a class="danger label" href="../../tag/python.html">python</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">在Supervisor中配置Pyramid项目</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-09-09T00:00:00+08:00"> 2015-09-09 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Supervisor是一个很不错的进程管理工具，pyramid项目也能很简单的配置成Supervisor的受控项目。不过为了更好的运行pyramid程序，在正常的配置之后，还有几点地方值得注意一下。</p>
+<h3>1. 配置环境变量</h3>
+<p>pyramid项目中一个很讨厌的地方就是一旦部署到一个新的地方，就需要python setup.py develop一番，特别是在类似Docker之类的地方部署时就显得很多余，放哪里运行都不合适。其实我们完全可以通过配置PYTHONPATH环境变量来避免这种运行方式。如下：</p>
+<div class="highlight"><pre><span></span><span class="k">[program:mytest]</span>
+<span class="na">environment</span><span class="o">=</span><span class="s">PYTHONPATH=&quot;/source/MyTest&quot;</span>
+<span class="na">command</span><span class="o">=</span><span class="s">pserve development.ini</span>
+<span class="na">process_name</span><span class="o">=</span><span class="s">mytest</span>
+<span class="na">numprocs</span><span class="o">=</span><span class="s">1</span>
+<span class="na">directory</span><span class="o">=</span><span class="s">/source/MyTest</span>
+<span class="na">priority</span><span class="o">=</span><span class="s">200</span>
+<span class="na">autostart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">autorestart</span><span class="o">=</span><span class="s">true</span>
+<span class="na">startsecs</span><span class="o">=</span><span class="s">15</span>
+<span class="na">startretries</span><span class="o">=</span><span class="s">5</span>
+</pre></div>
+
+
+<p>这里通过环境变量配置项把项目目录加入到了PYTHONPATH中，这样没有运行setup.py也不会报找不到包了。不过这种情况需要特别注意：</p>
+<ul>
+<li>项目中使用了的包不要忘了安装。</li>
+<li>不要忘了egg_info目录，有的时候从代码管理系统中取回的代码是没egg_info目录的 …</li></ul> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/pyramid.html">pyramid</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/08/31/sqlalchemy-many-to-many-ordering.html" rel="bookmark" title="Permalink to SQLAlchemy many to many的排序问题">SQLAlchemy many to many的排序问题</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-31T00:00:00+08:00"> 2015-08-31 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>SQLAlchemy支持many to many的关联管理，不过实际使用中，经常需要两侧取到的数据都是排序的，文档里面还没看到类似例子，这里倒是有一个<a href="https://julo.ch/blog/sqlalchemy-many-to-many-ordering/" title="Ordering your sqlalchemy many-to-many relationship">案例</a>，不过略显复杂。实际测试了一下，relationship应该是可以带两个排序参数的，下面就给出测试代码，重点在relationship的参数上：</p>
+<div class="highlight"><pre><span></span>    engine = create_engine(&#39;sqlite:///:memory:&#39;, echo=True)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    Base = declarative_base()
+    association_table = Table(&#39;association&#39;, Base.metadata,
+                              Column(&#39;left_id&#39;, Integer, ForeignKey(&#39;left.id&#39;)),
+                              Column(&#39;right_id&#39;, Integer, ForeignKey(&#39;right.id&#39;))
+                              )
+
+    class Left(Base):
+        __tablename__ = &#39;left&#39;
+        id …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/08/31/sqlalchemy-many-to-many-ordering.html" rel="bookmark" title="Permalink to SQLAlchemy many to many的排序问题">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/sqlalchemy.html">SQLAlchemy</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">在SQLAlchemy ORM中使用反射自动装载数据库结构</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-29T00:00:00+08:00"> 2015-08-29 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>在现实项目中，数据库经常是已经建好的。因此，要再去逐个字段去重新声明一下显然是很无聊的。SQLAlchemy早就在这方面提供了利用反射机制自动加载的功能，而且在ORM中也可以使用这种机制。</p>
+<h3>1. ORM中的reflection</h3>
+<p>直接通过declarative_base返回的Base基类不具备自动加载功能，需要加入DeferredReflection的支持，如下：</p>
+<div class="highlight"><pre><span></span><span class="err">#</span> <span class="err">因类定义在前，无法传入</span><span class="nx">engine参数</span><span class="err">，需要使用</span><span class="nx">DeferredReflection机制</span>
+<span class="nx">Base</span> <span class="o">=</span> <span class="nx">declarative_base</span><span class="p">(</span><span class="nx">cls</span><span class="o">=</span><span class="nx">DeferredReflection</span><span class="p">)</span>
+
+
+<span class="err">#</span> <span class="err">利用反射机制根据现有数据库表定义</span><span class="nx">User</span> <span class="err">类，这时类属性均与字段名一样</span>
+<span class="kr">class</span> <span class="nx">User</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+</pre></div>
+
+
+<p>在定义好类之后，还需要Base.prepare一下，否则会抛出unmapped异常。</p>
+<div class="highlight"><pre><span></span>    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="err">&#39;</span><span class="nl">mysql</span><span class="p">:</span><span class="c1">//root:@127.0.0.1:3306/test?charset=utf8&#39;, echo=True)</span>
+    <span class="n">Base</span><span class="p">.</span><span class="n">metadata</span><span class="p">.</span><span class="n">create_all …</span></pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/08/29/sqlalchemy-orm-autoload.html" rel="bookmark" title="Permalink to 在SQLAlchemy ORM中使用反射自动装载数据库结构">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/sqlalchemy.html">SQLAlchemy</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark" title="Permalink to SQLAlchemy ORM中字段名的几种变化">SQLAlchemy ORM中字段名的几种变化</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-21T00:00:00+08:00"> 2015-08-21 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>在不是非常需要考虑性能的地方，SQLAlchemy ORM是一个很便捷的架设与数据库与对象之间的桥梁。通过ORM，普通开发者就可以快速地写出比较安全可靠应用系统。</p>
+<p>不过在SQLAlchemy ORM的深入应用中，也会有很多大大小小的问题等着去解决。下面就简单说说比较常见的数据库字段名与类属性之间的映射关系。</p>
+<h3>1. 正常场景</h3>
+<p>在正常场景中，ORM类的定义非常简单。</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">User</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="nx">id</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">primary_key</span><span class="o">=</span><span class="nx">True</span><span class="p">)</span>
+    <span class="nx">first_name</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+    <span class="nx">last_name</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+
+
+<p>这是一个很简单的ORM类定义，类名为User，继承自Base，包含3个属性id, first_name, last_name。对应的表名为user。其中也至少包含跟上面名字相同的3个字段.</p>
+<h3>2. 属性名、字段名不一致</h3>
+<p>但是在正常开发中，经常会要处理一些名字不一致的地方。比如，上面的表中加入了一个from字段，表示来自哪里。那么在User类中也加一个from属性么？这显然是错误的，因为from是python的关键字 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark" title="Permalink to SQLAlchemy ORM中字段名的几种变化">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/sqlalchemy.html">SQLAlchemy</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark" title="Permalink to pyramid_tm 配置与使用">pyramid_tm 配置与使用</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-15T00:00:00+08:00"> 2015-08-15 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Pyramid_tm 是一个专门负责request事务处理的tween，可以通过简单的配置为request提供事务支持。而且，除了普通的事务管理之外，pyramid_tm还提供了另外几个有意思的小功能。</p>
+<h3>1. 配置定制Transaction Manager</h3>
+<p>如果对系统默认的事务管理器不满的话，可以定制一个专门的事务管理器，然后通过配置方式嵌入到系统中。</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">transaction</span>
+
+<span class="k">def</span> <span class="nf">manager_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">transaction</span><span class="o">.</span><span class="n">TransactionManager</span><span class="p">()</span>
+</pre></div>
+
+
+<p>定义了hook之后，就可以在程序中或ini文件中通过简单的配置启用它：</p>
+<div class="highlight"><pre><span></span>settings[&#39;tm.manager_hook&#39;] = manager_hook
+</pre></div>
+
+
+<h3>2. 定义启用规则</h3>
+<p>启用了事务管理之后，如果有些特殊的request不希望使用默认的事务管理，也可以通过配置一个是否启用的钩子来达到这个目的：</p>
+<div class="highlight"><pre><span></span>def activate_hook(request):
+    if request.path_info.startswith(&#39;/long-poll&#39;):
+        return False
+    return True
+</pre></div>
+
+
+<p>然后向系统配置这个钩子：</p>
+<div class="highlight"><pre><span></span>settings[&#39;tm.activate_hook&#39;] = activate_hook
+</pre></div>
+
+
+<h3>3. 定义一票否决规则 …</h3> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark" title="Permalink to pyramid_tm 配置与使用">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/pyramid.html">pyramid</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/08/07/transaction-pyramid-tm-notes.html" rel="bookmark" title="Permalink to Pyramid 事务处理及其注意事项">Pyramid 事务处理及其注意事项</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-07T00:00:00+08:00"> 2015-08-07 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>Pyramid 提供了一个事务处理的tween -- pyramid_tm，可以通过配置方式很方便得添加事务支持。</p>
+<h3>1. pyramid_tm的安装配置</h3>
+<p>在正确安装了pyramid_tm之后，只要在main函数中加入：</p>
+<div class="highlight"><pre><span></span>config.include(&#39;pyramid_tm&#39;)
+</pre></div>
+
+
+<p>或在ini文件中加入：</p>
+<div class="highlight"><pre><span></span><span class="k">[app:myapp]</span>
+<span class="na">pyramid.includes</span> <span class="o">=</span> <span class="s">pyramid_tm</span>
+</pre></div>
+
+
+<p>即可对所有view提供事务管理支持。</p>
+<h3>2. 正常的事务处理</h3>
+<p>在正常情况下，业务代码中不需要参杂事务处理代码，如下：</p>
+<div class="highlight"><pre><span></span>def my_view(request):
+    try:
+        one = DBSession.query(MyModel).filter(MyModel.name == &#39;one&#39;).first()
+        one.value = 2
+    except DBAPIError:
+        return Response(conn_err_msg, content_type=&#39;text/plain&#39;, status_int=500)
+    return …</pre></div> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/08/07/transaction-pyramid-tm-notes.html" rel="bookmark" title="Permalink to Pyramid 事务处理及其注意事项">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/pyramid.html">pyramid</a>
+                                </div>
+
+
+
+                        </article></li>
+                        <li><article class="hentry">
+                                <header> <h2 class="entry-title"><a href="../../posts/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">sqlalchemy中怎么使用IS NULL条件</a></h2> </header>
+                                <footer class="post-info">
+                                    <abbr class="published" title="2015-08-01T00:00:00+08:00"> 2015-08-01 </abbr>
+                                    <address class="vcard author">By 
+                                    <a class="url fn" href="../../author/eryx-lee.html"> Eryx Lee</a>
+                                    </address>
+                                </footer><!-- /.post-info -->
+                                <div class="entry-content"> <p>在使用sqlalchemy过程中，不小心犯了个小错误：在看一个查询语句时，发现一个从句 A.status == None 提示有PEP8警告，就好心改成了A.status is None。结果，单元测试各种出错。一看生成的SQl语句，发现status is null这个从句没有生成，这是为什么呢？</p>
+<p>仔细看看代码，终于发现A.status is None肯定是假值，在or从句中，被自动忽略了。</p>
+<p>那么，这里怎么写才能避免PEP8警告呢？通过查看SQLAlchemy的文档，可以看到如下用法：</p>
+<div class="highlight"><pre><span></span>query.filter(User.name == None)
+
+# alternatively, if pep8/linters are a concern
+query.filter(User.name.is_(None))
+</pre></div>
+
+
+<p>好了，没警告了 …</p> </div><!-- /.entry-content -->
+
+                                <div class="medium primary btn"><a href="../../posts/2015/08/01/sqlalchemy-is-null-filter.html" rel="bookmark" title="Permalink to sqlalchemy中怎么使用IS NULL条件">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+                                <div class="row tag-row">
+                                        <span>Tagged as : </span>
+                                            <a class="danger label" href="../../tag/sqlalchemy.html">SQLAlchemy</a>
+                                </div>
+
+
+
+                        </article></li>
+                </ol><!-- /#posts-list -->
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../category/ops/index.html">ops</a></li>
+    <li><a href="../../category/python/index.html">python</a></li>
+    <li><a href="../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+<p class="paginator">
+    Page 1 / 2
+        <a href="../../category/python/index2.html"><i class="icon-arrow-right"></i></a>
+</p>
+</section><!-- /#content -->
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../theme/js/plugins.js"></script>
+</body>
+</html>

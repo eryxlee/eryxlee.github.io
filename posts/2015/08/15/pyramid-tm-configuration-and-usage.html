@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>pyramid_tm 配置与使用</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/pygment.css" />
+
+        <script src="../../../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="../../../../posts/2015/08/15/pyramid-tm-configuration-and-usage.html" rel="bookmark"
+                   title="Permalink to pyramid_tm 配置与使用">pyramid_tm 配置与使用</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-08-15T00:00:00+08:00">
+                2015-08-15
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="../../../../author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>Pyramid_tm 是一个专门负责request事务处理的tween，可以通过简单的配置为request提供事务支持。而且，除了普通的事务管理之外，pyramid_tm还提供了另外几个有意思的小功能。</p>
+<h3>1. 配置定制Transaction Manager</h3>
+<p>如果对系统默认的事务管理器不满的话，可以定制一个专门的事务管理器，然后通过配置方式嵌入到系统中。</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">transaction</span>
+
+<span class="k">def</span> <span class="nf">manager_hook</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">transaction</span><span class="o">.</span><span class="n">TransactionManager</span><span class="p">()</span>
+</pre></div>
+
+
+<p>定义了hook之后，就可以在程序中或ini文件中通过简单的配置启用它：</p>
+<div class="highlight"><pre><span></span>settings[&#39;tm.manager_hook&#39;] = manager_hook
+</pre></div>
+
+
+<h3>2. 定义启用规则</h3>
+<p>启用了事务管理之后，如果有些特殊的request不希望使用默认的事务管理，也可以通过配置一个是否启用的钩子来达到这个目的：</p>
+<div class="highlight"><pre><span></span>def activate_hook(request):
+    if request.path_info.startswith(&#39;/long-poll&#39;):
+        return False
+    return True
+</pre></div>
+
+
+<p>然后向系统配置这个钩子：</p>
+<div class="highlight"><pre><span></span>settings[&#39;tm.activate_hook&#39;] = activate_hook
+</pre></div>
+
+
+<h3>3. 定义一票否决规则</h3>
+<p>有的时候我们的程序会捕获部分异常，然后输出一些定制的页面，这样怎么通知系统不要提交事务呢？pyramid_tm还提供了一个一票否决的钩子：</p>
+<div class="highlight"><pre><span></span>def default_commit_veto(request, response):
+    xtm = response.headers.get(&#39;x-tm&#39;)
+    if xtm is not None:
+        return xtm != &#39;commit&#39;
+    return response.status.startswith((&#39;4&#39;, &#39;5&#39;))
+</pre></div>
+
+
+<p>上面的钩子就是通过判断response中的一些特殊信息，来决定是否需要提交事务。
+同样，通过配置启用它。</p>
+<div class="highlight"><pre><span></span>settings[&#39;tm.commit_veto&#39;] = &#39;pyramid_tm.default_commit_veto&#39;
+</pre></div>
+
+
+<h3>4. 定义重试次数</h3>
+<p>pyramid_tm还提供了一个有趣的功能，就是request重试。有点时候，系统会有些短暂的异常，这一次request出错了，下一次可能就会正常了。这个时候，我们就可以用 tm.attempts 这个参数来决定重试的次数，一般设置 2-3 次就差不多了。那么，哪些异常才算是短暂的异常，会触发重试呢？transaction中提供了一个特别的异常transaction.interfaces.TransientError，只要继承了它就可以了。</p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "posts/2015/08/15/pyramid-tm-configuration-and-usage.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../../../category/ops/index.html">ops</a></li>
+    <li><a href="../../../../category/python/index.html">python</a></li>
+    <li><a href="../../../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../../../theme/js/plugins.js"></script>
+</body>
+</html>

@@ -9,11 +9,11 @@
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
         <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
 
-        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="stylesheet" type="text/css" href="./theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="./theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="./theme/pygment.css" />
 
-        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+        <script src="./theme/js/libs/modernizr-2.6.2.min.js"></script>
 
 
               <script>
@@ -38,17 +38,17 @@
         <div class="row">
 
           <header id="banner" class="body">
-                  <h1><a href="/">Learning & Thoughts <strong></strong></a></h1>
+                  <h1><a href="./">Learning & Thoughts <strong></strong></a></h1>
           </header><!-- /#banner -->
 
             <div id="navigation" class="navbar row">
               <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
              
               <ul class="columns">
-                <li><a href="/">Home</a></li>
+                <li><a href="./">Home</a></li>
 
                 <li><a href="/archives.html">Archives</a></li>
-                <li><a href="/about.html">About</a></li>
+                <li><a href="./pages/about.html">About</a></li>
 
               </ul>
             </div>
@@ -63,15 +63,15 @@
         <div class="eleven columns">
                  <ol id="post-list">
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2016/07/02/docker-compose-of-gitlab-and-ldap.html" rel="bookmark" title="Permalink to Gitlab+LDAP的compose文件">Gitlab+LDAP的compose文件</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2016/07/02/docker-compose-of-gitlab-and-ldap.html" rel="bookmark" title="Permalink to Gitlab+LDAP的compose文件">Gitlab+LDAP的compose文件</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2016-07-02T00:00:00+08:00"> 2016-07-02 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>简单配置了一个使用LDAP做用户认证的Gitlab服务器。</p>
-<div class="highlight"><pre><span class="n">gitlab</span><span class="o">:</span>
+<div class="highlight"><pre><span></span><span class="n">gitlab</span><span class="o">:</span>
     <span class="n">image</span><span class="o">:</span> <span class="n">sameersbn</span><span class="o">/</span><span class="n">gitlab</span><span class="o">:</span><span class="n">latest</span>
     <span class="n">restart</span><span class="o">:</span> <span class="n">always</span>
     <span class="n">environment</span><span class="o">:</span>
@@ -90,26 +90,26 @@
         <span class="o">-</span> <span class="n">LDAP_ALLOW_USERNAME_OR_EMAIL_LOGIN</span><span class="o">=</span><span class="kc">false</span>
         <span class="o">-</span> <span class="n">GITLAB_HOST</span><span class="o">=</span><span class="n">git</span><span class="o">.</span><span class="na">XXXX</span><span class="o">.</span><span class="na">com</span>
     <span class="n">volumes</span><span class="o">:</span>
-        <span class="o">-</span> <span class="sr">/var/run ...</span></pre></div> </div><!-- /.entry-content -->
+        <span class="o">-</span> <span class="sr">/var/run …</span></pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2016/07/02/docker-compose-of-gitlab-and-ldap.html" rel="bookmark" title="Permalink to Gitlab+LDAP的compose文件">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2016/07/02/docker-compose-of-gitlab-and-ldap.html" rel="bookmark" title="Permalink to Gitlab+LDAP的compose文件">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/docker.html">docker</a>
+                                            <a class="danger label" href="./tag/docker.html">docker</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2016-03-12T00:00:00+08:00"> 2016-03-12 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>因安全原因，最近将部分服务升级到了HTTPS，不过这次简单的升级却导致了有些业务应用出错。具体体现是业务应用一启动就抛出requests.exceptions.SSLError: [Errno 2] No such file or directory错误。不过该应用在开发环境运行是正常的，只是使用py2exe打包成可执行文件之后才会出现该错误。
@@ -119,173 +119,173 @@
 <p>最简单的方式就是直接在requests每次get的时候加一个参数verify=False跳过证书验证。不过这种做法需要改每个调用，而且在日志中会有一个警告错误。</p>
 <h3>2. 将cacert.pem一起打包</h3>
 <p>在py2exe配置文件中加入import requests.certs，然后在data_files中加入一项：('',[requests.certs.where()])，这里的requests.certs.where()返回了当前cacert.pem文件路径，在data_files中加入这一项即告诉py2exe将该文件拷贝到生成目标exe文件的相同目录。将ca文件拷贝好后，还需要在程序开头设置一下ca环境变量。
-os ...</p> </div><!-- /.entry-content -->
+os …</p> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html" rel="bookmark" title="Permalink to Requests访问HTTPS链接在使用py2exe打包后出现No such file or directory错误">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/py2exe.html">py2exe</a>
-                                            <a class="danger label" href="/tag/https.html">https</a>
+                                            <a class="danger label" href="./tag/py2exe.html">py2exe</a>
+                                            <a class="danger label" href="./tag/https.html">https</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2016/01/01/mysql-config.html" rel="bookmark" title="Permalink to MySQL 配置参数">MySQL 配置参数</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2016/01/01/mysql-config.html" rel="bookmark" title="Permalink to MySQL 配置参数">MySQL 配置参数</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2016-01-01T00:00:00+08:00"> 2016-01-01 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>MySQL 配置参数笔记
-<img alt="配置参数" src="/images/notes/mysql/MySQL%20-%20配置参数.jpeg" /></p> </div><!-- /.entry-content -->
+<img alt="配置参数" src="/images/notes/mysql/MySQL%20-%20配置参数.jpeg"></p> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2016/01/01/mysql-config.html" rel="bookmark" title="Permalink to MySQL 配置参数">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2016/01/01/mysql-config.html" rel="bookmark" title="Permalink to MySQL 配置参数">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/mysql.html">mysql</a>
+                                            <a class="danger label" href="./tag/mysql.html">mysql</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/12/03/mysql-macos-lib-error.html" rel="bookmark" title="Permalink to MAC OS 上安装MySQL 5.7.10后Python连接问题">MAC OS 上安装MySQL 5.7.10后Python连接问题</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2015/12/03/mysql-macos-lib-error.html" rel="bookmark" title="Permalink to MAC OS 上安装MySQL 5.7.10后Python连接问题">MAC OS 上安装MySQL 5.7.10后Python连接问题</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-12-03T00:00:00+08:00"> 2015-12-03 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>通过brew安装了最新版本的MySQL，在python中import MySQLdb发现找不到libmysqlclient.18.dylib文件。而MySQL 5.7.10带的lib文件是libmysqlclient.20.dylib。经过测试后，发现直接讲文件改名链接过来也是可以用的。</p>
 <p><code>sudo ln -s /usr/local/opt/mysql/lib/libmysqlclient.20.dylib /usr/local/lib/libmysqlclient.18.dylib</code> </p> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/12/03/mysql-macos-lib-error.html" rel="bookmark" title="Permalink to MAC OS 上安装MySQL 5.7.10后Python连接问题">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2015/12/03/mysql-macos-lib-error.html" rel="bookmark" title="Permalink to MAC OS 上安装MySQL 5.7.10后Python连接问题">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/mysql.html">mysql</a>
+                                            <a class="danger label" href="./tag/mysql.html">mysql</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html" rel="bookmark" title="Permalink to Docker machine虚拟机网络地址配置">Docker machine虚拟机网络地址配置</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html" rel="bookmark" title="Permalink to Docker machine虚拟机网络地址配置">Docker machine虚拟机网络地址配置</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-12-02T00:00:00+08:00"> 2015-12-02 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>因家里网络调整，将网段设置成了192.168.99.＊网段，一直也就没注意。不过后来一次突然发现，docker machine无法启动了，抛出了下面的错误：</p>
-<div class="highlight"><pre>This machine has been allocated an IP address, but Docker Machine could not
+<div class="highlight"><pre><span></span>This machine has been allocated an IP address, but Docker Machine could not
 reach it successfully.
 
 SSH for the machine should still work, but connecting to exposed ports, such as
-the Docker daemon port (usually &lt;ip&gt;:2376), may not work ...</pre></div> </div><!-- /.entry-content -->
+the Docker daemon port (usually &lt;ip&gt;:2376), may not work …</pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html" rel="bookmark" title="Permalink to Docker machine虚拟机网络地址配置">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html" rel="bookmark" title="Permalink to Docker machine虚拟机网络地址配置">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/docker.html">docker</a>
+                                            <a class="danger label" href="./tag/docker.html">docker</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/10/15/the-order-of-ordereddict.html" rel="bookmark" title="Permalink to OrderedDict的顺序问题">OrderedDict的顺序问题</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2015/10/15/the-order-of-ordereddict.html" rel="bookmark" title="Permalink to OrderedDict的顺序问题">OrderedDict的顺序问题</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-10-15T00:00:00+08:00"> 2015-10-15 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>一直比较习惯用类似</p>
-<div class="highlight"><pre>data = dict(f=12, a=5, e=6)
+<div class="highlight"><pre><span></span>data = dict(f=12, a=5, e=6)
 </pre></div>
 
 
 <p>这种方式来初始化字典。有一次需要用到排序的字典类型，就想当然的写了</p>
-<div class="highlight"><pre>data = collections.OrderedDict(f=12, a=5, e=6)
+<div class="highlight"><pre><span></span>data = collections.OrderedDict(f=12, a=5, e=6)
 </pre></div>
 
 
 <p>总以为这样传入参数形成的字典也是按指定的顺序排序的，结果得到的却是：</p>
-<div class="highlight"><pre>OrderedDict([(&#39;a&#39;, 5), (&#39;e&#39;, 6), (&#39;f&#39;, 12)])
+<div class="highlight"><pre><span></span>OrderedDict([(&#39;a&#39;, 5), (&#39;e&#39;, 6), (&#39;f&#39;, 12)])
 </pre></div>
 
 
 <p>OrderedDict的初始化参数竟然是没有排序的！！！</p>
-<p>The signature is the same as regular dictionaries, but keyword arguments are not recommended because their insertion order is ...</p> </div><!-- /.entry-content -->
+<p>The signature is the same as regular dictionaries, but keyword arguments are not recommended because their insertion order is …</p> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/10/15/the-order-of-ordereddict.html" rel="bookmark" title="Permalink to OrderedDict的顺序问题">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2015/10/15/the-order-of-ordereddict.html" rel="bookmark" title="Permalink to OrderedDict的顺序问题">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/python.html">python</a>
+                                            <a class="danger label" href="./tag/python.html">python</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">[转]Print all 256 colors for testing TERM or for a quick reference</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">[转]Print all 256 colors for testing TERM or for a quick reference</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-10-10T00:00:00+08:00"> 2015-10-10 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>记一个比较有用的命令，转自<a href="http://www.commandlinefu.com/commands/view/6533/print-all-256-colors-for-testing-term-or-for-a-quick-reference">commandlinefu</a></p>
-<div class="highlight"><pre>( x=`tput op` y=`printf %$((<span class="cp">${</span><span class="n">COLUMNS</span><span class="cp">}</span>-6))s`;for i in {0..256};do o=00<span class="nv">$i</span>;echo -e <span class="cp">${</span><span class="n">o</span><span class="p">:</span><span class="err">$</span><span class="p">{</span><span class="c">#o</span><span class="cp">}</span>-3:3} `tput setaf <span class="nv">$i</span>;tput setab <span class="nv">$i</span>`<span class="cp">${</span><span class="n">y</span><span class="o">//</span> <span class="o">/=</span><span class="cp">}</span><span class="nv">$x</span>;done; )
+<div class="highlight"><pre><span></span>( x=`tput op` y=`printf %$((<span class="cp">${</span><span class="n">COLUMNS</span><span class="cp">}</span>-6))s`;for i in {0..256};do o=00<span class="nv">$i</span>;echo -e <span class="cp">${</span><span class="n">o</span><span class="p">:</span><span class="err">$</span><span class="p">{</span><span class="c1">#o</span><span class="cp">}</span>-3:3} `tput setaf <span class="nv">$i</span>;tput setab <span class="nv">$i</span>`<span class="cp">${</span><span class="n">y</span><span class="o">//</span> <span class="o">/=</span><span class="cp">}</span><span class="nv">$x</span>;done; )
 </pre></div>
 
 
 <p>也可以写出函数放入到.bash_profile中：</p>
-<div class="highlight"><pre>aa_256 ()
+<div class="highlight"><pre><span></span>aa_256 ()
 {
 ( x=`tput op` y=`printf %$((<span class="cp">${</span><span class="n">COLUMNS</span><span class="cp">}</span>-6))s`;
-for i in {0 ...</pre></div> </div><!-- /.entry-content -->
+for i in {0 …</pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html" rel="bookmark" title="Permalink to [转]Print all 256 colors for testing TERM or for a quick reference">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/linux.html">linux</a>
+                                            <a class="danger label" href="./tag/linux.html">linux</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">体验一下Python 3.5</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">体验一下Python 3.5</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-09-15T00:00:00+08:00"> 2015-09-15 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>Python 3.5终于发布了，赶紧来尝鲜一把</p>
-<div class="highlight"><pre>FROM alpine:3.2
+<div class="highlight"><pre><span></span>FROM alpine:3.2
 MAINTAINER Eryx Lee &lt;eryx.lee0901@gmail.com&gt;
 
 RUN apk --update add \
@@ -298,33 +298,33 @@ VOLUME /source
 
 ADD https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tgz /source/Python-3.5.0.tgz
 
-RUN cd source &amp;&amp; tar -zxvf Python-3 ...</pre></div> </div><!-- /.entry-content -->
+RUN cd source &amp;&amp; tar -zxvf Python-3 …</pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2015/09/15/python-3-5-in-docker.html" rel="bookmark" title="Permalink to 体验一下Python 3.5">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/docker.html">docker</a>
-                                            <a class="danger label" href="/tag/python.html">python</a>
+                                            <a class="danger label" href="./tag/docker.html">docker</a>
+                                            <a class="danger label" href="./tag/python.html">python</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">在Supervisor中配置Pyramid项目</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">在Supervisor中配置Pyramid项目</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-09-09T00:00:00+08:00"> 2015-09-09 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>Supervisor是一个很不错的进程管理工具，pyramid项目也能很简单的配置成Supervisor的受控项目。不过为了更好的运行pyramid程序，在正常的配置之后，还有几点地方值得注意一下。</p>
 <h3>1. 配置环境变量</h3>
 <p>pyramid项目中一个很讨厌的地方就是一旦部署到一个新的地方，就需要python setup.py develop一番，特别是在类似Docker之类的地方部署时就显得很多余，放哪里运行都不合适。其实我们完全可以通过配置PYTHONPATH环境变量来避免这种运行方式。如下：</p>
-<div class="highlight"><pre><span class="k">[program:mytest]</span>
+<div class="highlight"><pre><span></span><span class="k">[program:mytest]</span>
 <span class="na">environment</span><span class="o">=</span><span class="s">PYTHONPATH=&quot;/source/MyTest&quot;</span>
 <span class="na">command</span><span class="o">=</span><span class="s">pserve development.ini</span>
 <span class="na">process_name</span><span class="o">=</span><span class="s">mytest</span>
@@ -341,30 +341,30 @@ RUN cd source &amp;&amp; tar -zxvf Python-3 ...</pre></div> </div><!-- /.entry-c
 <p>这里通过环境变量配置项把项目目录加入到了PYTHONPATH中，这样没有运行setup.py也不会报找不到包了。不过这种情况需要特别注意：</p>
 <ul>
 <li>项目中使用了的包不要忘了安装。</li>
-<li>不要忘了egg_info目录，有的时候从代码管理系统中取回的代码是没egg_info目录的 ...</li></ul> </div><!-- /.entry-content -->
+<li>不要忘了egg_info目录，有的时候从代码管理系统中取回的代码是没egg_info目录的 …</li></ul> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2015/09/09/pyramid-configuration-in-supervisor.html" rel="bookmark" title="Permalink to 在Supervisor中配置Pyramid项目">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/pyramid.html">pyramid</a>
+                                            <a class="danger label" href="./tag/pyramid.html">pyramid</a>
                                 </div>
 
 
 
                         </article></li>
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="/pages/2015/08/31/sqlalchemy-many-to-many-ordering.html" rel="bookmark" title="Permalink to SQLAlchemy many to many的排序问题">SQLAlchemy many to many的排序问题</a></h2> </header>
+                                <header> <h2 class="entry-title"><a href="./posts/2015/08/31/sqlalchemy-many-to-many-ordering.html" rel="bookmark" title="Permalink to SQLAlchemy many to many的排序问题">SQLAlchemy many to many的排序问题</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="2015-08-31T00:00:00+08:00"> 2015-08-31 </abbr>
                                     <address class="vcard author">By 
-                                    <a class="url fn" href="/author/eryx-lee.html"> Eryx Lee</a>
+                                    <a class="url fn" href="./author/eryx-lee.html"> Eryx Lee</a>
                                     </address>
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> <p>SQLAlchemy支持many to many的关联管理，不过实际使用中，经常需要两侧取到的数据都是排序的，文档里面还没看到类似例子，这里倒是有一个<a href="https://julo.ch/blog/sqlalchemy-many-to-many-ordering/" title="Ordering your sqlalchemy many-to-many relationship">案例</a>，不过略显复杂。实际测试了一下，relationship应该是可以带两个排序参数的，下面就给出测试代码，重点在relationship的参数上：</p>
-<div class="highlight"><pre>    engine = create_engine(&#39;sqlite:///:memory:&#39;, echo=True)
+<div class="highlight"><pre><span></span>    engine = create_engine(&#39;sqlite:///:memory:&#39;, echo=True)
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -376,15 +376,15 @@ RUN cd source &amp;&amp; tar -zxvf Python-3 ...</pre></div> </div><!-- /.entry-c
 
     class Left(Base):
         __tablename__ = &#39;left&#39;
-        id ...</pre></div> </div><!-- /.entry-content -->
+        id …</pre></div> </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="/pages/2015/08/31/sqlalchemy-many-to-many-ordering.html" rel="bookmark" title="Permalink to SQLAlchemy many to many的排序问题">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="./posts/2015/08/31/sqlalchemy-many-to-many-ordering.html" rel="bookmark" title="Permalink to SQLAlchemy many to many的排序问题">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                         <span>Tagged as : </span>
-                                            <a class="danger label" href="/tag/sqlalchemy.html">SQLAlchemy</a>
+                                            <a class="danger label" href="./tag/sqlalchemy.html">SQLAlchemy</a>
                                 </div>
 
 
@@ -395,48 +395,33 @@ RUN cd source &amp;&amp; tar -zxvf Python-3 ...</pre></div> </div><!-- /.entry-c
         </div><!-- /.eleven.columns -->
         
 <div class="three columns">
-<!--
-<h4>Pages</h4>
-
- <ul>
-      <li><a href="/archives.html">Archives</a></li>
-      <li><a href="/about.html">About</a></li>
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="./category/mysql/index.html">mysql</a></li>
+    <li><a href="./category/ops/index.html">ops</a></li>
+    <li><a href="./category/python/index.html">python</a></li>
+    <li><a href="./category/uncategorized/index.html">uncategorized</a></li>
   </ul>
-//-->
-<h4>Categories</h4>
-<ul>
-		<li><a href="/mysql/index.html">mysql</a></li>
-		<li><a href="/ops/index.html">ops</a></li>
-		<li><a href="/python/index.html">python</a></li>
-		<li><a href="/uncategorized/index.html">uncategorized</a></li>
-</ul>
 
 
 <h4>Tags</h4>
-	<ul>
-	    <li class="tag-0"><a href="/tag/pyramid.html">pyramid</a></li>
-	    <li class="tag-2"><a href="/tag/python.html">python</a></li>
-	    <li class="tag-4"><a href="/tag/https.html">https</a></li>
-	    <li class="tag-4"><a href="/tag/py2exe.html">py2exe</a></li>
-	    <li class="tag-2"><a href="/tag/mysql.html">mysql</a></li>
-	    <li class="tag-0"><a href="/tag/docker.html">docker</a></li>
-	    <li class="tag-4"><a href="/tag/linux.html">linux</a></li>
-	    <li class="tag-1"><a href="/tag/sqlalchemy.html">SQLAlchemy</a></li>
+	<ul class="blank">
+	    <li class="tag-4"><a href="./tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="./tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="./tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="./tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="./tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="./tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="./tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="./tag/docker.html">docker</a></li>
 </ul>
 
 
 <nav class="widget">
   <h4>Social</h4>
-  <ul>
+  <ul class="blank">
     <li><a href="http://weibo.com/eryxlee">微博</a></li>
-  </ul>
-</nav>
-
-<nav class="widget">
-  <h4>Links</h4>
-  <ul>
-    <li><a href="http://python.org/">Python.org</a></li>
-    <li><a href="https://github.com/docker-library">Docker library</a></li>
   </ul>
 </nav>
 
@@ -444,7 +429,7 @@ RUN cd source &amp;&amp; tar -zxvf Python-3 ...</pre></div> </div><!-- /.entry-c
 
 <p class="paginator">
     Page 1 / 3
-        <a href="/index2.html"><i class="icon-arrow-right"></i></a>
+        <a href="./index2.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
 
@@ -494,8 +479,8 @@ RUN cd source &amp;&amp; tar -zxvf Python-3 ...</pre></div> </div><!-- /.entry-c
         (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
 </script>
-  <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
-  <script src="/theme/js/libs/gumby.min.js"></script>
-  <script src="/theme/js/plugins.js"></script>
+  <script src="./theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="./theme/js/libs/gumby.min.js"></script>
+  <script src="./theme/js/plugins.js"></script>
 </body>
 </html>

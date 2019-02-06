@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>SQLAlchemy ORM中字段名的几种变化</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/pygment.css" />
+
+        <script src="../../../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="../../../../posts/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html" rel="bookmark"
+                   title="Permalink to SQLAlchemy ORM中字段名的几种变化">SQLAlchemy ORM中字段名的几种变化</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-08-21T00:00:00+08:00">
+                2015-08-21
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="../../../../author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>在不是非常需要考虑性能的地方，SQLAlchemy ORM是一个很便捷的架设与数据库与对象之间的桥梁。通过ORM，普通开发者就可以快速地写出比较安全可靠应用系统。</p>
+<p>不过在SQLAlchemy ORM的深入应用中，也会有很多大大小小的问题等着去解决。下面就简单说说比较常见的数据库字段名与类属性之间的映射关系。</p>
+<h3>1. 正常场景</h3>
+<p>在正常场景中，ORM类的定义非常简单。</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">User</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span><span class="o">:</span>
+    <span class="nx">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user&#39;</span>
+
+    <span class="nx">id</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">primary_key</span><span class="o">=</span><span class="nx">True</span><span class="p">)</span>
+    <span class="nx">first_name</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+    <span class="nx">last_name</span> <span class="o">=</span> <span class="nx">Column</span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+
+
+<p>这是一个很简单的ORM类定义，类名为User，继承自Base，包含3个属性id, first_name, last_name。对应的表名为user。其中也至少包含跟上面名字相同的3个字段.</p>
+<h3>2. 属性名、字段名不一致</h3>
+<p>但是在正常开发中，经常会要处理一些名字不一致的地方。比如，上面的表中加入了一个from字段，表示来自哪里。那么在User类中也加一个from属性么？这显然是错误的，因为from是python的关键字。这是就需要对名字做对应关系，如下：</p>
+<div class="highlight"><pre><span></span>    from_ = Column(&#39;from&#39;, String(10))
+</pre></div>
+
+
+<p>在这里，属性名字成了from_，而对应的字段名字还是from。</p>
+<p>做了这个对应关系之后，SQLAlchemy中的几个属性也有了响应的变化：</p>
+<div class="highlight"><pre><span></span>    # 如果类属性名跟字段名不一致，那么key, name 分别代表这两个值，注意这个区别
+    print [User.id.key, User.from_.key]
+    # [&#39;id&#39;, &#39;from_&#39;]
+    print [col.get(&quot;name&quot;) for col in stmt.column_descriptions]
+    # [&#39;id&#39;, &#39;from_&#39;]
+    print [User.id.name, User.from_.name]
+    # [&#39;id&#39;, &#39;from&#39;]
+</pre></div>
+
+
+<p>可以看到User.id.key得到的是属性的名字，而User.id.name得到的是字段的名字。</p>
+<h3>3. 组合</h3>
+<p>有的场景，需要输出几个字段的组合值。当然，这可以通过在select中组合得到想要的结果。不过，SQLAlchemy已经提供了一个更方便的方式，那就是通过column_property进行多个字段的组合，如下：</p>
+<div class="highlight"><pre><span></span>    # 复合字段，SQL中生成类似 concat(user.first_name, user.last_name) AS anon_1
+    compound_name = column_property(first_name + last_name)
+</pre></div>
+
+
+<p>通过column_property的定义，在以后的程序中，就可以像使用普通属性一样使用组合属性了。</p>
+<h3>4. namedtuple输出</h3>
+<p>在实际开发中，很少会直接query单个的类，经常会从多个表中提取部分字段一起输出。这种情况下，SQLAlchemy输出的namedtuple列表，</p>
+<div class="highlight"><pre><span></span>    rows = session.query(User.id.label(&#39;id&#39;), User.name.label(&#39;name&#39;), Address.email_address.label(&#39;email&#39;)) \
+        .filter(User.id == Address.user_id) \
+        .filter(Address.email_address == &#39;jack@google.com&#39;) \
+        .all()
+</pre></div>
+
+
+<p>上面的例子中输出了一个由(id, name, email)组成的tuple的列表，如果直接转化成字符串的话，tuple将会转换成列表，从而丢失了字段名字属性。如果我们需要保持其字段名字的话，就需要再做一点转换了，如下：</p>
+<div class="highlight"><pre><span></span>    print [r._asdict() for r in rows]
+</pre></div>
+
+
+<p>这里将会输出类似 [{'email': u'jack@google.com', 'id': 2, 'name': u'jack'}]这样的内容。</p>
+<p>如果我们是直接输出JSON格式的结果数据的话，使用simplejson将会更简单：</p>
+<div class="highlight"><pre><span></span>    print json.dumps(rows, namedtuple_as_object=True)
+</pre></div>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "posts/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../../../category/ops/index.html">ops</a></li>
+    <li><a href="../../../../category/python/index.html">python</a></li>
+    <li><a href="../../../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../../../theme/js/plugins.js"></script>
+</body>
+</html>

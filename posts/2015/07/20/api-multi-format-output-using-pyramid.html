@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh_cn">
+<head>
+
+        <title>使用Pyramid机制完成API的多格式输出</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../../../theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="../../../../theme/pygment.css" />
+
+        <script src="../../../../theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+              <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-21005293-3', 'Learning & Thoughts');
+                ga('send', 'pageview');
+
+              </script>
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="../../../../">Learning & Thoughts <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="../../../../">Home</a></li>
+
+                <li><a href="/archives.html">Archives</a></li>
+                <li><a href="../../../../pages/about.html">About</a></li>
+
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="../../../../posts/2015/07/20/api-multi-format-output-using-pyramid.html" rel="bookmark"
+                   title="Permalink to 使用Pyramid机制完成API的多格式输出">使用Pyramid机制完成API的多格式输出</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <abbr class="published" title="2015-07-20T00:00:00+08:00">
+                2015-07-20
+              </abbr>
+              <address class="vcard author">By 
+                <a class="url fn" href="../../../../author/eryx-lee.html"> Eryx Lee</a>
+              </address>
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>在API开发的过程中，经常会需要根据传入的format参数来选择不同格式的输出结果，如JSON，XML等。正巧，pyramid中renderer机制可以很方便的进行各种不同格式内容的输出，而且基本很少涉及到代码的大量修改。</p>
+<h3>1. 直接在代码中判断format参数</h3>
+<p>可以在pyramid的view中直接判断format参数，然后根据值不同分别render不同的response。如下：</p>
+<div class="highlight"><pre><span></span>@view_config(route_name=&#39;api1&#39;)
+def api1(request):
+    data = dict(
+        one=1,
+        two=&#39;2&#39;)
+
+    format = request.params.get(&#39;format&#39;, &#39;json&#39;).lower()
+    if format == &#39;xml&#39;:
+        return render_to_response(&#39;xml.mako&#39;, data, request)
+
+    return render_to_response(&#39;myjson&#39;, data, request)
+</pre></div>
+
+
+<h3>2. 通过view_config中的request_param参数来配置</h3>
+<p>上面的代码能完成按format参数输出不同内容的需要，但该方法毕竟已经将这个逻辑写到了代码中，那么，有没有直接通过配置来完成该任务的方法呢？其实，在view_config中有一个叫request_param的参数可以就是用来完成类似工作的。如下：</p>
+<div class="highlight"><pre><span></span>@view_config(route_name=&#39;api2&#39;, request_param=&#39;format=xml&#39;, renderer=&#39;xml.mako&#39;)
+@view_config(route_name=&#39;api2&#39;, renderer=&#39;myjson&#39;)
+def api2(request):
+    data = dict(
+        one=1,
+        two=&#39;2&#39;)
+
+    return data
+</pre></div>
+
+
+<h3>3. 通过自定义Predicate来配置</h3>
+<p>上面的方法很简单，对业务也没有任何侵入，不过有个小小的不足，就是在这种情况format参数的传入只能是跟定义的一模一样，不能有大小写区别，为了解决这个问题，我们只能通过自定义的Predicate来解决它。如下：
+首先在main函数中添加代码：</p>
+<div class="highlight"><pre><span></span>    config.add_view_predicate(&#39;format&#39;, FormatPredicate)
+</pre></div>
+
+
+<p>然后，添加FormatPredicate定义：</p>
+<div class="highlight"><pre><span></span><span class="kr">class</span> <span class="nx">FormatPredicate</span><span class="p">()</span><span class="o">:</span>
+
+    <span class="nx">def</span> <span class="nx">__init__</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span><span class="o">:</span>
+        <span class="nx">self</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">val</span>
+
+    <span class="nx">def</span> <span class="nx">text</span><span class="p">(</span><span class="nx">self</span><span class="p">)</span><span class="o">:</span>
+        <span class="k">return</span> <span class="s1">&#39;format = %s&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">val</span><span class="p">,)</span>
+
+    <span class="nx">phash</span> <span class="o">=</span> <span class="nx">text</span>
+
+    <span class="nx">def</span> <span class="nx">__call__</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">request</span><span class="p">)</span><span class="o">:</span>
+        <span class="k">return</span> <span class="nx">request</span><span class="p">.</span><span class="nx">GET</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;format&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">lower</span><span class="p">()</span> <span class="o">==</span> <span class="nx">self</span><span class="p">.</span><span class="nx">val</span>
+</pre></div>
+
+
+<p>最后，在views中如下使用format参数：</p>
+<div class="highlight"><pre><span></span>@view_config(route_name=&#39;api3&#39;, format=&#39;xml&#39;, renderer=&#39;xml.mako&#39;)
+@view_config(route_name=&#39;api3&#39;, renderer=&#39;myjson&#39;)
+def api3(request):
+    data = dict(
+        one=1,
+        two=&#39;2&#39;)
+
+    return data
+</pre></div>
+
+
+<p>这种情况下，就再也不用担心format输入的大小写了。</p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "posts/2015/07/20/api-multi-format-output-using-pyramid.html";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://eryxlee.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+  
+  <h4>Categories</h4>
+  <ul class="blank">
+    <li><a href="../../../../category/mysql/index.html">mysql</a></li>
+    <li><a href="../../../../category/ops/index.html">ops</a></li>
+    <li><a href="../../../../category/python/index.html">python</a></li>
+    <li><a href="../../../../category/uncategorized/index.html">uncategorized</a></li>
+  </ul>
+
+
+<h4>Tags</h4>
+	<ul class="blank">
+	    <li class="tag-4"><a href="../../../../tag/linux.html">linux</a></li>
+	    <li class="tag-4"><a href="../../../../tag/https.html">https</a></li>
+	    <li class="tag-0"><a href="../../../../tag/pyramid.html">pyramid</a></li>
+	    <li class="tag-1"><a href="../../../../tag/sqlalchemy.html">SQLAlchemy</a></li>
+	    <li class="tag-2"><a href="../../../../tag/mysql.html">mysql</a></li>
+	    <li class="tag-4"><a href="../../../../tag/py2exe.html">py2exe</a></li>
+	    <li class="tag-2"><a href="../../../../tag/python.html">python</a></li>
+	    <li class="tag-0"><a href="../../../../tag/docker.html">docker</a></li>
+</ul>
+
+
+<nav class="widget">
+  <h4>Social</h4>
+  <ul class="blank">
+    <li><a href="http://weibo.com/eryxlee">微博</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+                <li><div class="btn primary"><a href="http://github.com/eryxlee" target="_blank">Github</a></div></li>
+
+                <li><div class="btn twitter"><a href="https://twitter.com/EryxLee" target="_blank">Twitter</a></div></li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'eryxlee';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="../../../../theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="../../../../theme/js/libs/gumby.min.js"></script>
+  <script src="../../../../theme/js/plugins.js"></script>
+</body>
+</html>
