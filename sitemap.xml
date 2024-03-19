@@ -1,279 +1,187 @@
-<?xml version="1.0" encoding="utf-8"?>
-<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/17/LangChain-LCEL-quickstart/</loc>
+    
+    <lastmod>2024-03-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/07/langchain-application-develop-workflow/</loc>
+    
+    <lastmod>2024-03-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/19/LangChain-LCEL-quickstart-2/</loc>
+    
+    <lastmod>2024-03-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/17/LangChain-LCEL-intro/</loc>
+    
+    <lastmod>2024-03-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/15/LangChain-langserve/</loc>
+    
+    <lastmod>2024-03-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/13/LangChain-quickstart-4/</loc>
+    
+    <lastmod>2024-03-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/12/LangChain-quickstart-3/</loc>
+    
+    <lastmod>2024-03-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/11/LangChain-quickstart-2/</loc>
+    
+    <lastmod>2024-03-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/06/RAG-based-langchain-example/</loc>
+    
+    <lastmod>2024-03-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/10/LangChain-quickstart/</loc>
+    
+    <lastmod>2024-03-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/09/LangChain-libraries/</loc>
+    
+    <lastmod>2024-03-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/07/langchain-introduction/</loc>
+    
+    <lastmod>2024-03-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/05/langchain-docker/</loc>
+    
+    <lastmod>2024-03-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/about/index.html</loc>
+    
+    <lastmod>2024-03-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/categories/index.html</loc>
+    
+    <lastmod>2024-03-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/index.html</loc>
+    
+    <lastmod>2024-03-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
 
-<url>
-<loc>https://eryxlee.github.io/</loc>
-<lastmod>2019-02-06T14:16:15-00:00</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
+  <url>
+    <loc>https://blog.agiexplained.com/</loc>
+    <lastmod>2024-03-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
 
-<url>
-<loc>https://eryxlee.github.io/archives.html</loc>
-<lastmod>2019-02-06T14:16:15-00:00</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/langchain/</loc>
+    <lastmod>2024-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/docker/</loc>
+    <lastmod>2024-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/RAG/</loc>
+    <lastmod>2024-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
 
-<url>
-<loc>https://eryxlee.github.io/categories.html</loc>
-<lastmod>2019-02-06T14:16:15-00:00</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/pages/about.html</loc>
-<lastmod>2014-04-25T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2016/07/02/docker-compose-of-gitlab-and-ldap.html</loc>
-<lastmod>2016-07-02T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2016/03/12/Requests-https-py2exe-no-such-file-or-directory.html</loc>
-<lastmod>2016-03-12T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2016/01/01/mysql-config.html</loc>
-<lastmod>2016-01-01T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/12/03/mysql-macos-lib-error.html</loc>
-<lastmod>2015-12-03T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/12/02/docker-machine-virtualbox-hostonly-cidr.html</loc>
-<lastmod>2015-12-02T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/10/15/the-order-of-ordereddict.html</loc>
-<lastmod>2015-10-15T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/10/10/print-all-256-colors-for-testing-term-or-for-a-quick-reference.html</loc>
-<lastmod>2015-10-10T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/09/15/python-3-5-in-docker.html</loc>
-<lastmod>2015-09-15T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/09/09/pyramid-configuration-in-supervisor.html</loc>
-<lastmod>2015-09-09T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/08/31/sqlalchemy-many-to-many-ordering.html</loc>
-<lastmod>2015-08-31T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/08/29/sqlalchemy-orm-autoload.html</loc>
-<lastmod>2015-08-29T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/08/21/some-variants-of-sqlalchemy-orm-field-name.html</loc>
-<lastmod>2015-08-21T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/08/15/pyramid-tm-configuration-and-usage.html</loc>
-<lastmod>2015-08-15T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/08/07/transaction-pyramid-tm-notes.html</loc>
-<lastmod>2015-08-07T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/08/01/sqlalchemy-is-null-filter.html</loc>
-<lastmod>2015-08-01T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/07/23/api-multi-format-output-using-pyramid-2.html</loc>
-<lastmod>2015-07-23T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/07/20/api-multi-format-output-using-pyramid.html</loc>
-<lastmod>2015-07-20T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/05/19/SQLAlchemy-no-primary-key.html</loc>
-<lastmod>2015-05-19T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/05/12/docker-pyramid.html</loc>
-<lastmod>2015-05-12T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/04/29/docker-registry.html</loc>
-<lastmod>2015-04-29T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/04/25/docker-mysql-compose.html</loc>
-<lastmod>2015-04-25T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/posts/2015/04/23/old_post.html</loc>
-<lastmod>2015-04-23T00:00:00+08:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/category/mysql/index.html</loc>
-<lastmod>2016-01-01T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/category/ops/index.html</loc>
-<lastmod>2016-07-02T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/category/python/index.html</loc>
-<lastmod>2016-03-12T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/category/uncategorized/index.html</loc>
-<lastmod>2015-04-23T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/tag/docker.html</loc>
-<lastmod>2016-07-02T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/tag/py2exe.html</loc>
-<lastmod>2016-03-12T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/tag/https.html</loc>
-<lastmod>2016-03-12T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/tag/mysql.html</loc>
-<lastmod>2016-01-01T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/tag/python.html</loc>
-<lastmod>2015-10-15T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/tag/linux.html</loc>
-<lastmod>2015-10-10T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/tag/pyramid.html</loc>
-<lastmod>2015-09-09T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/tag/sqlalchemy.html</loc>
-<lastmod>2015-08-31T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://eryxlee.github.io/author/eryx-lee.html</loc>
-<lastmod>2016-07-02T00:00:00+08:06</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
+  
+  <url>
+    <loc>https://blog.agiexplained.com/categories/langchain/</loc>
+    <lastmod>2024-03-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
 </urlset>
