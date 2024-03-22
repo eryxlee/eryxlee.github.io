@@ -2,9 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.agiexplained.com/2024/03/19/LangChain-LCEL-quickstart-2/</loc>
+    
+    <lastmod>2024-03-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.agiexplained.com/2024/03/17/LangChain-LCEL-quickstart/</loc>
     
-    <lastmod>2024-03-20</lastmod>
+    <lastmod>2024-03-21</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -21,15 +30,6 @@
   
   <url>
     <loc>https://blog.agiexplained.com/2024/03/07/langchain-application-develop-workflow/</loc>
-    
-    <lastmod>2024-03-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/19/LangChain-LCEL-quickstart-2/</loc>
     
     <lastmod>2024-03-19</lastmod>
     
@@ -148,7 +148,7 @@
 
   <url>
     <loc>https://blog.agiexplained.com/</loc>
-    <lastmod>2024-03-21</lastmod>
+    <lastmod>2024-03-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -156,21 +156,21 @@
   
   <url>
     <loc>https://blog.agiexplained.com/tags/langchain/</loc>
-    <lastmod>2024-03-21</lastmod>
+    <lastmod>2024-03-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/docker/</loc>
-    <lastmod>2024-03-21</lastmod>
+    <lastmod>2024-03-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/RAG/</loc>
-    <lastmod>2024-03-21</lastmod>
+    <lastmod>2024-03-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -179,7 +179,7 @@
   
   <url>
     <loc>https://blog.agiexplained.com/categories/langchain/</loc>
-    <lastmod>2024-03-21</lastmod>
+    <lastmod>2024-03-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
