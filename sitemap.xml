@@ -2,108 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.agiexplained.com/2024/03/19/LangChain-LCEL-quickstart-2/</loc>
+    <loc>https://blog.agiexplained.com/2024/03/22/LangChain-why-use-LCEL/</loc>
     
-    <lastmod>2024-03-21</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/17/LangChain-LCEL-quickstart/</loc>
-    
-    <lastmod>2024-03-21</lastmod>
+    <lastmod>2024-03-22</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.agiexplained.com/2024/03/07/langchain-introduction/</loc>
+    <loc>https://blog.agiexplained.com/2024/03/22/prompt-engineering/</loc>
     
-    <lastmod>2024-03-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/07/langchain-application-develop-workflow/</loc>
-    
-    <lastmod>2024-03-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/17/LangChain-LCEL-intro/</loc>
-    
-    <lastmod>2024-03-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/15/LangChain-langserve/</loc>
-    
-    <lastmod>2024-03-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/13/LangChain-quickstart-4/</loc>
-    
-    <lastmod>2024-03-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/12/LangChain-quickstart-3/</loc>
-    
-    <lastmod>2024-03-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/11/LangChain-quickstart-2/</loc>
-    
-    <lastmod>2024-03-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/06/RAG-based-langchain-example/</loc>
-    
-    <lastmod>2024-03-16</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/10/LangChain-quickstart/</loc>
-    
-    <lastmod>2024-03-10</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/2024/03/09/LangChain-libraries/</loc>
-    
-    <lastmod>2024-03-10</lastmod>
+    <lastmod>2024-03-22</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -112,7 +22,115 @@
   <url>
     <loc>https://blog.agiexplained.com/2024/03/05/langchain-docker/</loc>
     
-    <lastmod>2024-03-05</lastmod>
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/07/langchain-introduction/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/07/langchain-application-develop-workflow/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/15/LangChain-langserve/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/17/LangChain-LCEL-intro/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/19/LangChain-LCEL-quickstart-2/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/17/LangChain-LCEL-quickstart/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/09/LangChain-libraries/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/11/LangChain-quickstart-2/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/12/LangChain-quickstart-3/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/13/LangChain-quickstart-4/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/10/LangChain-quickstart/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/03/06/RAG-based-langchain-example/</loc>
+    
+    <lastmod>2024-03-22</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -155,21 +173,28 @@
 
   
   <url>
-    <loc>https://blog.agiexplained.com/tags/langchain/</loc>
-    <lastmod>2024-03-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.agiexplained.com/tags/docker/</loc>
-    <lastmod>2024-03-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.agiexplained.com/tags/RAG/</loc>
+    <lastmod>2024-03-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/LangChain/</loc>
+    <lastmod>2024-03-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/Prompt/</loc>
+    <lastmod>2024-03-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/Docker/</loc>
     <lastmod>2024-03-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -178,7 +203,14 @@
 
   
   <url>
-    <loc>https://blog.agiexplained.com/categories/langchain/</loc>
+    <loc>https://blog.agiexplained.com/categories/LangChain/</loc>
+    <lastmod>2024-03-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/categories/Prompt/</loc>
     <lastmod>2024-03-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
