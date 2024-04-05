@@ -2,7 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.agiexplained.com/2024/04/01/LangChain-LangSmith-quickstart/</loc>
+    <loc>https://blog.agiexplained.com/2024/04/05/poetry-quickstart/</loc>
+    
+    <lastmod>2024-04-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/04/02/LangChain-LCEL-interface/</loc>
     
     <lastmod>2024-04-02</lastmod>
     
@@ -11,7 +20,7 @@
   </url>
   
   <url>
-    <loc>https://blog.agiexplained.com/2024/04/02/LangChain-LCEL-interface/</loc>
+    <loc>https://blog.agiexplained.com/2024/04/01/LangChain-LangSmith-quickstart/</loc>
     
     <lastmod>2024-04-02</lastmod>
     
@@ -193,7 +202,7 @@
 
   <url>
     <loc>https://blog.agiexplained.com/</loc>
-    <lastmod>2024-04-02</lastmod>
+    <lastmod>2024-04-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -201,28 +210,35 @@
   
   <url>
     <loc>https://blog.agiexplained.com/tags/RAG/</loc>
-    <lastmod>2024-04-02</lastmod>
+    <lastmod>2024-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/LangChain/</loc>
-    <lastmod>2024-04-02</lastmod>
+    <lastmod>2024-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Prompt/</loc>
-    <lastmod>2024-04-02</lastmod>
+    <lastmod>2024-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Docker/</loc>
-    <lastmod>2024-04-02</lastmod>
+    <lastmod>2024-04-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/Python/</loc>
+    <lastmod>2024-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -231,14 +247,21 @@
   
   <url>
     <loc>https://blog.agiexplained.com/categories/LangChain/</loc>
-    <lastmod>2024-04-02</lastmod>
+    <lastmod>2024-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/Prompt/</loc>
-    <lastmod>2024-04-02</lastmod>
+    <lastmod>2024-04-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/categories/Python/</loc>
+    <lastmod>2024-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
