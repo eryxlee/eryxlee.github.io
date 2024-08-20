@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.agiexplained.com/2024/08/12/SQLModel-join/</loc>
+    <lastmod>2024-08-12</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/08/03/SQLModel-self-referential-many/</loc>
+    <lastmod>2024-08-03</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/07/28/SQLModel-self-referential/</loc>
+    <lastmod>2024-07-28</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/07/25/SQLModel-relationship-4/</loc>
+    <lastmod>2024-07-25</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/07/21/SQLModel-relationship-3/</loc>
+    <lastmod>2024-07-21</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/07/17/SQLModel-relationship-2/</loc>
+    <lastmod>2024-07-17</lastmod>
+  </url>
+  <url>
     <loc>https://blog.agiexplained.com/2024/05/10/FastAPI-ruff-config/</loc>
     <lastmod>2024-07-15</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/07/13/SQLModel-relationship-1/</loc>
+    <lastmod>2024-07-13</lastmod>
   </url>
   <url>
     <loc>https://blog.agiexplained.com/2024/07/07/SQLModel-user-guide/</loc>
