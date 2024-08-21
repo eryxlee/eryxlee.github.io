@@ -2,9 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.agiexplained.com/2024/08/12/SQLModel-join/</loc>
+    <loc>https://blog.agiexplained.com/2024/08/07/SQLModel-join/</loc>
     
-    <lastmod>2024-08-12</lastmod>
+    <lastmod>2024-08-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -436,7 +436,7 @@
 
   <url>
     <loc>https://blog.agiexplained.com/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -444,77 +444,77 @@
   
   <url>
     <loc>https://blog.agiexplained.com/tags/FastAPI/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Cache/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/LangChain/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Pydantic/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/ruff/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Python/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/SQLModel/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/RAG/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Docker/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Prompt/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/pytest/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -523,49 +523,49 @@
   
   <url>
     <loc>https://blog.agiexplained.com/categories/FastAPI/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/LangChain/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/Pydantic/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/ruff/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/Python/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/Prompt/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/pytest/</loc>
-    <lastmod>2024-08-20</lastmod>
+    <lastmod>2024-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
