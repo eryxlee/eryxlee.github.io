@@ -1,0 +1,245 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>文档项目管理工具MkDocs | AGI Explained</title><meta name="author" content="Eryx Lee"><meta name="copyright" content="Eryx Lee"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="良好的文档是项目成功的关键。它不仅帮助开发者理解项目结构和代码逻辑，还是新团队成员快速上手的桥梁。MkDocs可以帮助我们构建出既美观又功能丰富的技术文档。 1、mkdocs简介MkDocs 是一个快速、简单且功能丰富的静态站点生成器，专为项目文档设计。它允许你用 Markdown 编写文档，然后通过一个简洁的命令生成一个静态网站。MkDocs 的核心优势在于它的简洁性、速度和易于使用。 主要特点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文档项目管理工具MkDocs">
+<meta property="og:url" content="https://blog.agiexplained.com/2024/08/12/mkdocs-run-on-k8s/index.html">
+<meta property="og:site_name" content="AGI Explained">
+<meta property="og:description" content="良好的文档是项目成功的关键。它不仅帮助开发者理解项目结构和代码逻辑，还是新团队成员快速上手的桥梁。MkDocs可以帮助我们构建出既美观又功能丰富的技术文档。 1、mkdocs简介MkDocs 是一个快速、简单且功能丰富的静态站点生成器，专为项目文档设计。它允许你用 Markdown 编写文档，然后通过一个简洁的命令生成一个静态网站。MkDocs 的核心优势在于它的简洁性、速度和易于使用。 主要特点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pics.agiexplained.com/i/2024/03/05/171847_2.png">
+<meta property="article:published_time" content="2024-08-12T11:25:38.000Z">
+<meta property="article:modified_time" content="2024-08-12T13:20:00.000Z">
+<meta property="article:author" content="Eryx Lee">
+<meta property="article:tag" content="tools">
+<meta property="article:tag" content="mkdocs">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pics.agiexplained.com/i/2024/03/05/171847_2.png"><link rel="shortcut icon" href="https://pics.agiexplained.com/i/2024/03/05/171847.ico"><link rel="canonical" href="https://blog.agiexplained.com/2024/08/12/mkdocs-run-on-k8s/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?8823ed47591706858ef7d0072102a1be";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '文档项目管理工具MkDocs',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-12 21:20:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pics.agiexplained.com/i/2024/03/05/171847_2.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">49</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com"><i class="fa-fw fas fa-book"></i><span> 知识库</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com/#/ai/aiindex"><i class="fa-fw fas fa-book"></i><span> AI资源清单</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="AGI Explained"><span class="site-name">AGI Explained</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com"><i class="fa-fw fas fa-book"></i><span> 知识库</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com/#/ai/aiindex"><i class="fa-fw fas fa-book"></i><span> AI资源清单</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">文档项目管理工具MkDocs</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-08-12T11:25:38.000Z" title="发表于 2024-08-12 19:25:38">2024-08-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-12T13:20:00.000Z" title="更新于 2024-08-12 21:20:00">2024-08-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/tools/">tools</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="文档项目管理工具MkDocs"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>良好的文档是项目成功的关键。它不仅帮助开发者理解项目结构和代码逻辑，还是新团队成员快速上手的桥梁。MkDocs可以帮助我们构建出既美观又功能丰富的技术文档。</p>
+<h3 id="1、mkdocs简介"><a href="#1、mkdocs简介" class="headerlink" title="1、mkdocs简介"></a>1、mkdocs简介</h3><p><a target="_blank" rel="noopener" href="https://www.mkdocs.org/">MkDocs</a> 是一个快速、简单且功能丰富的静态站点生成器，专为项目文档设计。它允许你用 Markdown 编写文档，然后通过一个简洁的命令生成一个静态网站。MkDocs 的核心优势在于它的简洁性、速度和易于使用。</p>
+<p>主要特点：</p>
+<ul>
+<li><strong>纯 Python 编写</strong>：不需要复杂的依赖关系。</li>
+<li><strong>Markdown 支持</strong>：使用 Markdown 编写文档，易于阅读和编写。</li>
+<li><strong>静态站点生成</strong>：生成静态 HTML 页面，可以轻松部署到任何静态文件服务器或 CDN 上。</li>
+<li><strong>实时预览</strong>：开发时提供实时预览功能，所见即所得。</li>
+<li><strong>自定义主题</strong>：支持自定义主题，可以轻松定制文档的外观。</li>
+</ul>
+<h3 id="2、MkDocs-Material"><a href="#2、MkDocs-Material" class="headerlink" title="2、MkDocs-Material"></a>2、MkDocs-Material</h3><p><a target="_blank" rel="noopener" href="https://squidfunk.github.io/mkdocs-material/">MkDocs-Material</a> 是 MkDocs 的一个非常受欢迎的主题，它基于 Google 的 Material Design。它不仅提供了一个现代、响应式的设计，还包含了许多增强功能，如搜索、版本切换和脚注等。</p>
+<h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ul>
+<li><strong>响应式设计</strong>：适配各种屏幕尺寸，无论是桌面还是移动设备。</li>
+<li><strong>内置搜索</strong>：提供快速、高效的搜索功能，方便用户查找文档内容。</li>
+<li><strong>版本切换</strong>：支持多版本文档，方便用户查看不同版本的信息。</li>
+<li><strong>丰富的组件</strong>：包括代码块、图表、表格等，丰富文档的表现力。</li>
+<li><strong>易于定制</strong>：通过 CSS 和 JavaScript 定制主题，满足个性化需求。</li>
+</ul>
+<h3 id="3、简单使用"><a href="#3、简单使用" class="headerlink" title="3、简单使用"></a>3、简单使用</h3><p>在python环境中安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install mkdocs</span><br><span class="line">pip install mkdocs-material</span><br></pre></td></tr></table></figure>
+
+<p>创建一个新的 MkDocs 项目目录，并初始化：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> my-project</span><br><span class="line"><span class="built_in">cd</span> my-project</span><br><span class="line">mkdocs new .</span><br></pre></td></tr></table></figure>
+
+<p>运行以下命令生成文档：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdocs build</span><br></pre></td></tr></table></figure>
+
+<p>这将在 <code>site</code> 目录下生成静态 HTML 文件。</p>
+<p>要查看实时预览，运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdocs serve</span><br></pre></td></tr></table></figure>
+
+<p>现在，你可以在浏览器中访问 <code>http://127.0.0.1:8000</code> 查看你的文档。</p>
+<h3 id="4、配置文件"><a href="#4、配置文件" class="headerlink" title="4、配置文件"></a>4、配置文件</h3><p>可以在mkdocs.yml中进行系统的配置。如：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">site_name:</span> <span class="string">个人知识库</span></span><br><span class="line"><span class="attr">site_url:</span> <span class="string">https://blog.agiexplained.com</span></span><br><span class="line"><span class="attr">site_author:</span> <span class="string">Eryx</span> <span class="string">Lee</span></span><br><span class="line"><span class="attr">docs_dir:</span> <span class="string">.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置主题</span></span><br><span class="line"><span class="attr">theme:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">material</span></span><br><span class="line">  <span class="attr">palette:</span></span><br><span class="line">    <span class="comment"># primary: blue grey</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">scheme:</span> <span class="string">default</span> <span class="comment"># 日间模式</span></span><br><span class="line">      <span class="attr">primary:</span> <span class="string">grey</span> <span class="comment"># 上方的</span></span><br><span class="line">      <span class="attr">accent:</span> <span class="string">cyan</span> <span class="comment"># 链接等可交互元件的高亮色</span></span><br><span class="line">      <span class="attr">toggle:</span></span><br><span class="line">        <span class="attr">icon:</span> <span class="string">material/weather-night</span> <span class="comment"># 图标</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">切换至夜间模式</span> <span class="comment"># 鼠标悬浮提示</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">scheme:</span> <span class="string">slate</span> <span class="comment"># 夜间模式</span></span><br><span class="line">      <span class="attr">primary:</span> <span class="string">black</span> </span><br><span class="line">      <span class="attr">accent:</span> <span class="string">cyan</span></span><br><span class="line">      <span class="attr">toggle:</span></span><br><span class="line">        <span class="attr">icon:</span> <span class="string">material/weather-sunny</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">切换至日间模式</span></span><br><span class="line">  <span class="attr">features:</span> </span><br><span class="line">    <span class="bullet">-</span> <span class="string">navigation.instant</span> <span class="comment">#- header.autohide  #自动隐藏</span></span><br><span class="line">    <span class="comment">#- announce.dismiss #呈现可标记为由用户读取的临时公告，可以包含一个用于取消当前公告的按钮</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">navigation.tracking</span> <span class="comment">#地址栏中的 URL 将自动更新为在目录中突出显示的活动锚点</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">navigation.tabs</span> <span class="comment">#顶级部分将呈现在上面视口标题下方的菜单层中，但在移动设备上保持原样</span></span><br><span class="line">    <span class="comment">#- navigation.tabs.sticky  #启用粘性选项卡后，导航选项卡将锁定在标题下方，并在向下滚动时始终保持可见</span></span><br><span class="line">    <span class="comment">#- navigation.sections #启用部分后，顶级部分在边栏中呈现为1220px以上视口的组，但在移动设备上保持原样</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">navigation.top</span> <span class="comment"># 返回顶部的按钮 在上滑时出现</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">search.suggest</span> <span class="comment"># 搜索输入一些字母时推荐补全整个单词</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">search.highlight</span> <span class="comment"># 搜索出的文章关键词加入高亮</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">navigation.expand</span> <span class="comment"># 打开Tab时左侧目录全部展开</span></span><br><span class="line">    <span class="comment">#- navigation.indexes #启用节索引页后，可以将文档直接附加到节</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">search.share</span> <span class="comment">#搜索分享按钮</span></span><br><span class="line">  <span class="attr">language:</span> <span class="string">zh</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># copyright: Copyright &amp;copy; 2024 Eryx Lee # 左下角的版权声明</span></span><br><span class="line"></span><br><span class="line"><span class="attr">extra:</span></span><br><span class="line">  <span class="attr">generator:</span> <span class="literal">false</span>  <span class="comment">#删除页脚显示“使用 MkDocs material制造”</span></span><br><span class="line">  <span class="attr">social:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">icon:</span> <span class="string">fontawesome/brands/twitter</span> </span><br><span class="line">      <span class="attr">link:</span> <span class="string">https://twitter.com/</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">icon:</span> <span class="string">fontawesome/brands/github</span></span><br><span class="line">      <span class="attr">link:</span> <span class="string">https://github.com/eryxlee</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">icon:</span> <span class="string">fontawesome/brands/bilibili</span></span><br><span class="line">      <span class="attr">link:</span> <span class="string">https://</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">icon:</span> <span class="string">fontawesome/solid/paper-plane</span></span><br><span class="line">      <span class="attr">link:</span> <span class="string">mailto:&lt;eryxlee@163.com&gt;</span> <span class="comment">#联系方式</span></span><br><span class="line"></span><br><span class="line"><span class="attr">plugins:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">search</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">same-dir</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">awesome-pages</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">autorefs</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">exclude:</span></span><br><span class="line">      <span class="attr">glob:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">.obsidian/*</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;index*.html&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;.*&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;_*.md&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;*.tmp&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;*.pdf&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&quot;*.gz&quot;</span></span><br><span class="line">      <span class="attr">regex:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">&#x27;.*\.(tmp|bin|tar)$&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">markdown_extensions:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">abbr</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pymdownx.caret</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pymdownx.mark</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pymdownx.tilde</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">md_in_html</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">pymdownx.arithmatex:</span>  <span class="comment"># latex支持</span></span><br><span class="line">      <span class="attr">generic:</span> <span class="literal">true</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">toc:</span></span><br><span class="line">      <span class="attr">permalink:</span> <span class="literal">true</span> <span class="comment"># 固定标题位置为当前位置</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">pymdownx.highlight:</span> <span class="comment"># 代码块高亮</span></span><br><span class="line">      <span class="attr">anchor_linenums:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">linenums:</span> <span class="literal">true</span> <span class="comment"># 显示行号</span></span><br><span class="line">      <span class="attr">auto_title:</span> <span class="literal">true</span> <span class="comment"># 显示编程语言名称</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pymdownx.inlinehilite</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pymdownx.snippets</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pymdownx.superfences</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">attr_list</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">pymdownx.emoji:</span></span><br><span class="line">      <span class="attr">emoji_index:</span> <span class="type">!!python/name:material.extensions.emoji.twemoji</span></span><br><span class="line">      <span class="attr">emoji_generator:</span> <span class="type">!!python/name:material.extensions.emoji.to_svg</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">pymdownx.superfences</span> <span class="comment"># 代码块高亮插件</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">meta</span> <span class="comment"># 支持Markdown文件上方自定义标题标签等 </span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5、在Docker中使用"><a href="#5、在Docker中使用" class="headerlink" title="5、在Docker中使用"></a>5、在Docker中使用</h3><p>为了在Docker中运行MkDocs，需要从<a target="_blank" rel="noopener" href="https://github.com/squidfunk/mkdocs-material">MkDocs-Material</a>的Github上下载代码，使用其中已经准备好的Dockerfile。这个Dockerfile将会安装MkDocs、MkDocs-Material所需要的所有依赖包，并且预留了一个user-requirements.txt文件，其中可以填入自己所需要的第三方插件，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdocs-same-dir~=0.1.3</span><br><span class="line">mkdocs-autorefs~=1.2.0</span><br><span class="line">mkdocs-exclude~=1.0.2</span><br><span class="line">mkdocs-awesome-pages-plugin~=2.9.3</span><br></pre></td></tr></table></figure>
+
+<p>之后就可以使用Docker build命令编译适合自己的镜像了。</p>
+<h3 id="6、在k8s上运行"><a href="#6、在k8s上运行" class="headerlink" title="6、在k8s上运行"></a>6、在k8s上运行</h3><p>构建deployment、service文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span> </span><br><span class="line"><span class="attr">metadata:</span> </span><br><span class="line">  <span class="attr">name:</span> <span class="string">mkdocs</span></span><br><span class="line"><span class="attr">spec:</span> </span><br><span class="line">  <span class="attr">selector:</span> </span><br><span class="line">    <span class="attr">matchLabels:</span> </span><br><span class="line">      <span class="attr">app:</span> <span class="string">mkdocs</span> </span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span> <span class="comment"># tells deployment to run 2 pods matching the template </span></span><br><span class="line">  <span class="attr">template:</span> </span><br><span class="line">    <span class="attr">metadata:</span> </span><br><span class="line">      <span class="attr">labels:</span> </span><br><span class="line">        <span class="attr">app:</span> <span class="string">mkdocs</span> </span><br><span class="line">    <span class="attr">spec:</span> </span><br><span class="line">      <span class="attr">containers:</span> </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mkdocs</span> </span><br><span class="line">        <span class="attr">image:</span> <span class="string">eryxlee0901/mkdocs:latest</span></span><br><span class="line">        <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mkdocs-data</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/docs</span>  <span class="comment"># 这是Pod内部的目录路径</span></span><br><span class="line">        <span class="attr">ports:</span> </span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">8000</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mkdocs-data</span></span><br><span class="line">        <span class="attr">hostPath:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/root/kb</span>  <span class="comment"># 这是主机上的目录路径</span></span><br><span class="line">          <span class="attr">type:</span> <span class="string">DirectoryOrCreate</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">Service</span> </span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span> </span><br><span class="line"><span class="attr">metadata:</span> </span><br><span class="line">  <span class="attr">name:</span> <span class="string">mkdocs-service</span> </span><br><span class="line"><span class="attr">spec:</span> </span><br><span class="line">  <span class="attr">selector:</span> </span><br><span class="line">    <span class="attr">app:</span> <span class="string">mkdocs</span> </span><br><span class="line">  <span class="attr">ports:</span> </span><br><span class="line">  <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span> </span><br><span class="line">    <span class="attr">port:</span> <span class="number">8000</span></span><br><span class="line">    <span class="attr">targetPort:</span> <span class="number">8000</span></span><br><span class="line">    <span class="attr">nodePort:</span> <span class="number">30000</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span> </span><br></pre></td></tr></table></figure>
+
+<p>然后就可以用http:&#x2F;&#x2F;(IP):30000进行站点访问了</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.agiexplained.com">Eryx Lee</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.agiexplained.com/2024/08/12/mkdocs-run-on-k8s/">https://blog.agiexplained.com/2024/08/12/mkdocs-run-on-k8s/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.agiexplained.com" target="_blank">AGI Explained</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/tools/">tools</a><a class="post-meta__tags" href="/tags/mkdocs/">mkdocs</a></div><div class="post_share"><div class="social-share" data-image="https://pics.agiexplained.com/i/2024/03/05/171847_2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/11/25/ollama-local-install/" title="使用ollama部署本地大模型"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">使用ollama部署本地大模型</div></div></a></div><div class="next-post pull-right"><a href="/2024/08/07/SQLModel-join/" title="SQLModel 关联查询"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SQLModel 关联查询</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pics.agiexplained.com/i/2024/03/05/171847_2.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Eryx Lee</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">49</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">16</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/eryxlee"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81mkdocs%E7%AE%80%E4%BB%8B"><span class="toc-text">1、mkdocs简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81MkDocs-Material"><span class="toc-text">2、MkDocs-Material</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9%EF%BC%9A"><span class="toc-text">特点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%E3%80%81%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-text">3、简单使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E3%80%81%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">4、配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5%E3%80%81%E5%9C%A8Docker%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="toc-text">5、在Docker中使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6%E3%80%81%E5%9C%A8k8s%E4%B8%8A%E8%BF%90%E8%A1%8C"><span class="toc-text">6、在k8s上运行</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/01/llama.cpp-build-and-setup/" title="llama.cpp 编译使用">llama.cpp 编译使用</a><time datetime="2024-12-01T11:41:21.000Z" title="发表于 2024-12-01 19:41:21">2024-12-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/26/ollama-local-install-with-gpu/" title="使用ollama部署本地大模型（启用GPU）">使用ollama部署本地大模型（启用GPU）</a><time datetime="2024-11-26T06:30:41.000Z" title="发表于 2024-11-26 14:30:41">2024-11-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/25/ollama-local-install/" title="使用ollama部署本地大模型">使用ollama部署本地大模型</a><time datetime="2024-11-25T04:10:45.000Z" title="发表于 2024-11-25 12:10:45">2024-11-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/12/mkdocs-run-on-k8s/" title="文档项目管理工具MkDocs">文档项目管理工具MkDocs</a><time datetime="2024-08-12T11:25:38.000Z" title="发表于 2024-08-12 19:25:38">2024-08-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/08/07/SQLModel-join/" title="SQLModel 关联查询">SQLModel 关联查询</a><time datetime="2024-08-07T10:49:45.000Z" title="发表于 2024-08-07 18:49:45">2024-08-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By Eryx Lee</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><a target="_blank" href="https://beian.miit.gov.cn/">浙ICP备2024062350号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.agiexplained.com/2024/08/12/mkdocs-run-on-k8s/'
+    this.page.identifier = '/2024/08/12/mkdocs-run-on-k8s/'
+    this.page.title = '文档项目管理工具MkDocs'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://EryxLee.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=EryxLee&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Disqus' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

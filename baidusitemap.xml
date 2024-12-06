@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.agiexplained.com/2024/12/01/llama.cpp-build-and-setup/</loc>
+    <lastmod>2024-12-06</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/11/26/ollama-local-install-with-gpu/</loc>
+    <lastmod>2024-11-26</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/11/25/ollama-local-install/</loc>
+    <lastmod>2024-11-25</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/08/12/mkdocs-run-on-k8s/</loc>
+    <lastmod>2024-08-12</lastmod>
+  </url>
+  <url>
     <loc>https://blog.agiexplained.com/2024/08/07/SQLModel-join/</loc>
     <lastmod>2024-08-07</lastmod>
   </url>
