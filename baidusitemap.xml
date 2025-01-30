@@ -33,6 +33,22 @@
     <lastmod>2024-10-30</lastmod>
   </url>
   <url>
+    <loc>https://blog.agiexplained.com/2024/09/02/FastAPI-celery-redis/</loc>
+    <lastmod>2024-09-02</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/08/27/FastAPI-celery/</loc>
+    <lastmod>2024-08-27</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/08/22/FastAPI-background-task-2/</loc>
+    <lastmod>2024-08-22</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/08/17/FastAPI-background-task/</loc>
+    <lastmod>2024-08-17</lastmod>
+  </url>
+  <url>
     <loc>https://blog.agiexplained.com/2024/08/12/mkdocs-run-on-k8s/</loc>
     <lastmod>2024-08-12</lastmod>
   </url>

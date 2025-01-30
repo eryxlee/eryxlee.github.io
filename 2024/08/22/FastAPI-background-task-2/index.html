@@ -1,0 +1,258 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>深入探索FastAPI Background Tasks：原理、实践与高级技巧 | AGI Explained</title><meta name="author" content="Eryx Lee"><meta name="copyright" content="Eryx Lee"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="FastAPI通过Background Tasks提供了一种轻量级异步解决方案，允许开发者在请求响应后继续执行非即时性任务。 一、核心原理1.1 底层机制解析FastAPI的Background Tasks并非基于多线程或多进程，而是利用Python的asyncio事件循环实现异步执行。其核心实现位于starlette.background模块中，具体流程如下： 123456789101112#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入探索FastAPI Background Tasks：原理、实践与高级技巧">
+<meta property="og:url" content="https://blog.agiexplained.com/2024/08/22/FastAPI-background-task-2/index.html">
+<meta property="og:site_name" content="AGI Explained">
+<meta property="og:description" content="FastAPI通过Background Tasks提供了一种轻量级异步解决方案，允许开发者在请求响应后继续执行非即时性任务。 一、核心原理1.1 底层机制解析FastAPI的Background Tasks并非基于多线程或多进程，而是利用Python的asyncio事件循环实现异步执行。其核心实现位于starlette.background模块中，具体流程如下： 123456789101112#">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pics.agiexplained.com/i/2024/03/05/171847_2.png">
+<meta property="article:published_time" content="2024-08-22T14:30:48.000Z">
+<meta property="article:modified_time" content="2024-08-22T15:20:00.000Z">
+<meta property="article:author" content="Eryx Lee">
+<meta property="article:tag" content="FastAPI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pics.agiexplained.com/i/2024/03/05/171847_2.png"><link rel="shortcut icon" href="https://pics.agiexplained.com/i/2024/03/05/171847.ico"><link rel="canonical" href="https://blog.agiexplained.com/2024/08/22/FastAPI-background-task-2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?8823ed47591706858ef7d0072102a1be";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '深入探索FastAPI Background Tasks：原理、实践与高级技巧',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-22 23:20:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pics.agiexplained.com/i/2024/03/05/171847_2.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com"><i class="fa-fw fas fa-book"></i><span> 知识库</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com/#/ai/aiindex"><i class="fa-fw fas fa-book"></i><span> AI资源清单</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="AGI Explained"><span class="site-name">AGI Explained</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com"><i class="fa-fw fas fa-book"></i><span> 知识库</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com/#/ai/aiindex"><i class="fa-fw fas fa-book"></i><span> AI资源清单</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">深入探索FastAPI Background Tasks：原理、实践与高级技巧</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-08-22T14:30:48.000Z" title="发表于 2024-08-22 22:30:48">2024-08-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-22T15:20:00.000Z" title="更新于 2024-08-22 23:20:00">2024-08-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/FastAPI/">FastAPI</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="深入探索FastAPI Background Tasks：原理、实践与高级技巧"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>FastAPI通过<strong>Background Tasks</strong>提供了一种轻量级异步解决方案，允许开发者在请求响应后继续执行非即时性任务。</p>
+<h2 id="一、核心原理"><a href="#一、核心原理" class="headerlink" title="一、核心原理"></a>一、核心原理</h2><h3 id="1-1-底层机制解析"><a href="#1-1-底层机制解析" class="headerlink" title="1.1 底层机制解析"></a>1.1 底层机制解析</h3><p>FastAPI的Background Tasks并非基于多线程或多进程，而是利用Python的<strong>asyncio事件循环</strong>实现异步执行。其核心实现位于<code>starlette.background</code>模块中，具体流程如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Starlette源码简析</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BackgroundTask</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, func: typing.<span class="type">Callable</span>, *args: typing.<span class="type">Any</span>, **kwargs: typing.<span class="type">Any</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        self.func = func</span><br><span class="line">        self.args = args</span><br><span class="line">        self.kwargs = kwargs</span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">if</span> iscoroutinefunction(self.func):</span><br><span class="line">            <span class="keyword">await</span> self.func(*self.args, **self.kwargs)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">await</span> run_in_threadpool(self.func, *self.args, **self.kwargs)</span><br></pre></td></tr></table></figure>
+
+<p>关键点：</p>
+<ul>
+<li><strong>协程优先</strong>：自动检测任务是否为async函数</li>
+<li><strong>线程池降级</strong>：同步函数通过<code>anyio.to_thread.run_sync</code>在独立线程执行</li>
+<li><strong>生命周期绑定</strong>：任务与请求上下文共享生命周期</li>
+</ul>
+<h3 id="1-2-与Celery等队列系统的区别"><a href="#1-2-与Celery等队列系统的区别" class="headerlink" title="1.2 与Celery等队列系统的区别"></a>1.2 与Celery等队列系统的区别</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>FastAPI Background Tasks</th>
+<th>Celery</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>任务持久化</td>
+<td>❌ 内存存储，重启丢失</td>
+<td>✅ 支持数据库&#x2F;RabbitMQ</td>
+</tr>
+<tr>
+<td>分布式处理</td>
+<td>❌ 单机执行</td>
+<td>✅ 支持集群</td>
+</tr>
+<tr>
+<td>执行延迟</td>
+<td>立即执行</td>
+<td>可设置延迟</td>
+</tr>
+<tr>
+<td>复杂度</td>
+<td>⭐️</td>
+<td>⭐️⭐️⭐️</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>短时、非关键任务</td>
+<td>长时、关键任务</td>
+</tr>
+</tbody></table>
+<h2 id="二、开发实践"><a href="#二、开发实践" class="headerlink" title="二、开发实践"></a>二、开发实践</h2><h3 id="2-1-任务管理案例"><a href="#2-1-任务管理案例" class="headerlink" title="2.1 任务管理案例"></a>2.1 任务管理案例</h3><p><strong>场景</strong>：用户上传CSV文件后，后台解析数据并生成统计报告，完成后发送通知邮件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, UploadFile, BackgroundTasks</span><br><span class="line"><span class="keyword">from</span> pydantic <span class="keyword">import</span> EmailStr</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">from</span> sqlalchemy.orm <span class="keyword">import</span> Session</span><br><span class="line"><span class="keyword">from</span> .database <span class="keyword">import</span> SessionLocal  <span class="comment"># 确保从数据库模块导入SessionLocal</span></span><br><span class="line"><span class="keyword">from</span> .models <span class="keyword">import</span> UserReport</span><br><span class="line"><span class="keyword">from</span> .email <span class="keyword">import</span> send_notification</span><br><span class="line"><span class="keyword">from</span> .generate_stats <span class="keyword">import</span> generate_statistics  <span class="comment"># 导入生成统计报告的函数</span></span><br><span class="line"></span><br><span class="line">app = FastAPI()</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">process_report</span>(<span class="params"></span></span><br><span class="line"><span class="params">    contents: <span class="built_in">bytes</span>,  <span class="comment"># 接收文件内容而不是UploadFile对象</span></span></span><br><span class="line"><span class="params">    user_email: EmailStr,</span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    db = SessionLocal()  <span class="comment"># 在后台任务中创建新的数据库会话</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 解析CSV</span></span><br><span class="line">        df = pd.read_csv(io.BytesIO(contents))</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 生成报告</span></span><br><span class="line">        report_data = generate_statistics(df)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 保存到数据库</span></span><br><span class="line">        db_report = UserReport(</span><br><span class="line">            email=user_email,</span><br><span class="line">            data=report_data.json()  <span class="comment"># 假设report_data有json()方法</span></span><br><span class="line">        )</span><br><span class="line">        db.add(db_report)</span><br><span class="line">        db.commit()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 发送异步通知</span></span><br><span class="line">        <span class="keyword">await</span> send_notification(</span><br><span class="line">            email=user_email,</span><br><span class="line">            message=<span class="string">f&quot;Report <span class="subst">&#123;db_report.<span class="built_in">id</span>&#125;</span> is ready&quot;</span></span><br><span class="line">        )</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        db.rollback()</span><br><span class="line">        <span class="comment"># 可根据需要添加错误处理逻辑</span></span><br><span class="line">        <span class="keyword">raise</span> e</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        db.close()  <span class="comment"># 确保关闭数据库会话</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.post(<span class="params"><span class="string">&quot;/upload-report/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">upload_report</span>(<span class="params"></span></span><br><span class="line"><span class="params">    file: UploadFile,</span></span><br><span class="line"><span class="params">    email: EmailStr,</span></span><br><span class="line"><span class="params">    background_tasks: BackgroundTasks,</span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    background_tasks.add_task(</span><br><span class="line">        process_report,</span><br><span class="line">        file,</span><br><span class="line">        email</span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;status&quot;</span>: <span class="string">&quot;processing_started&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-异常处理与日志监控"><a href="#2-2-异常处理与日志监控" class="headerlink" title="2.2 异常处理与日志监控"></a>2.2 异常处理与日志监控</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> contextlib <span class="keyword">import</span> suppress</span><br><span class="line"><span class="keyword">from</span> logging <span class="keyword">import</span> getLogger</span><br><span class="line"></span><br><span class="line">logger = getLogger(__name__)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">safe_task_wrapper</span>(<span class="params">func, *args, **kwargs</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">await</span> func(*args, **kwargs)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        logger.error(<span class="string">f&quot;Task failed: <span class="subst">&#123;<span class="built_in">str</span>(e)&#125;</span>&quot;</span>, exc_info=<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">with</span> suppress(Exception):</span><br><span class="line">            <span class="keyword">await</span> send_alert_email(<span class="string">f&quot;Task Error: <span class="subst">&#123;<span class="built_in">type</span>(e).__name__&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        logger.info(<span class="string">&quot;Task completed with cleanup&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用装饰器增强任务</span></span><br><span class="line">background_tasks.add_task(safe_task_wrapper, process_report, file, email)</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、性能优化策略"><a href="#三、性能优化策略" class="headerlink" title="三、性能优化策略"></a>三、性能优化策略</h2><h3 id="3-1-资源限制模式"><a href="#3-1-资源限制模式" class="headerlink" title="3.1 资源限制模式"></a>3.1 资源限制模式</h3><p>通过信号量控制并发任务数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> anyio <span class="keyword">import</span> create_task_group, Semaphore</span><br><span class="line"></span><br><span class="line">MAX_CONCURRENT_TASKS = <span class="number">5</span></span><br><span class="line">task_semaphore = Semaphore(MAX_CONCURRENT_TASKS)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">rate_limited_task</span>(<span class="params">func, *args, **kwargs</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> task_semaphore:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">await</span> func(*args, **kwargs)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加任务时</span></span><br><span class="line">background_tasks.add_task(rate_limited_task, heavy_processing, data)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-任务优先级队列"><a href="#3-2-任务优先级队列" class="headerlink" title="3.2 任务优先级队列"></a>3.2 任务优先级队列</h3><p>实现加权优先级调度：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> heapq</span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, UploadFile, BackgroundTasks</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Optional</span>, <span class="type">Callable</span>, <span class="type">Any</span></span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line">app = FastAPI()</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PriorityBackgroundTasks</span>(<span class="title class_ inherited__">BackgroundTasks</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self._priority_queue = []</span><br><span class="line">        self._lock = threading.Lock()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add_task</span>(<span class="params"></span></span><br><span class="line"><span class="params">        self,</span></span><br><span class="line"><span class="params">        func: <span class="type">Callable</span>[..., <span class="type">Any</span>],</span></span><br><span class="line"><span class="params">        *args: <span class="type">Any</span>,</span></span><br><span class="line"><span class="params">        priority: <span class="built_in">int</span> = <span class="number">0</span>,  <span class="comment"># 默认优先级为0，数值越小优先级越高</span></span></span><br><span class="line"><span class="params">        **kwargs: <span class="type">Any</span></span></span><br><span class="line"><span class="params">    </span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">with</span> self._lock:</span><br><span class="line">            heapq.heappush(self._priority_queue, (priority, (func, args, kwargs)))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">__call__</span>(<span class="params">self</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">while</span> self._priority_queue:</span><br><span class="line">            <span class="keyword">with</span> self._lock:</span><br><span class="line">                _, (func, args, kwargs) = heapq.heappop(self._priority_queue)</span><br><span class="line">            <span class="keyword">await</span> self.run_func(func, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">run_func</span>(<span class="params">self, func: <span class="type">Callable</span>[..., <span class="type">Any</span>], *args: <span class="type">Any</span>, **kwargs: <span class="type">Any</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">if</span> self.is_async(func):</span><br><span class="line">            <span class="keyword">await</span> func(*args, **kwargs)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">await</span> self.run_in_threadpool(func, *args, **kwargs)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用示例</span></span><br><span class="line"><span class="meta">@app.post(<span class="params"><span class="string">&quot;/upload-report/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">upload_report</span>(<span class="params"></span></span><br><span class="line"><span class="params">    file: UploadFile,</span></span><br><span class="line"><span class="params">    email: <span class="built_in">str</span>,</span></span><br><span class="line"><span class="params">    background_tasks: PriorityBackgroundTasks = PriorityBackgroundTasks(<span class="params"></span>)</span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    contents = <span class="keyword">await</span> file.read()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 添加高优先级任务（priority=0）</span></span><br><span class="line">    background_tasks.add_task(</span><br><span class="line">        process_urgent_report,</span><br><span class="line">        contents,</span><br><span class="line">        email,</span><br><span class="line">        priority=<span class="number">0</span></span><br><span class="line">    )</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 添加普通优先级任务（priority=1）</span></span><br><span class="line">    background_tasks.add_task(</span><br><span class="line">        process_report,</span><br><span class="line">        contents,</span><br><span class="line">        email,</span><br><span class="line">        priority=<span class="number">1</span></span><br><span class="line">    )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;status&quot;</span>: <span class="string">&quot;processing_started&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例任务函数</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">process_urgent_report</span>(<span class="params">contents: <span class="built_in">bytes</span>, email: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Processing urgent report...&quot;</span>)</span><br><span class="line">    <span class="comment"># 实现具体逻辑</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">process_report</span>(<span class="params">contents: <span class="built_in">bytes</span>, email: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Processing normal report...&quot;</span>)</span><br><span class="line">    <span class="comment"># 实现具体逻辑</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="四、测试与调试技巧"><a href="#四、测试与调试技巧" class="headerlink" title="四、测试与调试技巧"></a>四、测试与调试技巧</h2><h3 id="4-1-单元测试方案"><a href="#4-1-单元测试方案" class="headerlink" title="4.1 单元测试方案"></a>4.1 单元测试方案</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi.testclient <span class="keyword">import</span> TestClient</span><br><span class="line"><span class="keyword">from</span> unittest.mock <span class="keyword">import</span> patch</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_background_task</span>():</span><br><span class="line">    client = TestClient(app)</span><br><span class="line">    mock_send = AsyncMock()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> patch(<span class="string">&quot;module.send_notification&quot;</span>, mock_send):</span><br><span class="line">        response = client.post(<span class="string">&quot;/upload-report/&quot;</span>, ...)</span><br><span class="line">        <span class="keyword">assert</span> response.status_code == <span class="number">200</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 等待后台任务完成</span></span><br><span class="line">        loop = asyncio.get_event_loop()</span><br><span class="line">        loop.run_until_complete(asyncio.sleep(<span class="number">0.1</span>))</span><br><span class="line">        </span><br><span class="line">        mock_send.assert_awaited_once()</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-实时监控实现"><a href="#4-2-实时监控实现" class="headerlink" title="4.2 实时监控实现"></a>4.2 实时监控实现</h3><p>集成Prometheus监控：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> prometheus_client <span class="keyword">import</span> Counter, Histogram</span><br><span class="line"></span><br><span class="line">TASK_STARTED = Counter(<span class="string">&quot;bg_tasks_started&quot;</span>, <span class="string">&quot;Background tasks started&quot;</span>)</span><br><span class="line">TASK_DURATION = Histogram(<span class="string">&quot;bg_task_duration&quot;</span>, <span class="string">&quot;Task execution time&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">monitored_task</span>(<span class="params">func, *args, **kwargs</span>):</span><br><span class="line">    TASK_STARTED.inc()</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        result = <span class="keyword">await</span> func(*args, **kwargs)</span><br><span class="line">        duration = time.time() - start_time</span><br><span class="line">        TASK_DURATION.observe(duration)</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    <span class="keyword">except</span> Exception:</span><br><span class="line">        TASK_ERRORS.labels(<span class="built_in">type</span>=<span class="built_in">type</span>(e).__name__).inc()</span><br><span class="line">        <span class="keyword">raise</span></span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.agiexplained.com">Eryx Lee</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.agiexplained.com/2024/08/22/FastAPI-background-task-2/">https://blog.agiexplained.com/2024/08/22/FastAPI-background-task-2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.agiexplained.com" target="_blank">AGI Explained</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/FastAPI/">FastAPI</a></div><div class="post_share"><div class="social-share" data-image="https://pics.agiexplained.com/i/2024/03/05/171847_2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/08/27/FastAPI-celery/" title="在FastAPI中集成Celery实现分布式任务处理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">在FastAPI中集成Celery实现分布式任务处理</div></div></a></div><div class="next-post pull-right"><a href="/2024/08/17/FastAPI-background-task/" title="使用FastAPI开发高效的Background Tasks"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用FastAPI开发高效的Background Tasks</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/05/29/FastAPI-Cache-key-builder/" title="FastAPI Cache 自定义 key builder"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-29</div><div class="title">FastAPI Cache 自定义 key builder</div></div></a></div><div><a href="/2024/05/28/FastAPI-Cache/" title="FastAPI Cache"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-28</div><div class="title">FastAPI Cache</div></div></a></div><div><a href="/2024/05/31/FastAPI-redis-om/" title="FastAPI redis-om 使用指南"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-31</div><div class="title">FastAPI redis-om 使用指南</div></div></a></div><div><a href="/2024/05/10/FastAPI-ruff-config/" title="FastAPI项目 ruff配置规则"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-10</div><div class="title">FastAPI项目 ruff配置规则</div></div></a></div><div><a href="/2024/04/20/fastapi-exception-handler/" title="FastAPI统一异常处理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-20</div><div class="title">FastAPI统一异常处理</div></div></a></div><div><a href="/2024/06/07/pytest-basic/" title="pytest 简介"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-07</div><div class="title">pytest 简介</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pics.agiexplained.com/i/2024/03/05/171847_2.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Eryx Lee</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/eryxlee"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="toc-text">一、核心原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%BA%95%E5%B1%82%E6%9C%BA%E5%88%B6%E8%A7%A3%E6%9E%90"><span class="toc-text">1.1 底层机制解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%B8%8ECelery%E7%AD%89%E9%98%9F%E5%88%97%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">1.2 与Celery等队列系统的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%BC%80%E5%8F%91%E5%AE%9E%E8%B7%B5"><span class="toc-text">二、开发实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86%E6%A1%88%E4%BE%8B"><span class="toc-text">2.1 任务管理案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E4%B8%8E%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7"><span class="toc-text">2.2 异常处理与日志监控</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="toc-text">三、性能优化策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6%E6%A8%A1%E5%BC%8F"><span class="toc-text">3.1 资源限制模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E4%BB%BB%E5%8A%A1%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97"><span class="toc-text">3.2 任务优先级队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%B5%8B%E8%AF%95%E4%B8%8E%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="toc-text">四、测试与调试技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%96%B9%E6%A1%88"><span class="toc-text">4.1 单元测试方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%AE%9E%E6%97%B6%E7%9B%91%E6%8E%A7%E5%AE%9E%E7%8E%B0"><span class="toc-text">4.2 实时监控实现</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/01/llama.cpp-build-and-setup/" title="llama.cpp 编译使用">llama.cpp 编译使用</a><time datetime="2024-12-01T11:41:21.000Z" title="发表于 2024-12-01 19:41:21">2024-12-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/26/ollama-local-install-with-gpu/" title="使用ollama部署本地大模型（启用GPU）">使用ollama部署本地大模型（启用GPU）</a><time datetime="2024-11-26T06:30:41.000Z" title="发表于 2024-11-26 14:30:41">2024-11-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/25/ollama-local-install/" title="使用ollama部署本地大模型">使用ollama部署本地大模型</a><time datetime="2024-11-25T04:10:45.000Z" title="发表于 2024-11-25 12:10:45">2024-11-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/21/download-models-from-huggingface/" title="从Huggingface和魔搭下载大模型">从Huggingface和魔搭下载大模型</a><time datetime="2024-11-21T14:13:45.000Z" title="发表于 2024-11-21 22:13:45">2024-11-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/15/python-tips-2/" title="python 小技巧整理">python 小技巧整理</a><time datetime="2024-11-15T11:34:57.000Z" title="发表于 2024-11-15 19:34:57">2024-11-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Eryx Lee</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><a target="_blank" href="https://beian.miit.gov.cn/">浙ICP备2024062350号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.agiexplained.com/2024/08/22/FastAPI-background-task-2/'
+    this.page.identifier = '/2024/08/22/FastAPI-background-task-2/'
+    this.page.title = '深入探索FastAPI Background Tasks：原理、实践与高级技巧'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://EryxLee.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=EryxLee&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Disqus' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

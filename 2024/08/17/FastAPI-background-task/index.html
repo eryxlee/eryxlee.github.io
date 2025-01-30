@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>使用FastAPI开发高效的Background Tasks | AGI Explained</title><meta name="author" content="Eryx Lee"><meta name="copyright" content="Eryx Lee"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在Web应用开发中，处理耗时任务是一个常见的需求。例如，发送电子邮件、处理大量数据、调用外部API等操作可能会阻塞主线程，导致用户体验下降。FastAPI作为一个高性能的Web框架，提供了强大的Background Tasks功能，允许开发者将这些耗时任务放到后台执行，从而提升应用的响应速度和用户体验。 什么是Background Tasks？Background Tasks是FastAPI提供的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用FastAPI开发高效的Background Tasks">
+<meta property="og:url" content="https://blog.agiexplained.com/2024/08/17/FastAPI-background-task/index.html">
+<meta property="og:site_name" content="AGI Explained">
+<meta property="og:description" content="在Web应用开发中，处理耗时任务是一个常见的需求。例如，发送电子邮件、处理大量数据、调用外部API等操作可能会阻塞主线程，导致用户体验下降。FastAPI作为一个高性能的Web框架，提供了强大的Background Tasks功能，允许开发者将这些耗时任务放到后台执行，从而提升应用的响应速度和用户体验。 什么是Background Tasks？Background Tasks是FastAPI提供的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pics.agiexplained.com/i/2024/03/05/171847_2.png">
+<meta property="article:published_time" content="2024-08-17T09:14:15.000Z">
+<meta property="article:modified_time" content="2024-08-17T11:30:00.000Z">
+<meta property="article:author" content="Eryx Lee">
+<meta property="article:tag" content="FastAPI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pics.agiexplained.com/i/2024/03/05/171847_2.png"><link rel="shortcut icon" href="https://pics.agiexplained.com/i/2024/03/05/171847.ico"><link rel="canonical" href="https://blog.agiexplained.com/2024/08/17/FastAPI-background-task/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?8823ed47591706858ef7d0072102a1be";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '使用FastAPI开发高效的Background Tasks',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-17 19:30:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://pics.agiexplained.com/i/2024/03/05/171847_2.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com"><i class="fa-fw fas fa-book"></i><span> 知识库</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com/#/ai/aiindex"><i class="fa-fw fas fa-book"></i><span> AI资源清单</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="AGI Explained"><span class="site-name">AGI Explained</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com"><i class="fa-fw fas fa-book"></i><span> 知识库</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://kb.agiexplained.com/#/ai/aiindex"><i class="fa-fw fas fa-book"></i><span> AI资源清单</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">使用FastAPI开发高效的Background Tasks</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-08-17T09:14:15.000Z" title="发表于 2024-08-17 17:14:15">2024-08-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-17T11:30:00.000Z" title="更新于 2024-08-17 19:30:00">2024-08-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/FastAPI/">FastAPI</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="使用FastAPI开发高效的Background Tasks"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="post-content" id="article-container"><p>在Web应用开发中，处理耗时任务是一个常见的需求。例如，发送电子邮件、处理大量数据、调用外部API等操作可能会阻塞主线程，导致用户体验下降。FastAPI作为一个高性能的Web框架，提供了强大的Background Tasks功能，允许开发者将这些耗时任务放到后台执行，从而提升应用的响应速度和用户体验。</p>
+<h2 id="什么是Background-Tasks？"><a href="#什么是Background-Tasks？" class="headerlink" title="什么是Background Tasks？"></a>什么是Background Tasks？</h2><p>Background Tasks是FastAPI提供的一种机制，在请求处理完成后，继续执行一些耗时操作。这些操作不会阻塞主线程，因此可以显著提高应用的响应速度。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>FastAPI的Background Tasks机制基于Python的<code>asyncio</code>库。当在路由处理函数中定义一个Background Task时，FastAPI会将该任务放入一个任务队列中，并在请求处理完成后异步执行这些任务。由于这些任务是在后台执行的，因此不会影响主线程的响应速度。</p>
+<h2 id="如何使用Background-Tasks？"><a href="#如何使用Background-Tasks？" class="headerlink" title="如何使用Background Tasks？"></a>如何使用Background Tasks？</h2><p>在FastAPI中使用Background Tasks只需要在路由处理函数中定义一个<code>BackgroundTasks</code>参数，并将需要执行的任务添加到该参数中即可。</p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p>在FastAPI中使用Background Tasks发送电子邮件。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, BackgroundTasks</span><br><span class="line"><span class="keyword">import</span> smtplib</span><br><span class="line"><span class="keyword">from</span> email.mime.text <span class="keyword">import</span> MIMEText</span><br><span class="line"><span class="keyword">from</span> email.mime.multipart <span class="keyword">import</span> MIMEMultipart</span><br><span class="line"></span><br><span class="line">app = FastAPI()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">email: <span class="built_in">str</span>, message: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="comment"># 配置邮件服务器</span></span><br><span class="line">    smtp_server = <span class="string">&quot;smtp.example.com&quot;</span></span><br><span class="line">    smtp_port = <span class="number">587</span></span><br><span class="line">    sender_email = <span class="string">&quot;your_email@example.com&quot;</span></span><br><span class="line">    sender_password = <span class="string">&quot;your_password&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建邮件内容</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>] = sender_email</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>] = email</span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>] = <span class="string">&quot;Test Email&quot;</span></span><br><span class="line">    msg.attach(MIMEText(message, <span class="string">&#x27;plain&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 发送邮件</span></span><br><span class="line">    <span class="keyword">with</span> smtplib.SMTP(smtp_server, smtp_port) <span class="keyword">as</span> server:</span><br><span class="line">        server.starttls()</span><br><span class="line">        server.login(sender_email, sender_password)</span><br><span class="line">        server.sendmail(sender_email, email, msg.as_string())</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.post(<span class="params"><span class="string">&quot;/send-email/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">send_email_background</span>(<span class="params">email: <span class="built_in">str</span>, message: <span class="built_in">str</span>, background_tasks: BackgroundTasks</span>):</span><br><span class="line">    background_tasks.add_task(send_email, email, message)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;message&quot;</span>: <span class="string">&quot;Email will be sent in the background&quot;</span>&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><h3 id="场景1：发送欢迎邮件"><a href="#场景1：发送欢迎邮件" class="headerlink" title="场景1：发送欢迎邮件"></a>场景1：发送欢迎邮件</h3><p>在用户注册成功后，通常需要发送一封欢迎邮件。由于发送邮件是一个耗时操作，可以将其放到后台执行，从而避免阻塞主线程。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.post(<span class="params"><span class="string">&quot;/register/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">register_user</span>(<span class="params">username: <span class="built_in">str</span>, email: <span class="built_in">str</span>, background_tasks: BackgroundTasks</span>):</span><br><span class="line">    <span class="comment"># 保存用户信息到数据库</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 发送欢迎邮件</span></span><br><span class="line">    background_tasks.add_task(send_email, email, <span class="string">f&quot;Welcome <span class="subst">&#123;username&#125;</span>!&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;message&quot;</span>: <span class="string">&quot;User registered successfully&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="场景2：处理大量数据"><a href="#场景2：处理大量数据" class="headerlink" title="场景2：处理大量数据"></a>场景2：处理大量数据</h3><p>在某些情况下，需要处理大量数据，例如生成报表或进行数据分析。这些操作通常非常耗时，可以将其放到后台执行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">generate_report</span>(<span class="params">data: <span class="built_in">list</span></span>):</span><br><span class="line">    <span class="comment"># 模拟生成报表的耗时操作</span></span><br><span class="line">    <span class="keyword">import</span> time</span><br><span class="line">    time.sleep(<span class="number">10</span>)</span><br><span class="line">    <span class="comment"># 生成报表的逻辑</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.post(<span class="params"><span class="string">&quot;/generate-report/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">generate_report_background</span>(<span class="params">data: <span class="built_in">list</span>, background_tasks: BackgroundTasks</span>):</span><br><span class="line">    background_tasks.add_task(generate_report, data)</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;message&quot;</span>: <span class="string">&quot;Report generation started in the background&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li><p><strong>任务执行顺序</strong>：Background Tasks的执行顺序是不确定的，因此不能依赖任务的执行顺序。</p>
+</li>
+<li><p><strong>任务失败处理</strong>：如果后台任务执行失败，FastAPI不会自动重试。你需要在任务中添加错误处理逻辑，或者使用第三方任务队列（如Celery）来处理复杂的任务调度和重试机制。</p>
+</li>
+<li><p><strong>资源管理</strong>：由于Background Tasks是异步执行的，因此需要注意资源管理，避免资源泄漏。</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.agiexplained.com">Eryx Lee</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.agiexplained.com/2024/08/17/FastAPI-background-task/">https://blog.agiexplained.com/2024/08/17/FastAPI-background-task/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.agiexplained.com" target="_blank">AGI Explained</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/FastAPI/">FastAPI</a></div><div class="post_share"><div class="social-share" data-image="https://pics.agiexplained.com/i/2024/03/05/171847_2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/08/22/FastAPI-background-task-2/" title="深入探索FastAPI Background Tasks：原理、实践与高级技巧"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">深入探索FastAPI Background Tasks：原理、实践与高级技巧</div></div></a></div><div class="next-post pull-right"><a href="/2024/08/12/mkdocs-run-on-k8s/" title="文档项目管理工具MkDocs"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">文档项目管理工具MkDocs</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/05/29/FastAPI-Cache-key-builder/" title="FastAPI Cache 自定义 key builder"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-29</div><div class="title">FastAPI Cache 自定义 key builder</div></div></a></div><div><a href="/2024/05/28/FastAPI-Cache/" title="FastAPI Cache"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-28</div><div class="title">FastAPI Cache</div></div></a></div><div><a href="/2024/05/31/FastAPI-redis-om/" title="FastAPI redis-om 使用指南"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-31</div><div class="title">FastAPI redis-om 使用指南</div></div></a></div><div><a href="/2024/05/10/FastAPI-ruff-config/" title="FastAPI项目 ruff配置规则"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-10</div><div class="title">FastAPI项目 ruff配置规则</div></div></a></div><div><a href="/2024/04/20/fastapi-exception-handler/" title="FastAPI统一异常处理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-20</div><div class="title">FastAPI统一异常处理</div></div></a></div><div><a href="/2024/06/07/pytest-basic/" title="pytest 简介"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-07</div><div class="title">pytest 简介</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://pics.agiexplained.com/i/2024/03/05/171847_2.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Eryx Lee</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">58</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/eryxlee"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFBackground-Tasks%EF%BC%9F"><span class="toc-text">什么是Background Tasks？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-text">原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Background-Tasks%EF%BC%9F"><span class="toc-text">如何使用Background Tasks？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B"><span class="toc-text">案例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF1%EF%BC%9A%E5%8F%91%E9%80%81%E6%AC%A2%E8%BF%8E%E9%82%AE%E4%BB%B6"><span class="toc-text">场景1：发送欢迎邮件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF2%EF%BC%9A%E5%A4%84%E7%90%86%E5%A4%A7%E9%87%8F%E6%95%B0%E6%8D%AE"><span class="toc-text">场景2：处理大量数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">注意事项</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/01/llama.cpp-build-and-setup/" title="llama.cpp 编译使用">llama.cpp 编译使用</a><time datetime="2024-12-01T11:41:21.000Z" title="发表于 2024-12-01 19:41:21">2024-12-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/26/ollama-local-install-with-gpu/" title="使用ollama部署本地大模型（启用GPU）">使用ollama部署本地大模型（启用GPU）</a><time datetime="2024-11-26T06:30:41.000Z" title="发表于 2024-11-26 14:30:41">2024-11-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/25/ollama-local-install/" title="使用ollama部署本地大模型">使用ollama部署本地大模型</a><time datetime="2024-11-25T04:10:45.000Z" title="发表于 2024-11-25 12:10:45">2024-11-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/21/download-models-from-huggingface/" title="从Huggingface和魔搭下载大模型">从Huggingface和魔搭下载大模型</a><time datetime="2024-11-21T14:13:45.000Z" title="发表于 2024-11-21 22:13:45">2024-11-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/15/python-tips-2/" title="python 小技巧整理">python 小技巧整理</a><time datetime="2024-11-15T11:34:57.000Z" title="发表于 2024-11-15 19:34:57">2024-11-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2025 By Eryx Lee</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><a target="_blank" href="https://beian.miit.gov.cn/">浙ICP备2024062350号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'https://blog.agiexplained.com/2024/08/17/FastAPI-background-task/'
+    this.page.identifier = '/2024/08/17/FastAPI-background-task/'
+    this.page.title = '使用FastAPI开发高效的Background Tasks'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://EryxLee.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=EryxLee&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Disqus' === 'Disqus' || !false) {
+    if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
