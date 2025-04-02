@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.agiexplained.com/2024/12/20/Xinference_vs_vllm_vs_ollama/</loc>
+    <lastmod>2025-04-02</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/12/13/Xinference_local_install/</loc>
+    <lastmod>2025-04-02</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2024/12/07/vllm_local_install/</loc>
+    <lastmod>2025-04-02</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.agiexplained.com/2025/03/31/vibe-coding/</loc>
+    <lastmod>2025-04-01</lastmod>
+  </url>
+  <url>
     <loc>https://blog.agiexplained.com/2024/12/01/llama.cpp-build-and-setup/</loc>
     <lastmod>2024-12-06</lastmod>
   </url>

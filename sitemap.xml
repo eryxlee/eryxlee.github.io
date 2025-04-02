@@ -2,6 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.agiexplained.com/2024/12/20/Xinference_vs_vllm_vs_ollama/</loc>
+    
+    <lastmod>2025-04-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/12/13/Xinference_local_install/</loc>
+    
+    <lastmod>2025-04-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2024/12/07/vllm_local_install/</loc>
+    
+    <lastmod>2025-04-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/2025/03/31/vibe-coding/</loc>
+    
+    <lastmod>2025-04-01</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.agiexplained.com/2024/12/01/llama.cpp-build-and-setup/</loc>
     
     <lastmod>2024-12-06</lastmod>
@@ -553,7 +589,7 @@
 
   <url>
     <loc>https://blog.agiexplained.com/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -561,119 +597,147 @@
   
   <url>
     <loc>https://blog.agiexplained.com/tags/FastAPI/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Cache/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/LangChain/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Pydantic/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/ruff/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Python/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/SQLModel/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/RAG/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Docker/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Prompt/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/pytest/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/LLM/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/ollama/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/llama-cpp/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/tools/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/mkdocs/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/tags/Celery/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/Vibe-Coding/</loc>
+    <lastmod>2025-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/Xinference/</loc>
+    <lastmod>2025-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/Ollama/</loc>
+    <lastmod>2025-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/tags/vLLM/</loc>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -682,63 +746,70 @@
   
   <url>
     <loc>https://blog.agiexplained.com/categories/FastAPI/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/LangChain/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/Pydantic/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/ruff/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/Python/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/Prompt/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/pytest/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/LLM/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.agiexplained.com/categories/tools/</loc>
-    <lastmod>2025-01-30</lastmod>
+    <lastmod>2025-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.agiexplained.com/categories/General/</loc>
+    <lastmod>2025-04-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
